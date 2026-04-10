@@ -1,0 +1,13 @@
+{
+  "skill_id": "p2_lists_arrays",
+  "depth": "beginner",
+  "title": "Lists \u2014 Storing Many Values Together",
+  "key_insight": "A list is a single variable that holds many values. It's the most important data structure in Python.",
+  "body": "## Why Lists?\n\nInstead of 100 separate variables for 100 test scores, one list does it all:\n\n```python\nscores = [85, 92, 78, 95, 88]\n```\n\n## Creating and Accessing Lists\n\n```python\nfruits = ['apple', 'banana', 'cherry']\n\n# Access by index (starts at 0):\nprint(fruits[0])   # 'apple'  (first item)\nprint(fruits[1])   # 'banana' (second item)\nprint(fruits[-1])  # 'cherry' (last item)\n\n# Slicing (get a sub-list):\nprint(fruits[0:2])  # ['apple', 'banana']\n```\n\n## Modifying Lists\n\n```python\nfruits.append('mango')  # add to end\nfruits[0] = 'grape'     # change item\nprint(len(fruits))      # count items\n```\n\n## Lists in ML\n\n```python\n# A dataset is a list of examples:\ndataset = [{'text': 'hello', 'label': 0}, {'text': 'spam', 'label': 1}]\n\n# A sequence of tokens:\ntokens = [101, 2023, 1996, 3424, 102]\n\n# Track training losses:\nlosses = []\nfor epoch in range(10):\n    loss = train()\n    losses.append(loss)\n```",
+  "common_mistakes": [
+    "IndexError from off-by-one: a 5-item list has indices 0,1,2,3,4. Index 5 crashes.",
+    "Forgetting slicing fruits[1:4] gives items at 1,2,3 \u2014 the end index is excluded",
+    "Thinking list assignment copies: b = a makes b point to the SAME list as a"
+  ],
+  "mini_exercise": "Create a list of 5 numbers. Print the first item, last item, and items from index 1 to 3. Then append a new number. These four operations cover 90% of list usage in ML code."
+}

@@ -1,0 +1,13 @@
+{
+  "skill_id": "p1_memory_storage",
+  "depth": "advanced",
+  "title": "Memory Management in Large-Scale ML",
+  "key_insight": "Memory management is the dominant engineering constraint in training and serving large models.",
+  "body": "## Memory Management for Large Models\n\n### Activation Memory: The Hidden Cost\n\nForward pass stores intermediate activations for use in backpropagation:\n\n```\nLayer 1 output: (batch=32, seq=2048, dim=4096) \u00d7 2 bytes = 512 MB\nLayer 2 output: 512 MB\n... \u00d7 32 transformer layers = 16 GB of activations alone\n```\n\nTotal memory: weights + activations + gradients + optimizer state.\nFor training a 7B model with Adam: 7B \u00d7 (2 + 2 + 2 + 8) bytes = 98 GB minimum.\n\n### Gradient Checkpointing\n\n```python\nfrom torch.utils.checkpoint import checkpoint\n\ndef forward(self, x):\n    # Don't store intermediate activations\n    # Recompute them during backward pass instead\n    x = checkpoint(self.layer1, x)\n    x = checkpoint(self.layer2, x)\n    return x\n```\n\nTrade-off: ~30% slower backward pass, ~60% less activation memory. Essential for long sequences.\n\n### ZeRO (Zero Redundancy Optimizer)\n\nDistributed training normally replicates model state on every GPU. ZeRO shards it:\n\n- Stage 1: Shard optimizer states only\n- Stage 2: Shard gradients + optimizer states\n- Stage 3: Shard parameters + gradients + optimizer states\n\nZeRO-3 on 8 GPUs: each holds only 1/8 of the model, enabling training of models 8\u00d7 larger.\n\n### Flash Attention: Memory-Efficient Attention\n\nStandard attention: O(n\u00b2) memory for attention matrix.\nFlash Attention: O(n) memory by computing attention in tiles, never materialising the full matrix.\n\n```python\n# Standard attention: stores n\u00d7n attention matrix in VRAM\nattn_weights = Q @ K.T  # (seq, seq) \u2014 huge for long sequences\n\n# Flash Attention: no n\u00d7n matrix ever created\nfrom flash_attn import flash_attn_qkvpacked_func\nout = flash_attn_qkvpacked_func(qkv, dropout_p=0.0)\n```\n\nFlash Attention 2 is 2-4\u00d7 faster than standard attention for long sequences while using less memory.",
+  "common_mistakes": [
+    "Not using gradient checkpointing for sequences > 512 tokens \u2014 VRAM will OOM without it",
+    "Forgetting optimizer state in memory calculations \u2014 Adam stores 2 extra copies of parameters (m and v)",
+    "Using standard attention for sequences > 1024 on consumer GPUs \u2014 Flash Attention is now the default for a reason"
+  ],
+  "mini_exercise": "Use model.get_memory_footprint() (Hugging Face) to check a model's parameter memory. Then estimate total training memory: params \u00d7 14 bytes (fp32 Adam). Does it fit on your GPU?"
+}

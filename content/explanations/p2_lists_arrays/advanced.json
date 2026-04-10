@@ -1,0 +1,13 @@
+{
+  "skill_id": "p2_lists_arrays",
+  "depth": "advanced",
+  "title": "Arrays, Broadcasting, and Tensor Operations",
+  "key_insight": "Broadcasting is NumPy's mechanism for applying operations to arrays of different shapes \u2014 it underpins nearly all ML math.",
+  "body": "## Broadcasting Rules\n\n```python\nimport numpy as np\n\na = np.array([[1, 2, 3],\n              [4, 5, 6]])     # shape (2, 3)\nb = np.array([10, 20, 30])   # shape (3,)\n\nresult = a + b\n# [[11, 22, 33],\n#  [14, 25, 36]]\n# b is broadcast across both rows of a\n```\n\n## Advanced Indexing\n\n```python\narr = np.array([10, 20, 30, 40, 50])\n\n# Boolean indexing:\nmask = arr > 25\nprint(arr[mask])  # [30, 40, 50]\n\n# Fancy indexing:\nindices = [0, 2, 4]\nprint(arr[indices])  # [10, 30, 50]\n```\n\n## Tensor Operations in PyTorch\n\n```python\nimport torch\n\n# einsum: explicit dimension labelling\nresult = torch.einsum('bsd,do->bso', queries, weight)\n\n# Reshape operations:\nx = torch.randn(32, 128)\nx_col = x.unsqueeze(1)       # (32, 1, 128)\nx_flat = x.view(32, -1)      # -1: infer dim\nx_perm = x.permute(1, 0)     # (128, 32)\n```",
+  "common_mistakes": [
+    "Broadcasting: (3,) + (3,1) works but (3,) + (1,3) doesn't \u2014 trailing dims must match",
+    "Using .reshape() without ensuring same total elements",
+    "Confusing .view() and .reshape() \u2014 view requires contiguous memory"
+  ],
+  "mini_exercise": "Create a (4,1) column vector and (1,5) row vector. Add them. What shape is the result? This produces a (4,5) matrix \u2014 every combination. Used in position encoding."
+}

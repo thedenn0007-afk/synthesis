@@ -1,0 +1,13 @@
+{
+  "skill_id": "p2_big_o_basics",
+  "depth": "beginner",
+  "title": "Big O \u2014 How Fast Does Code Scale? (Beginner)",
+  "key_insight": "Big O tells you how code behaves when your data gets 10x bigger. This is the only metric that matters at scale.",
+  "body": "## The Common Big O Values\n\n```python\n# O(1): dictionary lookup\nvocab = {'hello': 7592}\nid = vocab['hello']   # instant always\n\n# O(n): loop over n items\ndef find_max(arr):\n    for x in arr: ...   # 10x bigger = 10x longer\n\n# O(n\u00b2): nested loops\nfor i in arr:\n    for j in arr:       # 10x bigger = 100x longer\n        compare(i, j)\n```\n\n## What This Means at Scale\n\n| n | O(1) | O(n) | O(n\u00b2) |\n|---|---|---|---|\n| 100 | instant | 0.0001s | 0.01s |\n| 1,000,000 | instant | 1s | ~11 days |\n\nTransformer attention is O(n\u00b2) in sequence length \u2014 this is why long contexts cost so much.",
+  "common_mistakes": [
+    "Thinking O(n\u00b2) is fine for small data \u2014 it is, until data grows",
+    "Not recognising nested loops as O(n\u00b2)",
+    "Optimising before measuring \u2014 profile first, then optimise the bottleneck"
+  ],
+  "mini_exercise": "Look at the transformer attention mechanism. Every token attends to every other token. If a sequence has n tokens, how many comparisons? Write it as O(?). Why does this matter for long-context models?"
+}

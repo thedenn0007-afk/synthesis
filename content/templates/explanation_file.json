@@ -1,0 +1,34 @@
+{
+  "_comment": "TEMPLATE \u2014 copy to content/explanations/{skill_id}/{depth}.json. Remove all _comment fields.",
+  "skill_id": "SKILL_ID",
+  "depth": "beginner",
+  "title": "Short, evocative title. E.g. 'Backpropagation \u2014 Teaching by Mistake'",
+  "key_insight": "One sentence. The single most important takeaway. Should be memorable.",
+  "body": "## First Heading\n\nStart with the intuition, not the definition. Use an analogy.\n\n## Why It Works\n\nExplain the underlying mechanism.\n\n```python\n# Include a minimal code example\nx = example_code()\n```\n\n## AI Connection\n\nExplicitly connect to AI/ML engineering.",
+  "common_mistakes": [
+    "First common mistake \u2014 something learners almost always get wrong",
+    "Second common mistake \u2014 a subtle confusion or edge case",
+    "Third common mistake \u2014 a practical pitfall in ML code"
+  ],
+  "mini_exercise": "A short, doable task that takes 2-5 minutes. Should use Python if possible.",
+  "real_world_usage": "One paragraph. Where is this used in production AI systems? Be specific: name a company, tool, paper, or framework.",
+  "explain_back_prompt": "A question that forces the learner to reconstruct the concept in their own words.",
+  "build_task": {
+    "title": "Short title for the build task",
+    "context": "One sentence: why this build task matters.",
+    "steps": [
+      "Step 1: concrete action",
+      "Step 2: concrete action",
+      "Step 3: concrete action",
+      "Step 4: verify your result"
+    ],
+    "expected_output": "Describe what a correct implementation produces.",
+    "hint": "Optional: one hint for when the learner is stuck.",
+    "starter_code": "# Optional: scaffold code\ndef your_function():\n    # TODO: implement this\n    pass"
+  },
+  "_depth_guide": {
+    "beginner": "Use analogies. No jargon. Code examples 5-10 lines max.",
+    "mid": "Technical terminology. Real ML patterns. Code 10-30 lines.",
+    "advanced": "Production concerns. Performance. Research connections. Real tools/papers."
+  }
+}

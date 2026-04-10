@@ -1,0 +1,13 @@
+{
+  "skill_id": "p1_binary_numbers",
+  "depth": "advanced",
+  "title": "Quantisation and Mixed Precision in Practice",
+  "key_insight": "Choosing the right numerical format is a first-class engineering decision that determines whether a model fits on your hardware.",
+  "body": "## Numerical Precision as an Engineering Tool\n\n### IEEE 754 Floating Point\n\nEvery float operation has rounding error. For a single op, this is negligible. After billions of gradient updates, these errors accumulate.\n\n**Stochastic rounding** (used in modern accelerators): instead of always rounding to nearest, randomly round up or down with probability proportional to distance. This prevents systematic bias accumulation during training.\n\n### Mixed Precision Training (AMP)\n\n```python\nimport torch\nfrom torch.cuda.amp import autocast, GradScaler\n\nscaler = GradScaler()  # scales loss to prevent fp16 underflow\n\nfor batch in dataloader:\n    with autocast():             # forward pass in fp16\n        output = model(batch)\n        loss = criterion(output, labels)\n    \n    scaler.scale(loss).backward()  # backward in fp16, scaled\n    scaler.step(optimizer)          # unscale + optimizer step in fp32\n    scaler.update()                 # adjust scale factor\n```\n\nStrategy:\n- Forward pass: fp16 (fast, less memory)\n- Loss scaling: multiply loss by large constant (e.g. 2^16) before backward\n- Gradient storage: fp32 master copy (precision for optimizer)\n- Weight update: fp32 (numerical stability)\n\n### GPTQ: Post-Training Quantisation\n\nAfter training in fp32/fp16, quantise weights to int4:\n1. For each layer, find the optimal int4 values that minimise output error\n2. Compensate remaining error in subsequent weights (second-order correction)\n3. Result: 4-bit weights with fp16-level accuracy\n\n### Practical Decision Tree\n\n```\nHave a 24GB GPU? \u2192 Use bfloat16 (best balance)\nHave a 8GB GPU?  \u2192 Use int8 quantisation (bitsandbytes)\nHave a 4GB GPU?  \u2192 Use int4 GPTQ (4-bit quantisation)\nDeploying on CPU? \u2192 Use int4 (llama.cpp GGUF format)\nTraining from scratch? \u2192 bfloat16 + AMP\n```",
+  "common_mistakes": [
+    "Not using GradScaler with AMP \u2014 loss underflows to zero in fp16, gradients vanish, training stalls silently",
+    "Quantising the KV cache \u2014 KV cache precision affects generation quality more than weight precision",
+    "Assuming int4 always works \u2014 some model families (Mistral, Llama 2) tolerate it; others degrade significantly"
+  ],
+  "mini_exercise": "Load a Hugging Face model in 4-bit: from transformers import AutoModelForCausalLM; model = AutoModelForCausalLM.from_pretrained('gpt2', load_in_4bit=True). Check model.get_memory_footprint() before and after quantisation."
+}

@@ -1,0 +1,75 @@
+[
+  {
+    "id": "p2_alg_q1",
+    "skill_id": "p2_algorithms_intro",
+    "format": "mcq",
+    "difficulty_tier": "same",
+    "stem": "What is an algorithm?",
+    "options": [
+      {
+        "id": "a",
+        "text": "A type of computer chip"
+      },
+      {
+        "id": "b",
+        "text": "A step-by-step procedure that solves a problem reliably and finitely"
+      },
+      {
+        "id": "c",
+        "text": "A programming language used for AI"
+      },
+      {
+        "id": "d",
+        "text": "A database of training examples"
+      }
+    ],
+    "correct_option_id": "b",
+    "explanation_after": "An algorithm is a finite, deterministic sequence of steps that takes inputs and produces outputs. Backpropagation, gradient descent, and even the attention mechanism are all algorithms.",
+    "graph_placement_weight": {
+      "p2_algorithms_intro": 1.0
+    }
+  },
+  {
+    "id": "p2_alg_q2",
+    "skill_id": "p2_algorithms_intro",
+    "format": "mcq",
+    "difficulty_tier": "harder",
+    "stem": "Traditional programming: you write rules \u2192 computer applies them to data. Machine learning: you provide data + answers \u2192 the ______ learns the rules.",
+    "options": [
+      {
+        "id": "a",
+        "text": "programmer"
+      },
+      {
+        "id": "b",
+        "text": "algorithm"
+      },
+      {
+        "id": "c",
+        "text": "database"
+      },
+      {
+        "id": "d",
+        "text": "compiler"
+      }
+    ],
+    "correct_option_id": "b",
+    "explanation_after": "In ML, the training algorithm (like gradient descent) automatically discovers rules from patterns in data. The algorithm does the work of rule-finding.",
+    "graph_placement_weight": {
+      "p2_algorithms_intro": 1.0,
+      "p3_ai_vs_ml_vs_dl": 0.4
+    }
+  },
+  {
+    "id": "p2_alg_q3",
+    "skill_id": "p2_algorithms_intro",
+    "format": "fill",
+    "difficulty_tier": "review",
+    "prompt": "An algorithm must always ______ \u2014 it cannot run forever without producing a result.",
+    "correct_answer": "terminate",
+    "explanation_after": "Termination is a key property of algorithms. Training loops in ML do terminate (after a set number of epochs or when loss converges).",
+    "graph_placement_weight": {
+      "p2_algorithms_intro": 0.9
+    }
+  }
+]

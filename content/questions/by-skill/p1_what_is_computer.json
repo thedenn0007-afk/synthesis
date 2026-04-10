@@ -1,0 +1,50 @@
+[
+  {
+    "id": "p1_comp_q1",
+    "skill_id": "p1_what_is_computer",
+    "format": "mcq",
+    "difficulty_tier": "same",
+    "stem": "What does a computer fundamentally do?",
+    "options": [
+      { "id": "a", "text": "It creates electricity from nothing" },
+      { "id": "b", "text": "It takes instructions, processes information, and produces results" },
+      { "id": "c", "text": "It can think and feel like a human" },
+      { "id": "d", "text": "It only stores files and photos" }
+    ],
+    "correct_option_id": "b",
+    "explanation_after": "A computer is an instruction-following machine. It processes inputs into outputs — nothing more, nothing less. It does not think or feel.",
+    "graph_placement_weight": { "p1_what_is_computer": 1.0 }
+  },
+  {
+    "id": "p1_comp_q2",
+    "skill_id": "p1_what_is_computer",
+    "format": "mcq",
+    "difficulty_tier": "same",
+    "stem": "Which of the following is NOT a component of a computer?",
+    "options": [
+      { "id": "a", "text": "CPU (processor)" },
+      { "id": "b", "text": "Memory (RAM)" },
+      { "id": "c", "text": "Imagination" },
+      { "id": "d", "text": "Storage" }
+    ],
+    "correct_option_id": "c",
+    "explanation_after": "Computers have CPU, RAM, and storage — all physical hardware. Imagination is a human quality. Computers only do what they are explicitly instructed to do.",
+    "graph_placement_weight": { "p1_what_is_computer": 0.8 }
+  },
+  {
+    "id": "p1_comp_q3",
+    "skill_id": "p1_what_is_computer",
+    "format": "mcq",
+    "difficulty_tier": "harder",
+    "stem": "Why is the phrase 'computers are intelligent' misleading?",
+    "options": [
+      { "id": "a", "text": "Because they are too slow" },
+      { "id": "b", "text": "Because computers only follow exact instructions — they don't understand or reason" },
+      { "id": "c", "text": "Because only robots can be intelligent" },
+      { "id": "d", "text": "Because computers cannot do math" }
+    ],
+    "correct_option_id": "b",
+    "explanation_after": "Computers execute instructions with no understanding. Even AI systems are sophisticated instruction-following — they don't 'understand' the way humans do. This distinction matters deeply when building AI systems.",
+    "graph_placement_weight": { "p1_what_is_computer": 1.0, "p3_what_is_ai": 0.3 }
+  }
+]

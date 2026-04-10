@@ -1,0 +1,13 @@
+{
+  "skill_id": "p1_binary_numbers",
+  "depth": "beginner",
+  "title": "Binary \u2014 How Computers Count",
+  "key_insight": "Computers only understand two things: electricity on (1) or electricity off (0). Everything is built from this.",
+  "body": "## Why Binary?\n\nImagine you can only communicate using light switches. You can only say ON or OFF \u2014 nothing else.\n\nThat's a computer. Each tiny electronic switch inside a chip is either:\n- ON = 1\n- OFF = 0\n\nThis single switch is called a **bit** (binary digit).\n\n### Counting in Binary\n\nWe use base-10 (decimal) because we have 10 fingers. Computers use base-2 (binary) because transistors have 2 states.\n\n| Decimal | Binary |\n|---------|--------|\n| 0 | 0 |\n| 1 | 1 |\n| 2 | 10 |\n| 3 | 11 |\n| 4 | 100 |\n| 5 | 101 |\n\nEach position in binary is a power of 2 (1, 2, 4, 8, 16, 32...).\n\n### Reading Binary\n\nTo read `1010`:\n- Position 3: 1 \u00d7 8 = 8\n- Position 2: 0 \u00d7 4 = 0\n- Position 1: 1 \u00d7 2 = 2\n- Position 0: 0 \u00d7 1 = 0\n- Total: 8 + 0 + 2 + 0 = **10**\n\n### Bits \u2192 Bytes\n\n- 1 bit = one 0 or 1\n- 8 bits = 1 byte (can represent 256 different values: 0\u2013255)\n- 1 kilobyte = 1,024 bytes\n- 1 megabyte = ~1 million bytes\n- 1 gigabyte = ~1 billion bytes\n\n### Everything is Binary\n\n- The letter 'A' = 01000001 (ASCII code 65)\n- The number 3.14 = a specific sequence of 32 or 64 bits\n- An image = millions of bits representing pixel colours\n- An AI model = billions of bits representing learned weights",
+  "common_mistakes": [
+    "Thinking binary is complicated \u2014 it's just a different way to count, using 2 symbols instead of 10",
+    "Confusing bits and bytes \u2014 8 bits = 1 byte. Storage sizes (GB, TB) are in bytes, not bits",
+    "Thinking computers 'understand' binary \u2014 they don't understand anything. They just manipulate electrical signals"
+  ],
+  "mini_exercise": "Convert these to decimal: 0101, 1000, 1111. Answers: 5, 8, 15. Now write the number 7 in binary (hint: it uses 3 positions)."
+}

@@ -1,0 +1,44 @@
+[
+  {
+    "id": "p1_cond_q1",
+    "skill_id": "p1_conditionals",
+    "format": "mcq",
+    "difficulty_tier": "same",
+    "stem": "What does this code print?\n\nscore = 85\nif score >= 90:\n    print('A')\nelif score >= 80:\n    print('B')\nelse:\n    print('C')",
+    "options": [
+      { "id": "a", "text": "A" },
+      { "id": "b", "text": "B" },
+      { "id": "c", "text": "C" },
+      { "id": "d", "text": "A and B" }
+    ],
+    "correct_option_id": "b",
+    "explanation_after": "score = 85. First check: is 85 >= 90? No. Second check: is 85 >= 80? Yes — so print 'B' and stop. Python checks conditions in order and executes only the first one that's true. This top-to-bottom evaluation is called short-circuit evaluation.",
+    "graph_placement_weight": { "p1_conditionals": 1.0 }
+  },
+  {
+    "id": "p1_cond_q2",
+    "skill_id": "p1_conditionals",
+    "format": "mcq",
+    "difficulty_tier": "harder",
+    "stem": "In a neural network, an activation function like ReLU does this:\nif x > 0: return x\nelse: return 0\n\nWhat value does ReLU return for x = -3?",
+    "options": [
+      { "id": "a", "text": "-3" },
+      { "id": "b", "text": "3" },
+      { "id": "c", "text": "0" },
+      { "id": "d", "text": "Error — negative numbers not allowed" }
+    ],
+    "correct_option_id": "c",
+    "explanation_after": "ReLU (Rectified Linear Unit) is literally a conditional: if positive, pass through; if negative or zero, output 0. This simple if/else is one of the most important operations in deep learning — it's what gives neural networks the ability to learn non-linear patterns. Every node in a neural network applies this conditional.",
+    "graph_placement_weight": { "p1_conditionals": 1.0, "p5_neural_network_basics": 0.4 }
+  },
+  {
+    "id": "p1_cond_q3",
+    "skill_id": "p1_conditionals",
+    "format": "fill",
+    "difficulty_tier": "review",
+    "prompt": "In Python, the keyword that means 'otherwise, if this other condition is true' is ______.",
+    "correct_answer": "elif",
+    "explanation_after": "elif = else if. It lets you chain multiple conditions. If the first condition is False, Python checks the elif. If that's also False, it falls to else. Without elif you'd need deeply nested if statements, which quickly becomes unreadable.",
+    "graph_placement_weight": { "p1_conditionals": 0.9 }
+  }
+]

@@ -1,0 +1,13 @@
+{
+  "skill_id": "p2_numpy_basics",
+  "depth": "mid",
+  "title": "NumPy \u2014 Vectorisation and Broadcasting",
+  "key_insight": "The goal of NumPy is to eliminate Python loops from numerical computation entirely.",
+  "body": "## Vectorisation: The Core Principle\n\n```python\nimport numpy as np\nimport time\n\nN = 1_000_000\na = np.random.rand(N)\nb = np.random.rand(N)\n\n# Python loop (slow):\nstart = time.time()\nc_loop = [a[i] + b[i] for i in range(N)]\nprint(f'Loop: {time.time()-start:.3f}s')  # ~0.3s\n\n# NumPy vectorised (fast):\nstart = time.time()\nc_np = a + b\nprint(f'NumPy: {time.time()-start:.3f}s')  # ~0.002s \u2014 150x faster\n```\n\n## Axis Operations\n\n```python\ndata = np.array([[1, 2, 3],\n                 [4, 5, 6],\n                 [7, 8, 9]])  # shape (3, 3)\n\nnp.sum(data)          # 45 (all elements)\nnp.sum(data, axis=0)  # [12, 15, 18] (sum each column)\nnp.sum(data, axis=1)  # [6, 15, 24] (sum each row)\n```\n\nIn ML: axis=0 = batch dimension (across examples). axis=1 = feature dimension.\n\n## Key NumPy Operations\n\n```python\nx = np.arange(24).reshape(4, 6)  # (24,) \u2192 (4, 6)\nx_flat = x.reshape(-1)            # \u2192 (24,)\n\nnp.argmax(x)           # index of maximum value\nnp.argsort(x)          # indices that would sort x\nnp.where(x > 0, x, 0)  # conditional selection (ReLU!)\nnp.clip(x, -1, 1)      # clamp values to range\n```",
+  "common_mistakes": [
+    "Mixing NumPy arrays and PyTorch tensors in the same expression \u2014 they don't interoperate directly",
+    "Modifying a NumPy array that shares memory with a tensor \u2014 from_numpy shares memory, mutation affects both",
+    "Using axis incorrectly: np.mean(data, axis=0) averages across rows (each column), not within each row"
+  ],
+  "mini_exercise": "Create a (100, 784) NumPy array simulating 100 MNIST images. Compute: (1) mean pixel value across all images, (2) mean pixel value for each of the 784 positions, (3) normalise by subtracting the per-pixel mean. Use only NumPy operations."
+}

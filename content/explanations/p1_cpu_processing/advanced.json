@@ -1,0 +1,13 @@
+{
+  "skill_id": "p1_cpu_processing",
+  "depth": "advanced",
+  "title": "GPU Architecture and Tensor Core Operations",
+  "key_insight": "Modern AI hardware is co-designed with the algorithms \u2014 Tensor Cores are hardware built specifically for matrix multiplication.",
+  "body": "## Inside an NVIDIA GPU\n\n### SM (Streaming Multiprocessor)\n\nThe GPU is divided into SMs. Each SM contains:\n- CUDA Cores (FP32 operations)\n- Tensor Cores (matrix operations \u2014 the key for AI)\n- Shared memory (fast, on-chip, ~100 KB per SM)\n- L1 cache\n\nH100: 132 SMs \u00d7 (128 FP32 CUDA Cores + 4 Tensor Cores each) = ~17,000 CUDA Cores total.\n\n### Tensor Cores\n\nRegular CUDA Core: multiplies two numbers \u2192 1 FLOP per cycle.\nTensor Core: multiplies two 4\u00d74 matrices \u2192 64 FLOPs per cycle.\n\nFor matrix multiply (the dominant AI operation), Tensor Cores provide 8\u00d7 higher throughput than CUDA Cores.\n\n```python\nimport torch\n# Automatically uses Tensor Cores when dimensions are multiples of 16\nA = torch.randn(4096, 4096, device='cuda', dtype=torch.float16)\nB = torch.randn(4096, 4096, device='cuda', dtype=torch.float16)\nC = A @ B  # Tensor Cores engaged: 4096 is divisible by 16\n```\n\n**Important**: Tensor Cores require:\n- fp16 or bfloat16 (not fp32)\n- Matrix dimensions divisible by 8 (preferably 16 or 64)\n\n### Memory Bandwidth vs Compute: The Real Bottleneck\n\n```\nH100 SXM5:\n  FP16 compute:         1,979 TFLOPS\n  HBM3 bandwidth:       3.35  TB/s\n\n7B model inference:\n  Operations per token:  14B FLOPs (2 \u00d7 params)\n  Bytes to read:         14 GB (weights)\n  Arithmetic intensity:  14B / 14B = 1 FLOP/byte\n\nH100 roofline:           1979 TFLOPS / 3350 GB/s = 590 FLOP/byte\n```\n\nArithmetic intensity (1) << Roofline (590) \u2192 inference is memory-bandwidth bound.\nIncreasing batch size raises arithmetic intensity \u2192 eventually becomes compute-bound.",
+  "common_mistakes": [
+    "Using odd batch sizes or embedding dims not divisible by 8 \u2014 Tensor Cores unused, 8\u00d7 slower",
+    "Using fp32 with Tensor Cores \u2014 they require fp16/bf16; fp32 falls back to CUDA Cores",
+    "Profiling without torch.profiler \u2014 visual profiler shows Tensor Core utilisation directly"
+  ],
+  "mini_exercise": "Use torch.profiler to compare: matrix multiply of shape (4096, 4096) in fp16 vs fp32. Check the TFLOPS in the trace. You should see 8\u00d7 difference \u2014 Tensor Cores vs CUDA Cores."
+}

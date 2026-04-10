@@ -1,0 +1,31 @@
+{
+  "skill_id": "p1_loops",
+  "depth": "mid",
+  "title": "Loops \u2014 Iterators, Enumerate, and Loop Patterns",
+  "key_insight": "Python's for loop works on any iterable object, not just lists \u2014 this makes it the most versatile control structure.",
+  "body": "## Python's Iterator Protocol\n\nThe for loop works on anything that implements __iter__:\n- lists, tuples, strings, dicts\n- files (iterates line by line)\n- generators (lazy evaluation)\n- PyTorch DataLoaders\n- NumPy arrays\n\n```python\n# String iteration:\nfor char in 'hello':\n    print(char)  # h, e, l, l, o\n\n# Dict iteration (over keys by default):\nconfig = {'lr': 0.001, 'batch': 32}\nfor key in config:\n    print(f'{key}: {config[key]}')\n\n# Dict items (key-value pairs):\nfor key, value in config.items():\n    print(f'{key}: {value}')\n```\n\n## Useful Loop Patterns\n\n```python\n# enumerate: get index AND value\nfor i, item in enumerate(['a', 'b', 'c']):\n    print(f'{i}: {item}')  # 0: a, 1: b, 2: c\n\n# zip: loop two lists simultaneously\nnames = ['Alice', 'Bob']\nscores = [95, 87]\nfor name, score in zip(names, scores):\n    print(f'{name}: {score}')\n\n# List comprehension: create list from loop\nsquares = [x**2 for x in range(10)]\n\n# Dict comprehension:\nword_lengths = {word: len(word) for word in ['cat', 'elephant', 'dog']}\n```\n\n## Break and Continue\n\n```python\n# break: exit loop immediately\nfor i in range(100):\n    if loss < 0.01:\n        break  # training converged \u2014 stop early\n\n# continue: skip to next iteration\nfor batch in dataloader:\n    if batch is None:  # corrupted batch\n        continue       # skip this batch\n    train_step(batch)\n```\n\n## Training Loop Patterns\n\n```python\nfor epoch in range(num_epochs):\n    # Training phase\n    model.train()\n    for step, (inputs, labels) in enumerate(train_loader):\n        # step: batch number, inputs/labels: unpacked batch\n        loss = train_step(inputs, labels)\n        \n        if step % 100 == 0:  # log every 100 steps\n            print(f'Epoch {epoch}, Step {step}: loss={loss:.4f}')\n    \n    # Validation phase\n    model.eval()\n    val_loss = evaluate(val_loader)\n    print(f'Val loss: {val_loss:.4f}')\n```",
+  "common_mistakes": [
+    "Modifying a list while iterating over it \u2014 iterate over a copy: for x in list.copy()",
+    "Using range(len(list)) instead of enumerate(list) \u2014 enumerate is more Pythonic and less error-prone",
+    "Nested loops with O(n\u00b2) complexity when O(n) is possible \u2014 always check if inner loop can be vectorised"
+  ],
+  "mini_exercise": "Use enumerate and a list comprehension together: given a list of words, create a dict mapping each word to its position (index) in the list. This is how you'd build a vocabulary index for an NLP model.",
+  "real_world_usage": "Every machine learning training run is a nested loop: outer loop over epochs, inner loop over batches. PyTorch's DataLoader abstracts the inner loop. The training loop is so fundamental that papers describe their entire training procedure as one pseudocode loop.",
+  "explain_back_prompt": "Explain the difference between a for loop and a while loop. When would you use each? Give a machine learning example of each.",
+  "build_task": {
+    "title": "Write a training loop from scratch",
+    "context": "The training loop is the heart of any ML project. Write a simplified version using only Python (no PyTorch needed).",
+    "steps": [
+      "Create a dataset: data = [(1, 2), (2, 4), (3, 6), (4, 8), (5, 10)] \u2014 pairs of (x, y=2x)",
+      "Initialise a weight: w = 0.1 (our model will learn that w should be ~2.0)",
+      "Set learning_rate = 0.01 and num_epochs = 50",
+      "Write a nested loop: for epoch in range(num_epochs), for (x, y) in data",
+      "Inside the inner loop: prediction = w * x; error = prediction - y; gradient = error * x; w = w - learning_rate * gradient",
+      "Print w every 10 epochs",
+      "After training, test: print(w * 6) \u2014 it should be close to 12"
+    ],
+    "expected_output": "Weight converging from 0.1 toward ~2.0 over 50 epochs. Final prediction for x=6 should be close to 12.",
+    "hint": "This is linear regression with SGD from scratch. Every ML library does exactly this, just with many more parameters and GPU acceleration.",
+    "starter_code": "data = [(1, 2), (2, 4), (3, 6), (4, 8), (5, 10)]\nw = 0.1\nlearning_rate = 0.01\nnum_epochs = 50\n\nfor epoch in range(num_epochs):\n    for x, y in data:\n        # Your code here:\n        # 1. prediction = w * x\n        # 2. error = prediction - y\n        # 3. gradient = error * x\n        # 4. update w\n        pass\n    if epoch % 10 == 0:\n        print(f'Epoch {epoch}: w = {w:.4f}')\n\nprint(f'Prediction for x=6: {w * 6:.2f} (should be ~12)')"
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "skill_id": "p1_loops",
+  "depth": "beginner",
+  "title": "Loops \u2014 Repeating Instructions",
+  "key_insight": "A loop is an instruction that says 'do this thing multiple times'. Without loops, you'd have to copy-paste code thousands of times.",
+  "body": "## Why We Need Loops\n\nImagine you want to print 'hello' 1,000 times. Without a loop:\n```python\nprint('hello')\nprint('hello')\nprint('hello')\n# ... 997 more lines\n```\n\nWith a loop:\n```python\nfor i in range(1000):\n    print('hello')\n```\n\nThree lines instead of 1,000. Loops eliminate repetition.\n\n## The For Loop\n\nA for loop goes through each item in a sequence:\n\n```python\n# Loop through a range of numbers\nfor i in range(5):\n    print(i)\n# 0, 1, 2, 3, 4\n\n# Loop through a list\nfruits = ['apple', 'banana', 'cherry']\nfor fruit in fruits:\n    print(fruit)\n# apple\n# banana\n# cherry\n\n# Loop and do math\ntotal = 0\nfor number in [1, 2, 3, 4, 5]:\n    total = total + number\nprint(total)  # 15\n```\n\n## The While Loop\n\nA while loop keeps running WHILE a condition is True:\n\n```python\ncount = 0\nwhile count < 5:\n    print(count)\n    count = count + 1\n# 0, 1, 2, 3, 4\n```\n\nBe careful: if the condition never becomes False, the loop runs forever!\n\n## AI Training is a Loop\n\n```python\nfor epoch in range(100):      # repeat 100 times\n    for batch in dataset:     # for each group of examples\n        prediction = model(batch)   # make prediction\n        error = calculate_error(prediction, answer)\n        update_model(error)   # improve the model\n    print(f'Epoch {epoch} complete')\n```\n\nTraining a neural network = running this nested loop. The model gets a little better each time.",
+  "common_mistakes": [
+    "Using range(1, 5) and expecting 5 to be included \u2014 range(1, 5) gives 1, 2, 3, 4 (stops before the end)",
+    "Forgetting to indent the code inside the loop \u2014 Python requires indentation for loop body",
+    "Creating an infinite while loop by forgetting to update the condition variable"
+  ],
+  "mini_exercise": "Use a for loop to calculate the sum of squares from 1 to 10: 1\u00b2 + 2\u00b2 + 3\u00b2 + ... + 10\u00b2. The answer is 385. Write the loop that builds up this sum one number at a time."
+}

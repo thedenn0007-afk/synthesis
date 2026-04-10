@@ -1,0 +1,44 @@
+[
+  {
+    "id": "p1_var_q1",
+    "skill_id": "p1_variables",
+    "format": "mcq",
+    "difficulty_tier": "same",
+    "stem": "What does this Python code print?\n\nage = 25\nage = age + 1\nprint(age)",
+    "options": [
+      { "id": "a", "text": "25" },
+      { "id": "b", "text": "26" },
+      { "id": "c", "text": "age" },
+      { "id": "d", "text": "age + 1" }
+    ],
+    "correct_option_id": "b",
+    "explanation_after": "First, age is set to 25. Then age = age + 1 reads the current value (25), adds 1, and stores 26 back into age. Finally print(age) outputs 26. Variables can be updated — you read the old value, compute something, and write the new value back in.",
+    "graph_placement_weight": { "p1_variables": 1.0 }
+  },
+  {
+    "id": "p1_var_q2",
+    "skill_id": "p1_variables",
+    "format": "mcq",
+    "difficulty_tier": "harder",
+    "stem": "In machine learning, a model's 'weights' are stored as variables. Why does this matter?",
+    "options": [
+      { "id": "a", "text": "It doesn't — weights are fixed and never change" },
+      { "id": "b", "text": "Because training updates the weight variables millions of times to improve the model's accuracy" },
+      { "id": "c", "text": "Because variables are the only thing that uses RAM" },
+      { "id": "d", "text": "Because weights are stored in the CPU, not RAM" }
+    ],
+    "correct_option_id": "b",
+    "explanation_after": "Training a neural network is literally: look at a training example → compute error → update the weight variables slightly → repeat millions of times. The entire learning process is just variable updates. Every AI parameter you've ever heard of — billions of parameters — is a variable being repeatedly changed during training.",
+    "graph_placement_weight": { "p1_variables": 1.0, "p4_supervised_learning": 0.3 }
+  },
+  {
+    "id": "p1_var_q3",
+    "skill_id": "p1_variables",
+    "format": "fill",
+    "difficulty_tier": "review",
+    "prompt": "In Python, to create a variable called 'score' and give it the value 100, you write:\n\nscore = ____",
+    "correct_answer": "100",
+    "explanation_after": "Variable assignment in Python: variable_name = value. The equals sign here means 'store this value in this named box' — not 'these two things are equal'. That's why Python uses == (double equals) to check equality.",
+    "graph_placement_weight": { "p1_variables": 0.9 }
+  }
+]

@@ -1,0 +1,13 @@
+{
+  "skill_id": "p2_numpy_basics",
+  "depth": "beginner",
+  "title": "NumPy: Math on Entire Arrays at Once",
+  "key_insight": "NumPy lets you do math on thousands of numbers simultaneously — this is the foundation of all ML.",
+  "body": "## NumPy: The Foundation of AI Math\n\n### The Problem NumPy Solves\n\nImagine you have 1,000 numbers and need to double each one.\n\n**Without NumPy (slow):**\n```python\nnumbers = [1, 2, 3, 4, 5]  # imagine 1000 of these\nresult = []\nfor n in numbers:\n    result.append(n * 2)\n# Runs one multiplication at a time\n```\n\n**With NumPy (fast):**\n```python\nimport numpy as np\nnumbers = np.array([1, 2, 3, 4, 5])\nresult = numbers * 2\n# [2, 4, 6, 8, 10]\n# All multiplications happen simultaneously\n```\n\n### Key NumPy Operations\n\n```python\nimport numpy as np\n\n# Create arrays\na = np.array([1, 2, 3, 4])\nb = np.array([10, 20, 30, 40])\n\n# Element-wise operations (applied to each item)\nprint(a + b)    # [11, 22, 33, 44]\nprint(a * b)    # [10, 40, 90, 160]\nprint(a ** 2)   # [1, 4, 9, 16]  (squared)\n\n# Statistics\nprint(np.mean(a))   # 2.5  (average)\nprint(np.sum(a))    # 10   (total)\nprint(np.max(a))    # 4    (largest)\n\n# 2D arrays (matrices)\nmatrix = np.array([[1, 2], [3, 4]])\nprint(matrix.shape)  # (2, 2) — 2 rows, 2 cols\n```\n\n### Why This Matters for AI\n\nA neural network layer takes an input vector, multiplies by a weight matrix, and adds a bias vector. That's:\n\n```python\noutput = np.dot(input_vector, weight_matrix) + bias\n```\n\nThis single line does what would take a hundred lines of manual looping. NumPy makes it instant.",
+  "common_mistakes": [
+    "Using Python lists when you need NumPy arrays — Python lists are slow for math",
+    "Forgetting that shape matters: (3,) and (3,1) are different and can cause errors",
+    "Not importing NumPy: always start with 'import numpy as np'"
+  ],
+  "mini_exercise": "Create a NumPy array with numbers 1 through 5. Compute the mean, then multiply every element by 10. What do you get?"
+}

@@ -1,0 +1,13 @@
+{
+  "skill_id": "p1_functions",
+  "depth": "beginner",
+  "title": "Functions \u2014 Reusable Blocks of Code",
+  "key_insight": "A function is a named recipe. Define it once, use it anywhere, pass different ingredients each time.",
+  "body": "## Why Functions?\n\nWithout functions, you repeat yourself:\n\n```python\n# Without functions (repetitive):\nprint(2 * 2 * 2)   # 8\nprint(3 * 3 * 3)   # 27\nprint(4 * 4 * 4)   # 64\n\n# With a function (reusable):\ndef cube(number):\n    return number * number * number\n\nprint(cube(2))   # 8\nprint(cube(3))   # 27\nprint(cube(4))   # 64\n```\n\nFunctions let you name a useful operation and reuse it.\n\n## Defining a Function\n\n```python\ndef greet(name):          # 'name' is the parameter\n    message = 'Hello, ' + name + '!'\n    return message        # return sends value back to caller\n\nresult = greet('Alice')   # 'Alice' is the argument\nprint(result)             # Hello, Alice!\n```\n\n## Parameters and Return Values\n\n```python\n# Multiple parameters:\ndef add(a, b):\n    return a + b\n\nprint(add(3, 4))    # 7\nprint(add(10, 20))  # 30\n\n# Default parameter values:\ndef power(base, exponent=2):  # exponent defaults to 2\n    return base ** exponent\n\nprint(power(5))     # 25 (uses default exponent=2)\nprint(power(5, 3))  # 125 (uses given exponent=3)\n\n# Functions without return:\ndef print_header(title):\n    print('=' * 20)\n    print(title)\n    print('=' * 20)\n    # no return \u2014 returns None automatically\n```\n\n## Functions in AI\n\nEvery part of an AI system is a function:\n\n```python\ndef tokenise(text):          # text \u2192 list of numbers\n    ...\n\ndef embed(token_ids):        # numbers \u2192 vectors\n    ...\n\ndef transformer_layer(x):    # vectors \u2192 better vectors\n    ...\n\ndef predict(x):              # final vectors \u2192 probabilities\n    ...\n```\n\nBuilding AI = composing functions.",
+  "common_mistakes": [
+    "Forgetting the return statement \u2014 a function without return gives back None, not the computed value",
+    "Using print instead of return \u2014 print displays output, return sends the value to the caller for further use",
+    "Not using functions at all and writing everything in one long script \u2014 makes code impossible to test and reuse"
+  ],
+  "mini_exercise": "Write a function called celsius_to_fahrenheit(c) that converts Celsius to Fahrenheit: F = (C \u00d7 9/5) + 32. Test it: 0\u00b0C should give 32\u00b0F, 100\u00b0C should give 212\u00b0F."
+}

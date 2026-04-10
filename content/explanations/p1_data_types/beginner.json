@@ -1,0 +1,13 @@
+{
+  "skill_id": "p1_data_types",
+  "depth": "beginner",
+  "title": "Data Types \u2014 What Kind of Thing Is It?",
+  "key_insight": "Every value has a type. The type determines what you can do with it.",
+  "body": "## Why Types Matter\n\nImagine trying to add a word to a number: 'hello' + 5 = ?\n\nThat doesn't make sense. Python agrees \u2014 it will give you a TypeError.\n\nTypes prevent nonsensical operations by saying: 'these two things are different kinds of data.'\n\n## The Four Basic Types\n\n```python\n# int \u2014 whole numbers\nage = 25\nbatch_size = 32\nnum_layers = 12\n\n# float \u2014 decimal numbers\nlearning_rate = 0.001\naccuracy = 0.95\npi = 3.14159\n\n# str \u2014 text (string)\nname = 'Alice'\nmodel_name = 'gpt-4'\nmessage = \"Hello, world!\"\n\n# bool \u2014 True or False\nis_training = True\nuse_gpu = False\ncorrect = True\n```\n\n## Checking the Type\n\n```python\nprint(type(42))        # <class 'int'>\nprint(type(3.14))      # <class 'float'>\nprint(type('hello'))   # <class 'str'>\nprint(type(True))      # <class 'bool'>\n```\n\n## Converting Between Types\n\n```python\n# str to int\nage_text = '25'\nage_number = int(age_text)  # 25 (as integer)\n\n# int to float\nx = float(5)  # 5.0\n\n# number to str (for printing)\nnum = 42\nprint('The answer is ' + str(num))  # 'The answer is 42'\n\n# int/float to bool\nbool(0)    # False\nbool(1)    # True\nbool(-5)   # True (any non-zero number)\n```\n\n## Types in Python vs Types in ML\n\nIn Python code, you use int, float, str, bool.\n\nIn ML, when data goes INTO a neural network, it's always converted to floats \u2014 usually float32 or float16. The neural network only understands numbers.",
+  "common_mistakes": [
+    "Adding a string and a number without converting: 'Score: ' + 42 gives TypeError. Use str(42) first.",
+    "Confusing int division: 5/2 = 2.5 (float). 5//2 = 2 (int, floor division)",
+    "Thinking True and False are strings \u2014 they're booleans. 'True' (with quotes) is a string."
+  ],
+  "mini_exercise": "Try each of these in Python and note the type: 10/3, 10//3, True + True, '5' * 3, bool(''). Some will surprise you. Use type() to check each one."
+}

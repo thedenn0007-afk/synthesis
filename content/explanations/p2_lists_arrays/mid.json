@@ -1,0 +1,13 @@
+{
+  "skill_id": "p2_lists_arrays",
+  "depth": "mid",
+  "title": "Lists and Arrays \u2014 Python vs NumPy",
+  "key_insight": "Python lists are flexible but slow for math. NumPy arrays are fast but require homogeneous types.",
+  "body": "## Python List Limitations for ML\n\n```python\nmy_list = [1, 2, 3, 4, 5]\n\n# Can't do math directly:\nmy_list * 2   # [1,2,3,4,5,1,2,3,4,5] \u2014 repeats, doesn't double!\nmy_list + 2   # TypeError\n\n# Must use a loop (slow):\ndoubled = [x * 2 for x in my_list]\n```\n\n## NumPy Arrays: Math-Ready\n\n```python\nimport numpy as np\n\narr = np.array([1, 2, 3, 4, 5])\n\nprint(arr * 2)       # [2, 4, 6, 8, 10]\nprint(arr + 10)      # [11, 12, 13, 14, 15]\nprint(np.mean(arr))  # 3.0\n```\n\n## 2D Arrays and Shape\n\n```python\nmatrix = np.array([[1, 2, 3],\n                   [4, 5, 6]])\n\nprint(matrix.shape)   # (2, 3) \u2014 2 rows, 3 columns\nprint(matrix[0, :])   # [1, 2, 3] \u2014 first row\nprint(matrix[:, 1])   # [2, 5] \u2014 second column\n```",
+  "common_mistakes": [
+    "Using np.array([1,2,'three']) \u2014 NumPy forces all elements to same type",
+    "Confusing .shape (tuple) with .size (total elements): shape=(3,4) means size=12",
+    "Creating NumPy arrays with Python loops \u2014 use np.zeros, np.ones, np.arange instead"
+  ],
+  "mini_exercise": "Create a (100, 784) NumPy array simulating 100 MNIST images. Compute mean pixel across all images. Normalise: subtract mean, divide by 255. Use only NumPy operations."
+}

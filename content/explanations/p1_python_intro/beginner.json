@@ -1,0 +1,13 @@
+{
+  "skill_id": "p1_python_intro",
+  "depth": "beginner",
+  "title": "Python: Your First Steps",
+  "key_insight": "Python reads almost like English — if you can write clear instructions, you can learn Python.",
+  "body": "## Python: Your Very First Steps\n\n### What is Python?\n\nPython is a programming language. It's how you give instructions to a computer in a way that's close to human language.\n\nCompare these two:\n\n**Very technical (Assembly language):**\n```\nMOV EAX, 5\nMOV EBX, 3\nADD EAX, EBX\n```\n\n**Python:**\n```python\nresult = 5 + 3\nprint(result)\n```\n\nPython is designed to be readable.\n\n### Your First Python Programs\n\n**Saying hello:**\n```python\nprint('Hello, World!')\n```\nOutput: `Hello, World!`\n\n**Simple maths:**\n```python\nprint(2 + 3)\nprint(10 - 4)\nprint(5 * 6)\nprint(15 / 3)\n```\nOutput: `5`, `6`, `30`, `5.0`\n\n**Asking questions:**\n```python\nname = input('What is your name? ')\nprint('Hello, ' + name + '!')\n```\n\n### Python Rules (Very Few!)\n\n1. **Case matters**: `print` works, `Print` does not\n2. **Text needs quotes**: `print('hello')` not `print(hello)`\n3. **Indentation matters**: spaces at the start of a line have meaning (you'll see this with loops and functions)\n\n### Why Python for AI?\n\nEvery major AI tool is in Python:\n- `import torch` — use PyTorch (train neural networks)\n- `import openai` — use GPT\n- `import sklearn` — classic machine learning\n\nLearning Python is literally the door to all of AI.",
+  "common_mistakes": [
+    "Forgetting quotes around text: print(hello) gives an error, print('hello') works",
+    "Wrong capitalisation: Print('hello') fails, print('hello') works",
+    "Mixing up = (assignment) and == (comparison): x = 5 sets x to 5; x == 5 checks if x is 5"
+  ],
+  "mini_exercise": "Try writing Python code to print your name, then print your age, then print the result of 100 divided by 4."
+}

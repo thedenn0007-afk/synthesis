@@ -1,0 +1,91 @@
+[
+  {
+    "_comment": "TEMPLATE \u2014 copy, rename to {skill_id}.json, fill in all fields",
+    "_format_guide": {
+      "formats": [
+        "mcq",
+        "fill",
+        "explain",
+        "code",
+        "order"
+      ],
+      "difficulty_tiers": [
+        "review",
+        "same",
+        "harder"
+      ],
+      "rule": "Each skill needs minimum: 1x same (mcq), 1x harder (mcq), 1x review (fill)"
+    },
+    "id": "SKILL_ID_q1",
+    "skill_id": "SKILL_ID",
+    "format": "mcq",
+    "difficulty_tier": "same",
+    "stem": "Your question here?",
+    "options": [
+      {
+        "id": "a",
+        "text": "First option"
+      },
+      {
+        "id": "b",
+        "text": "Second option (correct)"
+      },
+      {
+        "id": "c",
+        "text": "Third option"
+      },
+      {
+        "id": "d",
+        "text": "Fourth option"
+      }
+    ],
+    "correct_option_id": "b",
+    "explanation_after": "Brief explanation shown after answer. Connect to AI engineering.",
+    "graph_placement_weight": {
+      "SKILL_ID": 1.0
+    }
+  },
+  {
+    "id": "SKILL_ID_q2",
+    "skill_id": "SKILL_ID",
+    "format": "mcq",
+    "difficulty_tier": "harder",
+    "stem": "More challenging question connecting concept to real AI/ML context?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Option a"
+      },
+      {
+        "id": "b",
+        "text": "Option b"
+      },
+      {
+        "id": "c",
+        "text": "Option c (correct)"
+      },
+      {
+        "id": "d",
+        "text": "Option d"
+      }
+    ],
+    "correct_option_id": "c",
+    "explanation_after": "Explanation referencing a real tool, paper, or system.",
+    "graph_placement_weight": {
+      "SKILL_ID": 1.0,
+      "DOWNSTREAM_SKILL": 0.4
+    }
+  },
+  {
+    "id": "SKILL_ID_q3",
+    "skill_id": "SKILL_ID",
+    "format": "fill",
+    "difficulty_tier": "review",
+    "prompt": "Complete this sentence: The key idea of [concept] is ______.",
+    "correct_answer": "the key term or short phrase",
+    "explanation_after": "Brief reinforcement of the core term.",
+    "graph_placement_weight": {
+      "SKILL_ID": 0.9
+    }
+  }
+]

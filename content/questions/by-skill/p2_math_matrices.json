@@ -1,0 +1,75 @@
+[
+  {
+    "id": "p2_mat_q1",
+    "skill_id": "p2_math_matrices",
+    "format": "mcq",
+    "difficulty_tier": "same",
+    "stem": "What is the shape of the result when multiplying a (3\u00d74) matrix by a (4\u00d75) matrix?",
+    "options": [
+      {
+        "id": "a",
+        "text": "(3\u00d75)"
+      },
+      {
+        "id": "b",
+        "text": "(4\u00d74)"
+      },
+      {
+        "id": "c",
+        "text": "(3\u00d74\u00d75)"
+      },
+      {
+        "id": "d",
+        "text": "Error \u2014 they can't be multiplied"
+      }
+    ],
+    "correct_option_id": "a",
+    "explanation_after": "Matrix multiply rule: (m\u00d7n) \u00d7 (n\u00d7p) = (m\u00d7p). The inner dimensions must match (both 4). Result shape is outer dimensions: 3\u00d75. Most PyTorch errors are shape mismatches.",
+    "graph_placement_weight": {
+      "p2_math_matrices": 1.0
+    }
+  },
+  {
+    "id": "p2_mat_q2",
+    "skill_id": "p2_math_matrices",
+    "format": "mcq",
+    "difficulty_tier": "harder",
+    "stem": "A linear layer takes input x of shape (batch=32, features=128) and weight matrix W of shape (128, 64). What shape is the output x @ W?",
+    "options": [
+      {
+        "id": "a",
+        "text": "(128, 64)"
+      },
+      {
+        "id": "b",
+        "text": "(32, 64)"
+      },
+      {
+        "id": "c",
+        "text": "(32, 128)"
+      },
+      {
+        "id": "d",
+        "text": "(64, 32)"
+      }
+    ],
+    "correct_option_id": "b",
+    "explanation_after": "(32\u00d7128) @ (128\u00d764) = (32\u00d764). The inner 128s cancel. You go from 32 examples with 128 features to 32 examples with 64 features. This is every linear layer in every neural network.",
+    "graph_placement_weight": {
+      "p2_math_matrices": 1.0,
+      "p5_neural_network_basics": 0.5
+    }
+  },
+  {
+    "id": "p2_mat_q3",
+    "skill_id": "p2_math_matrices",
+    "format": "fill",
+    "difficulty_tier": "review",
+    "prompt": "In NumPy and PyTorch, the operator for matrix multiplication is ______",
+    "correct_answer": "@",
+    "explanation_after": "The @ symbol is Python's matrix multiplication operator (Python 3.5+). result = A @ B. You'll also see torch.matmul(A, B) or np.dot(A, B) \u2014 they do the same thing.",
+    "graph_placement_weight": {
+      "p2_math_matrices": 0.9
+    }
+  }
+]

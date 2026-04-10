@@ -1,0 +1,75 @@
+[
+  {
+    "id": "p2_prob_q1",
+    "skill_id": "p2_probability_basics",
+    "format": "mcq",
+    "difficulty_tier": "same",
+    "stem": "A language model outputs these probabilities for the next word:\n'cat': 0.55, 'dog': 0.30, 'fish': 0.15\n\nWhat must these probabilities sum to?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Any number"
+      },
+      {
+        "id": "b",
+        "text": "Exactly 1.0"
+      },
+      {
+        "id": "c",
+        "text": "100"
+      },
+      {
+        "id": "d",
+        "text": "The number of possible words"
+      }
+    ],
+    "correct_option_id": "b",
+    "explanation_after": "A valid probability distribution must sum to exactly 1.0. 0.55+0.30+0.15=1.0. This constraint is enforced by the softmax function \u2014 the last layer of every language model.",
+    "graph_placement_weight": {
+      "p2_probability_basics": 1.0
+    }
+  },
+  {
+    "id": "p2_prob_q2",
+    "skill_id": "p2_probability_basics",
+    "format": "mcq",
+    "difficulty_tier": "harder",
+    "stem": "A spam classifier outputs 0.92 for an email. What does this mean?",
+    "options": [
+      {
+        "id": "a",
+        "text": "The email is 92% written in spam language"
+      },
+      {
+        "id": "b",
+        "text": "The model is 92% confident this email is spam"
+      },
+      {
+        "id": "c",
+        "text": "92% of the email's words are spam words"
+      },
+      {
+        "id": "d",
+        "text": "The model has seen 92 similar emails before"
+      }
+    ],
+    "correct_option_id": "b",
+    "explanation_after": "0.92 is the model's confidence that this email belongs to class 'spam'. It does NOT mean 92% of words are spam. You still choose a threshold (often 0.5) to make the binary decision.",
+    "graph_placement_weight": {
+      "p2_probability_basics": 1.0,
+      "p4_supervised_learning": 0.4
+    }
+  },
+  {
+    "id": "p2_prob_q3",
+    "skill_id": "p2_probability_basics",
+    "format": "fill",
+    "difficulty_tier": "review",
+    "prompt": "A probability of 0 means the event is ______. A probability of 1 means the event is ______.",
+    "correct_answer": "impossible, certain",
+    "explanation_after": "Probability always lives between 0 (impossible) and 1 (certain). Real models almost never output exact 0s or 1s \u2014 they output values in between, reflecting genuine uncertainty.",
+    "graph_placement_weight": {
+      "p2_probability_basics": 0.9
+    }
+  }
+]

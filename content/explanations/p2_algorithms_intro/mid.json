@@ -1,0 +1,13 @@
+{
+  "skill_id": "p2_algorithms_intro",
+  "depth": "mid",
+  "title": "Algorithms \u2014 Step-by-Step Problem Solving (Mid)",
+  "key_insight": "An algorithm is a recipe for solving a problem. Clear steps, definite end, same answer every time.",
+  "body": "## What is an Algorithm?\n\n```python\ndef find_max(numbers):\n    largest = numbers[0]\n    for num in numbers[1:]:\n        if num > largest:\n            largest = num\n    return largest\n\nprint(find_max([3, 7, 2, 9, 1]))  # 9\n```\n\n## Gradient Descent: The ML Algorithm\n\n```python\n# The most important algorithm in ML:\nfor step in range(1000):\n    gradient = compute_gradient(weights)\n    weights = weights - learning_rate * gradient\n# weights now minimise the loss function\n```",
+  "common_mistakes": [
+    "Thinking an algorithm must be complex \u2014 finding the max of a list is a valid algorithm",
+    "Confusing algorithm with code \u2014 algorithm is the idea; code is one way to express it",
+    "Forgetting that algorithms must terminate \u2014 an infinite loop is not a correct algorithm"
+  ],
+  "mini_exercise": "Write in plain English (not code!) an algorithm for sorting a small list of numbers. Then implement it in Python. Writing steps in English first is how engineers design algorithms."
+}

@@ -1,0 +1,755 @@
+[
+  {
+    "id": "p1_what_is_computer",
+    "label": "What is a Computer?",
+    "phase": "phase_1_computer_basics",
+    "difficulty_base": 1,
+    "question_ids": [
+      "p1_comp_q1",
+      "p1_comp_q2",
+      "p1_comp_q3"
+    ],
+    "explanation_ids": {
+      "beginner": "p1_what_is_computer_beg",
+      "mid": "p1_what_is_computer_mid",
+      "advanced": "p1_what_is_computer_adv"
+    },
+    "tags": [
+      "computer",
+      "hardware",
+      "basics"
+    ],
+    "deprecated": false,
+    "intuition": "A computer is a machine that follows instructions to process information.",
+    "analogy": "Like a very obedient chef who can only cook exactly what the recipe says \u2014 nothing more, nothing less.",
+    "why_it_matters": "Everything in AI runs on computers. Understanding what they are is the true starting point."
+  },
+  {
+    "id": "p1_input_output",
+    "label": "Input & Output",
+    "phase": "phase_1_computer_basics",
+    "difficulty_base": 1,
+    "question_ids": [
+      "p1_io_q1",
+      "p1_io_q2",
+      "p1_io_q3"
+    ],
+    "explanation_ids": {
+      "beginner": "p1_input_output_beg",
+      "mid": "p1_input_output_mid",
+      "advanced": "p1_input_output_adv"
+    },
+    "tags": [
+      "input",
+      "output",
+      "hardware"
+    ],
+    "deprecated": false,
+    "intuition": "Computers receive information (input), process it, and send results back (output).",
+    "analogy": "Like a vending machine \u2014 you put money in (input), it gives you a snack (output).",
+    "why_it_matters": "AI systems are fundamentally input\u2192output machines. GPT takes text in, gives text out."
+  },
+  {
+    "id": "p1_binary_numbers",
+    "label": "Binary Numbers",
+    "phase": "phase_1_computer_basics",
+    "difficulty_base": 2,
+    "question_ids": [
+      "p1_bin_q1",
+      "p1_bin_q2",
+      "p1_bin_q3",
+      "p1_bin_q4"
+    ],
+    "explanation_ids": {
+      "beginner": "p1_binary_beg",
+      "mid": "p1_binary_mid",
+      "advanced": "p1_binary_adv"
+    },
+    "tags": [
+      "binary",
+      "bits",
+      "numbers"
+    ],
+    "deprecated": false,
+    "intuition": "Computers only understand two states: on and off \u2014 represented as 1 and 0.",
+    "analogy": "Like a light switch. It's either ON (1) or OFF (0). Everything a computer does is millions of light switches flipping.",
+    "why_it_matters": "Neural networks store all their knowledge as numbers \u2014 ultimately all 1s and 0s."
+  },
+  {
+    "id": "p1_memory_storage",
+    "label": "Memory & Storage",
+    "phase": "phase_1_computer_basics",
+    "difficulty_base": 2,
+    "question_ids": [
+      "p1_mem_q1",
+      "p1_mem_q2",
+      "p1_mem_q3"
+    ],
+    "explanation_ids": {
+      "beginner": "p1_memory_beg",
+      "mid": "p1_memory_mid",
+      "advanced": "p1_memory_adv"
+    },
+    "tags": [
+      "memory",
+      "RAM",
+      "storage",
+      "hardware"
+    ],
+    "deprecated": false,
+    "intuition": "RAM is your computer's short-term memory (what it's working on now). Storage is long-term memory (files saved permanently).",
+    "analogy": "RAM is your desk \u2014 you work on things there. Storage is your filing cabinet \u2014 things go there when you're done.",
+    "why_it_matters": "Training large AI models requires enormous amounts of both \u2014 understanding why helps you think about AI at scale."
+  },
+  {
+    "id": "p1_cpu_processing",
+    "label": "CPU & Processing",
+    "phase": "phase_1_computer_basics",
+    "difficulty_base": 2,
+    "question_ids": [
+      "p1_cpu_q1",
+      "p1_cpu_q2",
+      "p1_cpu_q3"
+    ],
+    "explanation_ids": {
+      "beginner": "p1_cpu_beg",
+      "mid": "p1_cpu_mid",
+      "advanced": "p1_cpu_adv"
+    },
+    "tags": [
+      "CPU",
+      "GPU",
+      "processing",
+      "hardware"
+    ],
+    "deprecated": false,
+    "intuition": "The CPU is the brain of the computer \u2014 it executes instructions one at a time, very fast.",
+    "analogy": "One brilliant chef cooking dish after dish sequentially. A GPU is a thousand simpler chefs all cooking at the same time.",
+    "why_it_matters": "AI training uses GPUs because matrix math is embarrassingly parallel \u2014 thousands of simple operations at once."
+  },
+  {
+    "id": "p1_how_code_works",
+    "label": "How Code Works",
+    "phase": "phase_1_computer_basics",
+    "difficulty_base": 2,
+    "question_ids": [
+      "p1_code_q1",
+      "p1_code_q2",
+      "p1_code_q3"
+    ],
+    "explanation_ids": {
+      "beginner": "p1_code_beg",
+      "mid": "p1_code_mid",
+      "advanced": "p1_code_adv"
+    },
+    "tags": [
+      "code",
+      "programming",
+      "compiler"
+    ],
+    "deprecated": false,
+    "intuition": "Code is a precise set of instructions written in a language humans and computers both understand.",
+    "analogy": "Like a recipe \u2014 it says exactly what to do, in what order, using what ingredients. The computer follows it perfectly every time.",
+    "why_it_matters": "Every AI system is code. You need to read, write, and understand code to build AI."
+  },
+  {
+    "id": "p1_python_intro",
+    "label": "Python: First Steps",
+    "phase": "phase_1_computer_basics",
+    "difficulty_base": 2,
+    "question_ids": [
+      "p1_py_q1",
+      "p1_py_q2",
+      "p1_py_q3",
+      "p1_py_q4"
+    ],
+    "explanation_ids": {
+      "beginner": "p1_python_beg",
+      "mid": "p1_python_mid",
+      "advanced": "p1_python_adv"
+    },
+    "tags": [
+      "python",
+      "syntax",
+      "print",
+      "basics"
+    ],
+    "deprecated": false,
+    "intuition": "Python is a programming language designed to be as readable as possible \u2014 it almost reads like English.",
+    "analogy": "Python is like giving instructions to a very literal-minded friend. Say exactly what you mean, and they'll do it perfectly.",
+    "why_it_matters": "Python is the language of AI. Every major AI library \u2014 TensorFlow, PyTorch, scikit-learn \u2014 is Python-first."
+  },
+  {
+    "id": "p1_variables",
+    "label": "Variables",
+    "phase": "phase_1_computer_basics",
+    "difficulty_base": 2,
+    "question_ids": [
+      "p1_var_q1",
+      "p1_var_q2",
+      "p1_var_q3"
+    ],
+    "explanation_ids": {
+      "beginner": "p1_variables_beg",
+      "mid": "p1_variables_mid",
+      "advanced": "p1_variables_adv"
+    },
+    "tags": [
+      "variables",
+      "python",
+      "assignment"
+    ],
+    "deprecated": false,
+    "intuition": "A variable is a named box that stores a value. You can look inside it or put something new in it.",
+    "analogy": "Like a labelled jar. Write cookies on it, put 5 cookies in. Later you can check how many or add more.",
+    "why_it_matters": "All data in AI models \u2014 weights, activations, losses \u2014 are stored in variables (called tensors)."
+  },
+  {
+    "id": "p1_data_types",
+    "label": "Data Types",
+    "phase": "phase_1_computer_basics",
+    "difficulty_base": 2,
+    "question_ids": [
+      "p1_dt_q1",
+      "p1_dt_q2",
+      "p1_dt_q3"
+    ],
+    "explanation_ids": {
+      "beginner": "p1_datatypes_beg",
+      "mid": "p1_datatypes_mid",
+      "advanced": "p1_datatypes_adv"
+    },
+    "tags": [
+      "int",
+      "float",
+      "string",
+      "bool",
+      "python"
+    ],
+    "deprecated": false,
+    "intuition": "Every value has a type \u2014 a number, text, or true/false. The type tells Python what operations make sense.",
+    "analogy": "Like sorting mail \u2014 you treat a letter differently from a package. Python treats numbers differently from text.",
+    "why_it_matters": "In ML, knowing the difference between integers and floats, and between scalars and tensors, is essential."
+  },
+  {
+    "id": "p1_conditionals",
+    "label": "If / Else Logic",
+    "phase": "phase_1_computer_basics",
+    "difficulty_base": 3,
+    "question_ids": [
+      "p1_cond_q1",
+      "p1_cond_q2",
+      "p1_cond_q3"
+    ],
+    "explanation_ids": {
+      "beginner": "p1_conditionals_beg",
+      "mid": "p1_conditionals_mid",
+      "advanced": "p1_conditionals_adv"
+    },
+    "tags": [
+      "if",
+      "else",
+      "logic",
+      "python",
+      "conditionals"
+    ],
+    "deprecated": false,
+    "intuition": "If a condition is true, do this. Otherwise, do that. Computers make decisions this way.",
+    "analogy": "Like a traffic light. IF it's green THEN go. ELSE stop.",
+    "why_it_matters": "Decision-making logic appears everywhere in AI: in training loops, in activation functions, in inference pipelines."
+  },
+  {
+    "id": "p1_loops",
+    "label": "Loops",
+    "phase": "phase_1_computer_basics",
+    "difficulty_base": 3,
+    "question_ids": [
+      "p1_loop_q1",
+      "p1_loop_q2",
+      "p1_loop_q3"
+    ],
+    "explanation_ids": {
+      "beginner": "p1_loops_beg",
+      "mid": "p1_loops_mid",
+      "advanced": "p1_loops_adv"
+    },
+    "tags": [
+      "for",
+      "while",
+      "loops",
+      "iteration",
+      "python"
+    ],
+    "deprecated": false,
+    "intuition": "A loop repeats a block of code many times. For each item in a list, or while some condition is true.",
+    "analogy": "Like brushing teeth \u2014 you repeat the same stroke many times. A loop tells the computer to repeat an action.",
+    "why_it_matters": "Training a neural network is literally a loop \u2014 run the data through, update the weights, repeat thousands of times."
+  },
+  {
+    "id": "p1_functions",
+    "label": "Functions",
+    "phase": "phase_1_computer_basics",
+    "difficulty_base": 3,
+    "question_ids": [
+      "p1_fn_q1",
+      "p1_fn_q2",
+      "p1_fn_q3"
+    ],
+    "explanation_ids": {
+      "beginner": "p1_functions_beg",
+      "mid": "p1_functions_mid",
+      "advanced": "p1_functions_adv"
+    },
+    "tags": [
+      "functions",
+      "def",
+      "parameters",
+      "return",
+      "python"
+    ],
+    "deprecated": false,
+    "intuition": "A function is a named, reusable block of code. Give it inputs, get outputs back.",
+    "analogy": "Like a toaster. Put bread in (input), press the lever (call the function), get toast out (output). Same every time.",
+    "why_it_matters": "All AI components are functions. The forward pass of a neural network is literally a function."
+  },
+  {
+    "id": "p2_lists_arrays",
+    "label": "Lists & Arrays",
+    "phase": "phase_2_cs_data",
+    "difficulty_base": 2,
+    "question_ids": [
+      "p2_list_q1",
+      "p2_list_q2",
+      "p2_list_q3"
+    ],
+    "explanation_ids": {
+      "beginner": "p2_lists_beg",
+      "mid": "p2_lists_mid",
+      "advanced": "p2_lists_adv"
+    },
+    "tags": [
+      "list",
+      "array",
+      "index",
+      "python"
+    ],
+    "deprecated": false,
+    "intuition": "A list is an ordered collection of values stored together under one name.",
+    "analogy": "Like a row of labelled lockers. Each locker has a number (index), and you open any one directly.",
+    "why_it_matters": "Datasets in ML are lists of examples. Images are lists of pixels. Text is a list of tokens."
+  },
+  {
+    "id": "p2_dictionaries",
+    "label": "Dictionaries",
+    "phase": "phase_2_cs_data",
+    "difficulty_base": 2,
+    "question_ids": [
+      "p2_dict_q1",
+      "p2_dict_q2",
+      "p2_dict_q3"
+    ],
+    "explanation_ids": {
+      "beginner": "p2_dict_beg",
+      "mid": "p2_dict_mid",
+      "advanced": "p2_dict_adv"
+    },
+    "tags": [
+      "dict",
+      "key-value",
+      "python"
+    ],
+    "deprecated": false,
+    "intuition": "A dictionary stores key-value pairs \u2014 look up any key instantly to get its value.",
+    "analogy": "Like a real dictionary. Look up apple, get a red fruit. Fast, no searching required.",
+    "why_it_matters": "Model configs, hyperparameters, and tokenizer vocabularies are all stored as dictionaries."
+  },
+  {
+    "id": "p2_algorithms_intro",
+    "label": "What is an Algorithm?",
+    "phase": "phase_2_cs_data",
+    "difficulty_base": 2,
+    "question_ids": [
+      "p2_alg_q1",
+      "p2_alg_q2",
+      "p2_alg_q3"
+    ],
+    "explanation_ids": {
+      "beginner": "p2_algorithms_beg",
+      "mid": "p2_algorithms_mid",
+      "advanced": "p2_algorithms_adv"
+    },
+    "tags": [
+      "algorithm",
+      "steps",
+      "problem-solving"
+    ],
+    "deprecated": false,
+    "intuition": "An algorithm is a step-by-step procedure that solves a problem reliably every time.",
+    "analogy": "Like a GPS route. Given start and end, it gives you a precise set of turns that always gets you there.",
+    "why_it_matters": "Machine learning IS an algorithm \u2014 one that learns the steps itself from data rather than being told them explicitly."
+  },
+  {
+    "id": "p2_big_o_basics",
+    "label": "Big O: How Fast is Code?",
+    "phase": "phase_2_cs_data",
+    "difficulty_base": 3,
+    "question_ids": [
+      "p2_bigo_q1",
+      "p2_bigo_q2",
+      "p2_bigo_q3"
+    ],
+    "explanation_ids": {
+      "beginner": "p2_bigo_beg",
+      "mid": "p2_bigo_mid",
+      "advanced": "p2_bigo_adv"
+    },
+    "tags": [
+      "big-o",
+      "complexity",
+      "performance"
+    ],
+    "deprecated": false,
+    "intuition": "Big O describes how the time an algorithm takes grows as the input gets bigger.",
+    "analogy": "If you search for a name in a 10-page phone book by reading every page: 10x pages = 10x time. That's O(n). A binary search: 10x pages = 3-4x time. That's O(log n).",
+    "why_it_matters": "Training efficiency, inference speed, and model architecture decisions all depend on understanding computational complexity."
+  },
+  {
+    "id": "p2_numpy_basics",
+    "label": "NumPy & Arrays",
+    "phase": "phase_2_cs_data",
+    "difficulty_base": 3,
+    "question_ids": [
+      "p2_np_q1",
+      "p2_np_q2",
+      "p2_np_q3",
+      "p2_np_q4"
+    ],
+    "explanation_ids": {
+      "beginner": "p2_numpy_beg",
+      "mid": "p2_numpy_mid",
+      "advanced": "p2_numpy_adv"
+    },
+    "tags": [
+      "numpy",
+      "array",
+      "matrix",
+      "python"
+    ],
+    "deprecated": false,
+    "intuition": "NumPy gives Python the ability to do math on entire arrays at once \u2014 fast, using optimised C code underneath.",
+    "analogy": "Instead of adding numbers one by one, NumPy lets you pour two buckets of numbers together and get a new bucket with all the sums instantly.",
+    "why_it_matters": "NumPy is the foundation all ML libraries are built on. PyTorch tensors are essentially NumPy arrays with GPU support."
+  },
+  {
+    "id": "p2_math_vectors",
+    "label": "Vectors & Dot Products",
+    "phase": "phase_2_cs_data",
+    "difficulty_base": 3,
+    "question_ids": [
+      "p2_vec_q1",
+      "p2_vec_q2",
+      "p2_vec_q3"
+    ],
+    "explanation_ids": {
+      "beginner": "p2_vectors_beg",
+      "mid": "p2_vectors_mid",
+      "advanced": "p2_vectors_adv"
+    },
+    "tags": [
+      "vector",
+      "dot-product",
+      "math",
+      "linear-algebra"
+    ],
+    "deprecated": false,
+    "intuition": "A vector is a list of numbers representing a point in space. The dot product measures how similar two vectors are.",
+    "analogy": "Imagine two arrows pointing in space. The dot product tells you how much they're pointing in the same direction.",
+    "why_it_matters": "Every word, image, and concept in AI is represented as a vector. Similarity search, attention, embeddings \u2014 all dot products."
+  },
+  {
+    "id": "p2_math_matrices",
+    "label": "Matrices & Multiplication",
+    "phase": "phase_2_cs_data",
+    "difficulty_base": 4,
+    "question_ids": [
+      "p2_mat_q1",
+      "p2_mat_q2",
+      "p2_mat_q3"
+    ],
+    "explanation_ids": {
+      "beginner": "p2_matrices_beg",
+      "mid": "p2_matrices_mid",
+      "advanced": "p2_matrices_adv"
+    },
+    "tags": [
+      "matrix",
+      "multiplication",
+      "linear-algebra"
+    ],
+    "deprecated": false,
+    "intuition": "A matrix is a 2D grid of numbers. Matrix multiplication is the key operation inside every neural network layer.",
+    "analogy": "Like a grid of mixing knobs. Each knob says how much of one signal gets mixed into another. Matrix multiplication does all the mixing at once.",
+    "why_it_matters": "A neural network forward pass is a sequence of matrix multiplications. Understanding this lets you read architecture diagrams."
+  },
+  {
+    "id": "p2_probability_basics",
+    "label": "Probability Basics",
+    "phase": "phase_2_cs_data",
+    "difficulty_base": 3,
+    "question_ids": [
+      "p2_prob_q1",
+      "p2_prob_q2",
+      "p2_prob_q3"
+    ],
+    "explanation_ids": {
+      "beginner": "p2_prob_beg",
+      "mid": "p2_prob_mid",
+      "advanced": "p2_prob_adv"
+    },
+    "tags": [
+      "probability",
+      "chance",
+      "distributions"
+    ],
+    "deprecated": false,
+    "intuition": "Probability is a number between 0 and 1 that says how likely something is. 0 = impossible. 1 = certain.",
+    "analogy": "Like weather forecasting. 70% chance of rain means: in 100 similar days, it rained on about 70 of them.",
+    "why_it_matters": "AI models output probabilities. A language model doesn't say the next word is cat \u2014 it says there's a 72% chance the next word is cat."
+  },
+  {
+    "id": "p2_problem_solving",
+    "label": "Problem-Solving Mindset",
+    "phase": "phase_2_cs_data",
+    "difficulty_base": 2,
+    "question_ids": [
+      "p2_ps_q1",
+      "p2_ps_q2",
+      "p2_ps_q3"
+    ],
+    "explanation_ids": {
+      "beginner": "p2_ps_beg",
+      "mid": "p2_ps_mid",
+      "advanced": "p2_ps_adv"
+    },
+    "tags": [
+      "problem-solving",
+      "decomposition",
+      "debugging"
+    ],
+    "deprecated": false,
+    "intuition": "Good engineers break big problems into smaller ones, solve each piece, then combine. This is decomposition.",
+    "analogy": "Building a LEGO castle. You don't build the whole thing at once \u2014 you do the walls, then towers, then the gate. Each piece is manageable.",
+    "why_it_matters": "AI systems are complex. The engineers who build them are really good at breaking impossible-seeming problems into solvable chunks."
+  },
+  {
+    "id": "p3_what_is_ai",
+    "label": "What is AI?",
+    "phase": "phase_3_intro_ai",
+    "difficulty_base": 2,
+    "question_ids": [],
+    "explanation_ids": {
+      "beginner": "",
+      "mid": "",
+      "advanced": ""
+    },
+    "tags": [
+      "AI",
+      "definition",
+      "history"
+    ],
+    "deprecated": false,
+    "intuition": "AI is software that can do tasks that used to require human intelligence.",
+    "analogy": "Teaching a dog tricks vs programming a robot \u2014 AI learns from examples instead of following rigid rules.",
+    "why_it_matters": "You're building AI \u2014 understanding what it actually is (and isn't) prevents the hype from clouding your engineering."
+  },
+  {
+    "id": "p3_ai_vs_ml_vs_dl",
+    "label": "AI vs ML vs Deep Learning",
+    "phase": "phase_3_intro_ai",
+    "difficulty_base": 2,
+    "question_ids": [],
+    "explanation_ids": {
+      "beginner": "",
+      "mid": "",
+      "advanced": ""
+    },
+    "tags": [
+      "AI",
+      "ML",
+      "deep-learning",
+      "taxonomy"
+    ],
+    "deprecated": false,
+    "intuition": "AI is the broad field. ML is a subset where systems learn from data. Deep Learning is a subset of ML using neural networks.",
+    "analogy": "AI = transport. ML = cars. Deep Learning = electric cars. Each is inside the one before.",
+    "why_it_matters": "People mix these up constantly. Being precise makes you a better communicator and thinker."
+  },
+  {
+    "id": "p4_data_pipeline",
+    "label": "Data \u2192 Model \u2192 Prediction",
+    "phase": "phase_4_machine_learning",
+    "difficulty_base": 3,
+    "question_ids": [],
+    "explanation_ids": {
+      "beginner": "",
+      "mid": "",
+      "advanced": ""
+    },
+    "tags": [
+      "pipeline",
+      "training",
+      "inference"
+    ],
+    "deprecated": false,
+    "intuition": "ML follows a fixed pattern: collect data \u2192 train a model \u2192 make predictions on new data.",
+    "analogy": "Like teaching a child to recognise dogs by showing 1000 photos \u2014 then testing them on a new photo they've never seen.",
+    "why_it_matters": "This three-step pipeline is the mental model behind every ML system you'll ever build."
+  },
+  {
+    "id": "p4_supervised_learning",
+    "label": "Supervised Learning",
+    "phase": "phase_4_machine_learning",
+    "difficulty_base": 3,
+    "question_ids": [],
+    "explanation_ids": {
+      "beginner": "",
+      "mid": "",
+      "advanced": ""
+    },
+    "tags": [
+      "supervised",
+      "labels",
+      "training"
+    ],
+    "deprecated": false,
+    "intuition": "Supervised learning trains on labelled examples \u2014 input paired with the correct answer.",
+    "analogy": "A student learning with an answer key. For every practice problem, they see the right answer and adjust.",
+    "why_it_matters": "Most practical ML \u2014 spam detection, image recognition, translation \u2014 is supervised learning."
+  },
+  {
+    "id": "p5_neural_network_basics",
+    "label": "Neural Networks",
+    "phase": "phase_5_deep_learning",
+    "difficulty_base": 4,
+    "question_ids": [],
+    "explanation_ids": {
+      "beginner": "",
+      "mid": "",
+      "advanced": ""
+    },
+    "tags": [
+      "neural-network",
+      "perceptron",
+      "layers"
+    ],
+    "deprecated": false,
+    "intuition": "A neural network is a chain of matrix multiplications with non-linear functions in between.",
+    "analogy": "Like a series of filters \u2014 each layer extracts progressively more abstract features from the input.",
+    "why_it_matters": "Every modern AI system \u2014 LLMs, image models, voice assistants \u2014 is a neural network."
+  },
+  {
+    "id": "p6_transformers",
+    "label": "Transformers Architecture",
+    "phase": "phase_6_modern_ai",
+    "difficulty_base": 5,
+    "question_ids": [],
+    "explanation_ids": {
+      "beginner": "",
+      "mid": "",
+      "advanced": ""
+    },
+    "tags": [
+      "transformer",
+      "attention",
+      "LLM"
+    ],
+    "deprecated": false,
+    "intuition": "The Transformer is the architecture behind GPT, Claude, and every major LLM. It processes all tokens in parallel using attention.",
+    "analogy": "Like a room where everyone can see and talk to everyone else at once, instead of passing a message down a line.",
+    "why_it_matters": "You cannot build or work with LLMs without understanding the Transformer architecture."
+  },
+  {
+    "id": "p6_embeddings",
+    "label": "Embeddings",
+    "phase": "phase_6_modern_ai",
+    "difficulty_base": 4,
+    "question_ids": [],
+    "explanation_ids": {
+      "beginner": "",
+      "mid": "",
+      "advanced": ""
+    },
+    "tags": [
+      "embeddings",
+      "vectors",
+      "representation"
+    ],
+    "deprecated": false,
+    "intuition": "An embedding turns words, images, or any data into a dense vector where similar things are close together.",
+    "analogy": "Like placing cities on a map \u2014 Paris and London are close (both European capitals), Paris and Tokyo are far.",
+    "why_it_matters": "Embeddings are the bridge between raw text/images and the math that AI operates on."
+  },
+  {
+    "id": "p6_rag_systems",
+    "label": "RAG Systems",
+    "phase": "phase_6_modern_ai",
+    "difficulty_base": 4,
+    "question_ids": [],
+    "explanation_ids": {
+      "beginner": "",
+      "mid": "",
+      "advanced": ""
+    },
+    "tags": [
+      "RAG",
+      "retrieval",
+      "vector-db"
+    ],
+    "deprecated": false,
+    "intuition": "RAG gives an LLM the ability to look things up before answering.",
+    "analogy": "Like an open-book exam vs closed-book. RAG lets the model check its notes before answering.",
+    "why_it_matters": "Most production AI applications are RAG systems. It's the most practical AI architecture to learn."
+  },
+  {
+    "id": "p7_ai_apis",
+    "label": "AI APIs & Production",
+    "phase": "phase_7_real_world",
+    "difficulty_base": 3,
+    "question_ids": [],
+    "explanation_ids": {
+      "beginner": "",
+      "mid": "",
+      "advanced": ""
+    },
+    "tags": [
+      "API",
+      "deployment",
+      "production"
+    ],
+    "deprecated": false,
+    "intuition": "An API lets your application talk to an AI model hosted elsewhere.",
+    "analogy": "Like ordering food delivery \u2014 you don't need a kitchen, just the menu (API docs) and a phone (HTTP request).",
+    "why_it_matters": "Most AI applications call APIs. Building your first AI product means knowing how to use them correctly."
+  },
+  {
+    "id": "p8_system_design_ai",
+    "label": "AI System Design",
+    "phase": "phase_8_mastery",
+    "difficulty_base": 5,
+    "question_ids": [],
+    "explanation_ids": {
+      "beginner": "",
+      "mid": "",
+      "advanced": ""
+    },
+    "tags": [
+      "system-design",
+      "architecture",
+      "scalability"
+    ],
+    "deprecated": false,
+    "intuition": "Designing AI systems means thinking about data flow, latency, cost, reliability, and how the AI component fits into a larger product.",
+    "analogy": "Like designing a city \u2014 not just the buildings, but the roads, utilities, and how people flow through it.",
+    "why_it_matters": "This is what senior AI engineers do. It's the skill that separates practitioners from architects."
+  }
+]

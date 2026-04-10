@@ -1,0 +1,44 @@
+[
+  {
+    "id": "p1_mem_q1",
+    "skill_id": "p1_memory_storage",
+    "format": "mcq",
+    "difficulty_tier": "same",
+    "stem": "What happens to RAM (Random Access Memory) when you turn off your computer?",
+    "options": [
+      { "id": "a", "text": "It saves everything automatically to the hard drive" },
+      { "id": "b", "text": "Everything stored in RAM is lost" },
+      { "id": "c", "text": "RAM keeps the data for 24 hours" },
+      { "id": "d", "text": "RAM transfers to the CPU for safekeeping" }
+    ],
+    "correct_option_id": "b",
+    "explanation_after": "RAM is volatile memory — it only works while electricity flows through it. The moment power cuts, every byte in RAM vanishes. This is why you must save files to disk (non-volatile storage) before closing your laptop. This distinction matters enormously in AI: model weights must be loaded from disk into RAM every time you run inference.",
+    "graph_placement_weight": { "p1_memory_storage": 1.0 }
+  },
+  {
+    "id": "p1_mem_q2",
+    "skill_id": "p1_memory_storage",
+    "format": "mcq",
+    "difficulty_tier": "harder",
+    "stem": "A large language model has 7 billion parameters, each stored as a 16-bit float (2 bytes). Approximately how much RAM does it need just to hold the weights?",
+    "options": [
+      { "id": "a", "text": "About 70 MB" },
+      { "id": "b", "text": "About 700 MB" },
+      { "id": "c", "text": "About 14 GB" },
+      { "id": "d", "text": "About 1.4 TB" }
+    ],
+    "correct_option_id": "c",
+    "explanation_after": "7 billion × 2 bytes = 14 GB. This is why running a 7B model requires a GPU with at least 14 GB of VRAM. Understanding memory math is essential for practical AI engineering — it tells you whether a model will even fit on your hardware.",
+    "graph_placement_weight": { "p1_memory_storage": 1.0, "p1_cpu_processing": 0.4 }
+  },
+  {
+    "id": "p1_mem_q3",
+    "skill_id": "p1_memory_storage",
+    "format": "fill",
+    "difficulty_tier": "review",
+    "prompt": "RAM is like your ______ (temporary working space). Storage (SSD/HDD) is like your ______ (permanent filing system).",
+    "correct_answer": "desk, filing cabinet",
+    "explanation_after": "The desk/filing cabinet analogy is the standard mental model for RAM vs storage. You work on things at your desk (RAM), and when done, file them away (storage). AI models are loaded from storage (filing cabinet) into RAM (desk) when running.",
+    "graph_placement_weight": { "p1_memory_storage": 0.9 }
+  }
+]

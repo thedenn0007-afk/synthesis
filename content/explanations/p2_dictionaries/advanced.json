@@ -1,0 +1,13 @@
+{
+  "skill_id": "p2_dictionaries",
+  "depth": "advanced",
+  "title": "Dictionaries at Scale \u2014 Tokenizer Vocabularies and State Dicts",
+  "key_insight": "In production AI, dictionaries with millions of entries are ubiquitous \u2014 vocabulary maps, model state dicts, caches.",
+  "body": "## PyTorch State Dict\n\n```python\nmodel = MyModel()\nstate = model.state_dict()  # OrderedDict\n\n# Keys are hierarchical layer names:\n# 'transformer.h.0.attn.c_attn.weight' \u2192 tensor\n\nfor name, param in state.items():\n    print(f'{name}: {param.shape}')\n\ntorch.save(state, 'model.pt')\nmodel.load_state_dict(torch.load('model.pt'))\n```\n\n## Tokenizer at Scale\n\n```python\nfrom transformers import GPT2Tokenizer\n\ntokenizer = GPT2Tokenizer.from_pretrained('gpt2')\nvocab = tokenizer.get_vocab()  # 50,257 entries\n\n# Inverse vocabulary (int \u2192 str):\ninverse = {v: k for k, v in vocab.items()}\n```",
+  "common_mistakes": [
+    "Loading state dicts with strict=True when fine-tuning different architecture",
+    "Not handling 'module.' prefix from DataParallel-saved state dicts",
+    "Caching tensors with lru_cache without considering VRAM"
+  ],
+  "mini_exercise": "Load GPT-2's state dict. Count total parameters: sum(p.numel() for p in model.state_dict().values()). Print the 5 largest layers by parameter count."
+}

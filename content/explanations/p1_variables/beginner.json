@@ -1,0 +1,31 @@
+{
+  "skill_id": "p1_variables",
+  "depth": "beginner",
+  "title": "Variables \u2014 Named Boxes for Data",
+  "key_insight": "A variable is a named storage location. You put data in, take it out, or replace it.",
+  "body": "## What is a Variable?\n\nImagine a row of boxes. Each box has a label on it. You can put something inside, check what's inside, or replace it with something else.\n\nThat's a variable.\n\n```python\n# Create a variable named 'score' and put 100 in it\nscore = 100\n\n# Look inside the box\nprint(score)  # 100\n\n# Replace the contents\nscore = 200\nprint(score)  # 200\n\n# Use the variable in a calculation\nnew_score = score + 50\nprint(new_score)  # 250\n```\n\n## Rules for Variable Names\n\n```python\n# VALID names:\nage = 25\nfirst_name = 'Alice'\nlearning_rate = 0.001\n_private = True\nmodel2 = 'gpt'\n\n# INVALID names:\n2model = 'gpt'     # can't start with a number\nmy-name = 'Bob'    # no hyphens\nclass = 'Python'   # 'class' is a reserved Python keyword\n```\n\n## Variables are Just Labels\n\nIn Python, a variable is a label that points to a value in memory:\n\n```python\na = [1, 2, 3]  # 'a' points to a list in memory\nb = a          # 'b' points to the SAME list\nb.append(4)    # modifies the list\nprint(a)       # [1, 2, 3, 4] \u2014 'a' changed too!\n```\n\nThis surprises beginners. Both `a` and `b` point to the same list object.\n\n## Variables in ML Context\n\n```python\n# Every important value in ML is a variable:\nlearning_rate = 0.001\nbatch_size = 32\nnum_epochs = 10\n\n# A model's 'parameters' are variables that get updated during training\nweight = 0.5  # starts at 0.5\nweight = weight - learning_rate * gradient  # updated every training step\n```",
+  "common_mistakes": [
+    "Using = for comparison (x = 5 sets x to 5) vs == for equality check (x == 5 asks 'is x equal to 5?')",
+    "Naming variables with single letters like x, y, z \u2014 use descriptive names like learning_rate, batch_size",
+    "Forgetting that reassigning a variable completely replaces what it pointed to before"
+  ],
+  "mini_exercise": "Create variables for: your name, your age, and your favourite number. Print a sentence using all three: 'My name is X, I am Y years old, and my favourite number is Z.'",
+  "real_world_usage": "Every time you fine-tune a language model, you're updating variables. GPT-4 has an estimated 1.8 trillion parameters \u2014 each is a floating-point variable that gets updated during training. The training process is literally: read variable, add small update, write variable back \u2014 repeated billions of times.",
+  "explain_back_prompt": "Without looking at the notes: what is a variable? What's the difference between creating a variable and updating one? Give a non-code example.",
+  "build_task": {
+    "title": "Simulate one step of gradient descent",
+    "context": "Gradient descent \u2014 the algorithm behind all neural network training \u2014 is just variable updates in a loop.",
+    "steps": [
+      "Create a variable: weight = 2.0",
+      "Create a variable: learning_rate = 0.1",
+      "Create a variable: gradient = 0.5 (pretend this was computed for you)",
+      "Update the weight: weight = weight - learning_rate * gradient",
+      "Print the new weight",
+      "Repeat steps 3-5 ten times (use a for loop), printing weight each time",
+      "Observe: the weight is converging toward a value. What value is it approaching?"
+    ],
+    "expected_output": "Ten lines of output showing weight decreasing: 2.0 \u2192 1.95 \u2192 1.905 \u2192 ... converging toward 0.0",
+    "hint": "The gradient 0.5 means 'weight is too large, decrease it'. With lr=0.1, you decrease by 0.1*0.5=0.05 each step.",
+    "starter_code": "weight = 2.0\nlearning_rate = 0.1\n\nfor step in range(10):\n    gradient = weight  # simplified: pretend gradient = weight itself\n    weight = weight - learning_rate * gradient\n    print(f'Step {step+1}: weight = {weight:.6f}')"
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "skill_id": "p2_probability_basics",
+  "depth": "advanced",
+  "title": "Probability \u2014 Measuring Chance (Advanced)",
+  "key_insight": "Probability is how AI systems express uncertainty. Every prediction is a probability, not a certainty.",
+  "body": "## What is Probability?\n\n```python\np_spam    = 0.92   # 92% this email is spam\np_correct = 0.55   # 55% chance next word is 'cat'\n# All probabilities must be between 0 and 1\n```\n\n## Probability Distributions Must Sum to 1\n\n```python\nprobs = {'cat': 0.55, 'dog': 0.30, 'fish': 0.15}\nprint(sum(probs.values()))  # 1.0 always!\n```\n\n## Softmax: Turning Scores into Probabilities\n\n```python\nimport torch\n\nlogits = torch.tensor([2.0, 1.0, 0.1])\nprobs  = torch.softmax(logits, dim=0)\nprint(probs)  # [0.659, 0.242, 0.099] \u2014 sums to 1.0\n```\n\n## Cross-Entropy Loss\n\n```python\n# How surprised the model was by the correct answer:\nloss = -np.log(pred_probs[true_label])\n# High confidence + correct \u2192 low loss\n# Wrong prediction \u2192 high loss\n```",
+  "common_mistakes": [
+    "Treating high probability as certainty \u2014 0.95 means wrong 5% of the time",
+    "Confusing probability (0\u20131) with percentage (0\u2013100) \u2014 same thing, different scale",
+    "Forgetting to check probabilities sum to 1 \u2014 if they don't, you have a bug"
+  ],
+  "mini_exercise": "Write a function that rolls a dice 1000 times and counts how often each face appears. Divide by 1000 to get empirical probabilities. Are they all close to 1/6 \u2248 0.167?"
+}

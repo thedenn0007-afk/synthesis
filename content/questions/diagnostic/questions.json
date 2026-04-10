@@ -1,0 +1,182 @@
+[
+  {
+    "id": "dq_01",
+    "skill_id": "p1_what_is_computer",
+    "format": "mcq",
+    "difficulty_tier": "same",
+    "stem": "What does a computer fundamentally do?",
+    "options": [
+      { "id": "a", "text": "Creates new ideas and thinks independently" },
+      { "id": "b", "text": "Takes instructions, processes information, and produces results" },
+      { "id": "c", "text": "Stores electricity for later use" },
+      { "id": "d", "text": "Connects people to the internet" }
+    ],
+    "correct_option_id": "b",
+    "graph_placement_weight": { "p1_what_is_computer": 1.0 }
+  },
+  {
+    "id": "dq_02",
+    "skill_id": "p1_binary_numbers",
+    "format": "mcq",
+    "difficulty_tier": "same",
+    "stem": "Computers store all data as:",
+    "options": [
+      { "id": "a", "text": "Decimal numbers (0–9)" },
+      { "id": "b", "text": "Letters and symbols" },
+      { "id": "c", "text": "1s and 0s (binary)" },
+      { "id": "d", "text": "Colour codes" }
+    ],
+    "correct_option_id": "c",
+    "graph_placement_weight": { "p1_binary_numbers": 1.0 }
+  },
+  {
+    "id": "dq_03",
+    "skill_id": "p1_python_intro",
+    "format": "mcq",
+    "difficulty_tier": "same",
+    "stem": "What will `print('hello')` output in Python?",
+    "options": [
+      { "id": "a", "text": "print('hello')" },
+      { "id": "b", "text": "hello" },
+      { "id": "c", "text": "An error" },
+      { "id": "d", "text": "Nothing" }
+    ],
+    "correct_option_id": "b",
+    "graph_placement_weight": { "p1_python_intro": 1.0 }
+  },
+  {
+    "id": "dq_04",
+    "skill_id": "p1_variables",
+    "format": "mcq",
+    "difficulty_tier": "same",
+    "stem": "What does this Python code do?\n\nx = 10\nx = x + 5\nprint(x)",
+    "options": [
+      { "id": "a", "text": "Prints 10" },
+      { "id": "b", "text": "Prints 15" },
+      { "id": "c", "text": "Prints x + 5" },
+      { "id": "d", "text": "Causes an error" }
+    ],
+    "correct_option_id": "b",
+    "graph_placement_weight": { "p1_variables": 1.0, "p1_python_intro": 0.5 }
+  },
+  {
+    "id": "dq_05",
+    "skill_id": "p1_loops",
+    "format": "mcq",
+    "difficulty_tier": "same",
+    "stem": "How many times does this loop run?\n\nfor i in range(5):\n    print(i)",
+    "options": [
+      { "id": "a", "text": "4 times" },
+      { "id": "b", "text": "5 times" },
+      { "id": "c", "text": "6 times" },
+      { "id": "d", "text": "Infinitely" }
+    ],
+    "correct_option_id": "b",
+    "graph_placement_weight": { "p1_loops": 1.0 }
+  },
+  {
+    "id": "dq_06",
+    "skill_id": "p1_functions",
+    "format": "mcq",
+    "difficulty_tier": "same",
+    "stem": "What does a Python function do?",
+    "options": [
+      { "id": "a", "text": "Stores data permanently" },
+      { "id": "b", "text": "A reusable block of code that takes inputs and produces outputs" },
+      { "id": "c", "text": "Connects to the internet" },
+      { "id": "d", "text": "Randomly generates numbers" }
+    ],
+    "correct_option_id": "b",
+    "graph_placement_weight": { "p1_functions": 1.0 }
+  },
+  {
+    "id": "dq_07",
+    "skill_id": "p2_lists_arrays",
+    "format": "mcq",
+    "difficulty_tier": "same",
+    "stem": "What does `len([1, 2, 3, 4])` return in Python?",
+    "options": [
+      { "id": "a", "text": "3" },
+      { "id": "b", "text": "4" },
+      { "id": "c", "text": "10 (the sum)" },
+      { "id": "d", "text": "An error" }
+    ],
+    "correct_option_id": "b",
+    "graph_placement_weight": { "p2_lists_arrays": 1.0 }
+  },
+  {
+    "id": "dq_08",
+    "skill_id": "p2_numpy_basics",
+    "format": "mcq",
+    "difficulty_tier": "same",
+    "stem": "What library is fundamental to numerical computing in Python, and is the foundation of PyTorch/TensorFlow?",
+    "options": [
+      { "id": "a", "text": "pandas" },
+      { "id": "b", "text": "NumPy" },
+      { "id": "c", "text": "matplotlib" },
+      { "id": "d", "text": "requests" }
+    ],
+    "correct_option_id": "b",
+    "graph_placement_weight": { "p2_numpy_basics": 1.0 }
+  },
+  {
+    "id": "dq_09",
+    "skill_id": "p2_math_vectors",
+    "format": "mcq",
+    "difficulty_tier": "same",
+    "stem": "In machine learning, an 'embedding' is a:",
+    "options": [
+      { "id": "a", "text": "Type of database" },
+      { "id": "b", "text": "Vector representation of data where similar items are close together" },
+      { "id": "c", "text": "Training algorithm" },
+      { "id": "d", "text": "Type of activation function" }
+    ],
+    "correct_option_id": "b",
+    "graph_placement_weight": { "p2_math_vectors": 1.0, "p6_embeddings": 0.4 }
+  },
+  {
+    "id": "dq_10",
+    "skill_id": "p3_what_is_ai",
+    "format": "mcq",
+    "difficulty_tier": "same",
+    "stem": "What is the key difference between traditional programming and machine learning?",
+    "options": [
+      { "id": "a", "text": "ML uses faster computers" },
+      { "id": "b", "text": "In ML, the system learns rules from data rather than being explicitly programmed" },
+      { "id": "c", "text": "ML only works for image problems" },
+      { "id": "d", "text": "Traditional programming can't use loops" }
+    ],
+    "correct_option_id": "b",
+    "graph_placement_weight": { "p3_what_is_ai": 1.0, "p4_data_pipeline": 0.4 }
+  },
+  {
+    "id": "dq_11",
+    "skill_id": "p4_supervised_learning",
+    "format": "mcq",
+    "difficulty_tier": "same",
+    "stem": "In supervised learning, what does the model learn from?",
+    "options": [
+      { "id": "a", "text": "Random data with no labels" },
+      { "id": "b", "text": "Labelled examples — inputs paired with correct outputs" },
+      { "id": "c", "text": "Pure mathematical equations with no data" },
+      { "id": "d", "text": "Human feedback only" }
+    ],
+    "correct_option_id": "b",
+    "graph_placement_weight": { "p4_supervised_learning": 1.0 }
+  },
+  {
+    "id": "dq_12",
+    "skill_id": "p5_neural_network_basics",
+    "format": "mcq",
+    "difficulty_tier": "same",
+    "stem": "At its core, a neural network layer performs:",
+    "options": [
+      { "id": "a", "text": "A database lookup" },
+      { "id": "b", "text": "A matrix multiplication followed by a non-linear activation function" },
+      { "id": "c", "text": "A web request to an AI server" },
+      { "id": "d", "text": "A random selection from training data" }
+    ],
+    "correct_option_id": "b",
+    "graph_placement_weight": { "p5_neural_network_basics": 1.0, "p2_math_matrices": 0.5 }
+  }
+]

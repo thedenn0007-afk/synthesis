@@ -1,0 +1,66 @@
+[
+  {
+    "id": "p1_bin_q1",
+    "skill_id": "p1_binary_numbers",
+    "format": "mcq",
+    "difficulty_tier": "same",
+    "stem": "Computers store all information as:",
+    "options": [
+      { "id": "a", "text": "Letters and words" },
+      { "id": "b", "text": "1s and 0s (bits)" },
+      { "id": "c", "text": "Colours and shapes" },
+      { "id": "d", "text": "Sound waves" }
+    ],
+    "correct_option_id": "b",
+    "explanation_after": "Everything a computer stores — images, text, video, numbers — is ultimately stored as billions of 1s and 0s (bits). A bit is the smallest unit of information.",
+    "graph_placement_weight": { "p1_binary_numbers": 1.0 }
+  },
+  {
+    "id": "p1_bin_q2",
+    "skill_id": "p1_binary_numbers",
+    "format": "mcq",
+    "difficulty_tier": "same",
+    "stem": "What does the binary number '1010' equal in decimal?",
+    "options": [
+      { "id": "a", "text": "4" },
+      { "id": "b", "text": "1010" },
+      { "id": "c", "text": "10" },
+      { "id": "d", "text": "8" }
+    ],
+    "correct_option_id": "c",
+    "explanation_after": "Binary is base-2. 1010 = 1×8 + 0×4 + 1×2 + 0×1 = 8+2 = 10. Each position is a power of 2: 8, 4, 2, 1 from left to right.",
+    "graph_placement_weight": { "p1_binary_numbers": 1.0 }
+  },
+  {
+    "id": "p1_bin_q3",
+    "skill_id": "p1_binary_numbers",
+    "format": "mcq",
+    "difficulty_tier": "review",
+    "stem": "A 'bit' is:",
+    "options": [
+      { "id": "a", "text": "A tiny piece of food" },
+      { "id": "b", "text": "The smallest unit of data — either 0 or 1" },
+      { "id": "c", "text": "A type of programming error" },
+      { "id": "d", "text": "1000 bytes of data" }
+    ],
+    "correct_option_id": "b",
+    "explanation_after": "A bit (binary digit) is the atom of computing — a single 0 or 1. 8 bits = 1 byte. Modern files are millions or billions of bits.",
+    "graph_placement_weight": { "p1_binary_numbers": 0.9 }
+  },
+  {
+    "id": "p1_bin_q4",
+    "skill_id": "p1_binary_numbers",
+    "format": "mcq",
+    "difficulty_tier": "harder",
+    "stem": "Why do computers use binary (base-2) rather than decimal (base-10)?",
+    "options": [
+      { "id": "a", "text": "Binary was invented first" },
+      { "id": "b", "text": "Electrical circuits naturally represent two states: on and off" },
+      { "id": "c", "text": "Binary is easier for humans to read" },
+      { "id": "d", "text": "Decimal numbers are too large" }
+    ],
+    "correct_option_id": "b",
+    "explanation_after": "A transistor (the basic building block of CPUs) is either conducting electricity or not — on or off. These two physical states map perfectly to 1 and 0. Building a circuit with 10 reliable states (for decimal) is far harder.",
+    "graph_placement_weight": { "p1_binary_numbers": 1.0, "p1_cpu_processing": 0.4 }
+  }
+]

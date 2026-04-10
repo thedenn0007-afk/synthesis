@@ -1,0 +1,61 @@
+[
+  {
+    "id": "p1_py_q1",
+    "skill_id": "p1_python_intro",
+    "format": "mcq",
+    "difficulty_tier": "same",
+    "stem": "What will this Python code print?\n\nprint('Hello, World!')",
+    "options": [
+      { "id": "a", "text": "Nothing" },
+      { "id": "b", "text": "Hello, World!" },
+      { "id": "c", "text": "print('Hello, World!')" },
+      { "id": "d", "text": "An error" }
+    ],
+    "correct_option_id": "b",
+    "explanation_after": "print() is Python's way of outputting text. The text inside the quotes is displayed exactly as written. This is traditionally the first program every programmer writes.",
+    "graph_placement_weight": { "p1_python_intro": 1.0 }
+  },
+  {
+    "id": "p1_py_q2",
+    "skill_id": "p1_python_intro",
+    "format": "mcq",
+    "difficulty_tier": "same",
+    "stem": "Which of these is valid Python code?",
+    "options": [
+      { "id": "a", "text": "PRINT 'hello'" },
+      { "id": "b", "text": "print(hello)" },
+      { "id": "c", "text": "print('hello')" },
+      { "id": "d", "text": "display 'hello'" }
+    ],
+    "correct_option_id": "c",
+    "explanation_after": "Python is case-sensitive (print not PRINT). Strings must be in quotes. print(hello) would look for a variable called hello, not the text 'hello'.",
+    "graph_placement_weight": { "p1_python_intro": 1.0 }
+  },
+  {
+    "id": "p1_py_q3",
+    "skill_id": "p1_python_intro",
+    "format": "mcq",
+    "difficulty_tier": "harder",
+    "stem": "Why is Python particularly popular for AI and machine learning?",
+    "options": [
+      { "id": "a", "text": "It was invented specifically for AI" },
+      { "id": "b", "text": "It's the fastest programming language" },
+      { "id": "c", "text": "It has a vast ecosystem of ML libraries and readable syntax" },
+      { "id": "d", "text": "AI can only be coded in Python" }
+    ],
+    "correct_option_id": "c",
+    "explanation_after": "Python's readable syntax lowers the barrier to entry. Its ecosystem — NumPy, PyTorch, TensorFlow, scikit-learn, Hugging Face — is unmatched. Speed-critical parts are written in C/C++ underneath.",
+    "graph_placement_weight": { "p1_python_intro": 0.8, "p3_what_is_ai": 0.3 }
+  },
+  {
+    "id": "p1_py_q4",
+    "skill_id": "p1_python_intro",
+    "format": "fill",
+    "difficulty_tier": "same",
+    "prompt": "Complete this Python code to print your name:\n\nprint(________)",
+    "correct_answer": "'YourName'",
+    "keywords": ["quote", "string", "print"],
+    "explanation_after": "In Python, text (strings) must be wrapped in quotes — either single 'like this' or double \"like this\". Without quotes, Python treats it as a variable name.",
+    "graph_placement_weight": { "p1_python_intro": 1.0 }
+  }
+]

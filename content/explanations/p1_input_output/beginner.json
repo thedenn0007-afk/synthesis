@@ -1,0 +1,13 @@
+{
+  "skill_id": "p1_input_output",
+  "depth": "beginner",
+  "title": "Input & Output — The Computer's Conversation",
+  "key_insight": "Every computer interaction is: you give something (input), it gives something back (output).",
+  "body": "## Input and Output\n\nThink of a computer like a really smart vending machine.\n\nYou put in money and press a button (INPUT).\nThe machine gives you a snack (OUTPUT).\n\nThat's it. Everything a computer does follows this same pattern.\n\n### Input = Information going IN\n\nExamples of input:\n- Typing on a keyboard\n- Clicking a mouse\n- Speaking into a microphone\n- Taking a photo with a camera\n- Touching a touchscreen\n\n### Output = Information coming OUT\n\nExamples of output:\n- Words appearing on a screen\n- Sound from speakers\n- A printed document\n- A file saved to disk\n\n### Why This Matters for AI\n\nEvery AI system is also an input-output machine:\n\n- **ChatGPT**: Input = your text question. Output = text answer.\n- **Image classifier**: Input = photo. Output = 'this is a cat'.\n- **Voice assistant**: Input = your voice. Output = spoken response.\n- **Spam filter**: Input = email text. Output = spam or not spam.\n\nWhen someone says 'build an AI', they really mean 'build a system that takes X as input and produces Y as output'. Defining X and Y is always the first step.",
+  "common_mistakes": [
+    "Thinking a touchscreen is only input — it's both: it receives your touch (input) and shows you things (output)",
+    "Confusing the device with its role — a camera can be input (taking photos) but can also display photos as output",
+    "Forgetting that storing a file to disk is output — data going OUT of the CPU and RAM into permanent storage"
+  ],
+  "mini_exercise": "Pick any AI product you've used (Siri, Google Translate, a recommendation system). Write down exactly what the input is and exactly what the output is. Be specific — not just 'text' but what kind of text."
+}

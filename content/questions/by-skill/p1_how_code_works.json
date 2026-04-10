@@ -1,0 +1,50 @@
+[
+  {
+    "id": "p1_code_q1",
+    "skill_id": "p1_how_code_works",
+    "format": "mcq",
+    "difficulty_tier": "same",
+    "stem": "What is source code?",
+    "options": [
+      { "id": "a", "text": "The electricity that powers a computer" },
+      { "id": "b", "text": "Instructions written in a programming language that humans can read" },
+      { "id": "c", "text": "The physical chips inside the computer" },
+      { "id": "d", "text": "Data stored in a database" }
+    ],
+    "correct_option_id": "b",
+    "explanation_after": "Source code is human-readable instructions. The computer cannot run it directly — it must be either compiled (translated all at once into machine code) or interpreted (translated line-by-line as it runs). Python is interpreted, which is one reason it feels fast to write but runs slower than compiled languages.",
+    "graph_placement_weight": { "p1_how_code_works": 1.0 }
+  },
+  {
+    "id": "p1_code_q2",
+    "skill_id": "p1_how_code_works",
+    "format": "mcq",
+    "difficulty_tier": "same",
+    "stem": "Code executes in what order by default?",
+    "options": [
+      { "id": "a", "text": "Bottom to top" },
+      { "id": "b", "text": "Randomly — whichever line seems most important" },
+      { "id": "c", "text": "Top to bottom, left to right" },
+      { "id": "d", "text": "Alphabetically by variable name" }
+    ],
+    "correct_option_id": "c",
+    "explanation_after": "Code runs top to bottom unless something explicitly changes the order — like a loop (repeats), a function call (jumps to another block), or a conditional (skips lines). Understanding this default order is foundational to reading any program.",
+    "graph_placement_weight": { "p1_how_code_works": 1.0 }
+  },
+  {
+    "id": "p1_code_q3",
+    "skill_id": "p1_how_code_works",
+    "format": "mcq",
+    "difficulty_tier": "harder",
+    "stem": "Why do AI systems still need code even if they 'learn' from data?",
+    "options": [
+      { "id": "a", "text": "They don't — AI systems write themselves" },
+      { "id": "b", "text": "Code defines the structure, training loop, and rules of what the AI is allowed to do" },
+      { "id": "c", "text": "Code is only needed to connect AI to the internet" },
+      { "id": "d", "text": "Code is only needed for older AI systems" }
+    ],
+    "correct_option_id": "b",
+    "explanation_after": "An AI model learns WHAT to do from data, but the CODE defines HOW it learns — the architecture, training loop, loss function, data pipeline, and deployment. Even GPT-4 is thousands of lines of code wrapped around a trained model. Learning AI engineering means understanding both the code structure and the learning process.",
+    "graph_placement_weight": { "p1_how_code_works": 1.0, "p3_what_is_ai": 0.4 }
+  }
+]

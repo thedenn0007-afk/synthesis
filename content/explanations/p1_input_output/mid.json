@@ -1,0 +1,13 @@
+{
+  "skill_id": "p1_input_output",
+  "depth": "mid",
+  "title": "Input & Output — Data Pipelines",
+  "key_insight": "Input/output is not just about devices — it's about data transformation at every level of a system.",
+  "body": "## Input/Output as Data Flow\n\nIn software, I/O refers to any transfer of data between components — not just keyboards and screens.\n\n### Types of I/O in a Software System\n\n```\nUser types → Browser → HTTP request → Server → Database → Response → Screen\n   (input)                (I/O)       (I/O)    (I/O)       (output)\n```\n\nEvery arrow is I/O. Data moves between components constantly.\n\n### I/O in an AI Pipeline\n\n```\nRaw text file  →  Tokenizer  →  Token IDs  →  Model  →  Logits  →  Softmax  →  Probabilities\n  (disk I/O)       (transform)   (memory)    (compute)  (memory)  (compute)    (output)\n```\n\nEach stage has inputs and outputs. The output of one stage is the input of the next.\n\n### Standard Streams\n\nIn Unix systems (Linux, Mac), every process has three I/O channels:\n- **stdin** — standard input (default: keyboard)\n- **stdout** — standard output (default: screen)\n- **stderr** — error output (separate from normal output)\n\nPython's `print()` writes to stdout. `input()` reads from stdin. AI training scripts use these constantly for progress logging.\n\n### I/O is Usually the Bottleneck\n\nIn ML training:\n- GPU compute: milliseconds per batch\n- Loading images from disk: also milliseconds — often SLOWER than compute\n\nData loading is I/O. A slow data pipeline means your expensive GPU sits idle waiting for the next batch. PyTorch's DataLoader uses multiple worker processes specifically to parallelise I/O so the GPU never waits.",
+  "common_mistakes": [
+    "Assuming compute is always the bottleneck — often it's disk I/O (reading training data) or network I/O (downloading data)",
+    "Not separating stderr from stdout in training logs — errors get mixed with progress output and are hard to find",
+    "Loading entire datasets into RAM when they're too large — use streaming/lazy I/O instead"
+  ],
+  "mini_exercise": "In Python, try: x = input('Enter your name: '). Then print('Hello, ' + x). You've just used stdin and stdout directly. Now think: in an AI system, what would replace input() and print()?"
+}

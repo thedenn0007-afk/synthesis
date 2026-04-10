@@ -1,0 +1,13 @@
+{
+  "skill_id": "p2_numpy_basics",
+  "depth": "advanced",
+  "title": "NumPy \u2014 Memory Layout, SIMD, and Performance",
+  "key_insight": "NumPy's speed comes from C-contiguous memory layout and SIMD vectorisation \u2014 understanding this lets you write maximally efficient array code.",
+  "body": "## Memory Layout: Row-Major (C) vs Column-Major (Fortran)\n\n```python\nimport numpy as np\n\nA = np.array([[1, 2, 3], [4, 5, 6]])\nprint(A.flags['C_CONTIGUOUS'])  # True\nprint(A.strides)  # (24, 8): 24 bytes to next row, 8 to next column\n\nB = A.T\nprint(B.flags['C_CONTIGUOUS'])  # False \u2014 rows now stride 8 bytes\n\nB_cont = np.ascontiguousarray(B)\nprint(B_cont.flags['C_CONTIGUOUS'])  # True (copied)\n```\n\n## BLAS: The Backbone of Fast Linear Algebra\n\nNumPy's matrix operations use BLAS (Basic Linear Algebra Subprograms):\n\n```python\n# This calls DGEMM from OpenBLAS or MKL \u2014 hand-optimised assembly\nC = A @ B  # 3000x faster than naive Python implementation\n```\n\n## Einsum: Explicit Dimension Notation\n\n```python\nimport numpy as np\n\nA = np.random.rand(3, 4)  # (i, k)\nB = np.random.rand(4, 5)  # (k, j)\n\n# Named dimensions \u2014 explicit and readable\nC = np.einsum('ik,kj->ij', A, B)  # matrix multiply: sum over k\n\n# Batch matrix multiply:\nC = np.einsum('bik,bkj->bij', A_batch, B_batch)\n\n# Outer product:\nouter = np.einsum('i,j->ij', a, b)\n```\n\n## Memory-Mapped Arrays for Large Datasets\n\n```python\n# 100 GB dataset without loading into RAM:\nfp = np.memmap('huge_data.npy', dtype='float32', mode='w+', shape=(10_000_000, 768))\nfp[0] = np.random.rand(768)  # writes to disk\ndel fp  # flush and close\n\n# Load and access efficiently:\ndata = np.memmap('huge_data.npy', dtype='float32', mode='r', shape=(10_000_000, 768))\nrow = data[42]  # loads only row 42 \u2014 OS handles paging\n```",
+  "common_mistakes": [
+    "Matrix operations on non-contiguous arrays \u2014 BLAS may need to copy; use np.ascontiguousarray() first",
+    "Using einsum without optimization path: add optimize=True for 10x speedup on complex expressions",
+    "Forgetting to flush memmap writes: del fp or fp.flush() before reading back"
+  ],
+  "mini_exercise": "Use np.einsum to compute the attention score matrix: Q @ K.T / sqrt(d_k) for Q and K of shape (8, 64). Then weight the values V of shape (8, 64) by the attention weights. Compare to the matrix multiply version."
+}

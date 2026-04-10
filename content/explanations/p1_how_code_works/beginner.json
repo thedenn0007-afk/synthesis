@@ -1,0 +1,13 @@
+{
+  "skill_id": "p1_how_code_works",
+  "depth": "beginner",
+  "title": "How Code Works \u2014 Instructions the Computer Follows",
+  "key_insight": "Code is a recipe. The computer follows it exactly, one step at a time, never guessing.",
+  "body": "## What is Code?\n\nCode is a set of instructions written in a language that both humans and computers can understand.\n\nThink of it like a recipe:\n- A recipe tells a chef exactly what to do, in exactly what order\n- The chef follows it precisely \u2014 no improvisation\n- A computer follows code the same way\n\n## How Code Becomes Instructions\n\nYou write code in a human-readable language (like Python).\nThe computer needs it in machine code (1s and 0s).\nSomething must translate between them.\n\n**Compiled languages** (C, C++, Rust):\n1. You write code\n2. A compiler translates the ENTIRE program to machine code\n3. You run the compiled program\n4. Very fast to run. Slow to develop.\n\n**Interpreted languages** (Python, JavaScript):\n1. You write code\n2. An interpreter reads and executes it line-by-line\n3. Slower to run. Faster to develop.\n4. Python is interpreted \u2014 great for experimenting.\n\n## Python Reads Top to Bottom\n\n```python\nprint('Step 1')    # runs first\nprint('Step 2')    # runs second\nprint('Step 3')    # runs third\n```\n\nOutput:\n```\nStep 1\nStep 2\nStep 3\n```\n\nCode runs in order unless something changes the flow (loops, functions, conditionals).\n\n## Your First Real Program\n\n```python\n# This is a comment \u2014 the computer ignores it\nname = 'Alice'          # create a variable\ngreeting = 'Hello, '   # another variable\nprint(greeting + name)  # combine and print\n```\n\nOutput: `Hello, Alice`",
+  "common_mistakes": [
+    "Thinking the computer understands intent \u2014 it only follows exact instructions. A typo in code = wrong result or crash",
+    "Forgetting that Python is case-sensitive: Print('hi') fails, print('hi') works",
+    "Thinking comments run as code \u2014 anything after # on a line is ignored by Python"
+  ],
+  "mini_exercise": "Write three lines of Python using print() to tell a tiny story. Run it and see the lines appear in order. Try swapping two lines \u2014 notice how the story changes. That's sequential execution."
+}

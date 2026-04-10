@@ -1,0 +1,13 @@
+{
+  "skill_id": "p1_conditionals",
+  "depth": "beginner",
+  "title": "If/Else \u2014 Making Decisions in Code",
+  "key_insight": "Conditionals let code make decisions. Without them, code does the same thing every time.",
+  "body": "## Making Decisions\n\nWithout decisions, a program is just a recipe that always does the same thing.\n\nWith conditionals (if/else), your code can DECIDE what to do based on values.\n\n```python\ntemperature = 35\n\nif temperature > 30:\n    print('It is hot!')\nelse:\n    print('It is cool.')\n```\n\nOutput: `It is hot!`\n\nThe code checks: is `temperature > 30` True? Yes \u2192 runs the first block. No \u2192 runs the else block.\n\n## Multiple Conditions: elif\n\n```python\nscore = 75\n\nif score >= 90:\n    grade = 'A'\nelif score >= 80:\n    grade = 'B'\nelif score >= 70:\n    grade = 'C'\nelse:\n    grade = 'F'\n\nprint(grade)  # C\n```\n\nPython checks conditions in order. The FIRST True condition runs. The rest are skipped.\n\n## Comparison Operators\n\n```python\n5 > 3    # True  (greater than)\n5 < 3    # False (less than)\n5 == 5   # True  (equal to)\n5 != 3   # True  (not equal to)\n5 >= 5   # True  (greater than or equal)\n5 <= 4   # False (less than or equal)\n```\n\n## Combining Conditions\n\n```python\nage = 20\nhas_id = True\n\n# Both must be True:\nif age >= 18 and has_id:\n    print('You can enter.')\n\n# At least one must be True:\nif age < 18 or not has_id:\n    print('You cannot enter.')\n```\n\n## AI Connection\n\nThe activation function ReLU is literally a conditional:\n\n```python\ndef relu(x):\n    if x > 0:\n        return x\n    else:\n        return 0\n```\n\nIt's applied millions of times in every neural network forward pass.",
+  "common_mistakes": [
+    "Using = instead of == in conditions: if x = 5 is a syntax error. Use if x == 5",
+    "Forgetting the colon at the end of if/elif/else lines",
+    "Not indenting the code inside the if block \u2014 Python uses indentation to know what's inside the conditional"
+  ],
+  "mini_exercise": "Write an if/elif/else block that takes a number from 0 to 100 and prints: 'low' (0-33), 'medium' (34-66), or 'high' (67-100). Test it with three different values."
+}

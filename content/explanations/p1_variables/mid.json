@@ -1,0 +1,13 @@
+{
+  "skill_id": "p1_variables",
+  "depth": "mid",
+  "title": "Variables, Scope, and Object Identity",
+  "key_insight": "Python variables are references, not containers. Understanding this prevents an entire class of bugs.",
+  "body": "## Python's Object Model\n\nIn Python, everything is an object. Variables are references (pointers) to objects:\n\n```python\na = 42       # 'a' points to integer object 42\nb = a        # 'b' points to the SAME integer object\nb = 100      # 'b' now points to a NEW integer object 100\nprint(a)     # still 42 \u2014 integers are immutable\n```\n\n```python\na = [1, 2, 3]   # 'a' points to list object\nb = a            # 'b' points to SAME list object\nb.append(4)      # MODIFIES the shared list object\nprint(a)         # [1, 2, 3, 4] \u2014 both see the change!\n\nb = b.copy()     # NOW b has its own copy\nb.append(5)      # only b changes\nprint(a)         # [1, 2, 3, 4] \u2014 a unchanged\n```\n\n## Variable Scope\n\n```python\nx = 10  # global scope\n\ndef my_function():\n    x = 99  # local scope \u2014 different variable, same name\n    print(x)  # 99\n\nmy_function()\nprint(x)  # 10 \u2014 global x unchanged\n```\n\nScope rules (LEGB):\n- **L**ocal: inside the current function\n- **E**nclosing: functions containing this one\n- **G**lobal: module level\n- **B**uilt-in: Python's built-ins (len, print, etc.)\n\n## Mutable vs Immutable\n\n| Immutable (safe to share) | Mutable (copy if sharing) |\n|--------------------------|---------------------------|\n| int, float, bool | list, dict, set |\n| str, tuple | numpy arrays, tensors |\n\n```python\n# Tensor aliasing is a common ML bug:\nweights = model.fc.weight        # reference to model weights\nweights_copy = weights.clone()   # explicit deep copy \u2014 safe to modify\nweights_detached = weights.detach()  # no grad tracking, same data\n```\n\n## Type Annotations for Variables\n\n```python\n# Python 3.9+\nlearning_rate: float = 3e-4\nbatch_size: int = 32\nmodel_name: str = 'gpt2'\nuse_gpu: bool = True\n```\n\nAnnotations are optional but make code self-documenting.",
+  "common_mistakes": [
+    "Mutating a variable passed to a function and expecting the caller's version unchanged \u2014 lists/dicts are passed by reference",
+    "Using global variables in ML training code \u2014 makes debugging and testing much harder",
+    "Not using .clone() when you need an independent copy of a tensor \u2014 modifying a tensor alias affects the original"
+  ],
+  "mini_exercise": "Create list a = [1,2,3]. Assign b = a. Append 99 to b. Print both a and b. Then create c = a.copy(). Append 100 to c. Print a and c. Observe the difference between reference and copy."
+}

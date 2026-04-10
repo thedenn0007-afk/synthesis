@@ -1,0 +1,13 @@
+{
+  "skill_id": "p1_how_code_works",
+  "depth": "advanced",
+  "title": "Python's Execution Model and Performance Implications",
+  "key_insight": "Python's interpreter design is elegant but has costs \u2014 knowing when to escape to compiled code is a core AI engineering skill.",
+  "body": "## CPython's Execution Model\n\nCPython (the standard Python interpreter) compiles source code to bytecode, then interprets that bytecode:\n\n```\n.py source \u2192 compile \u2192 .pyc bytecode \u2192 CPython VM interprets \u2192 machine instructions\n```\n\nThe Global Interpreter Lock (GIL) means only one thread executes Python bytecode at a time \u2014 despite multi-threading, Python is effectively single-threaded for CPU-bound work.\n\n## Escaping Python's Performance Limits\n\n```python\n# Slow: pure Python loop\ntotal = 0\nfor i in range(10_000_000):\n    total += i * i  # Python overhead on each iteration\n\n# Fast: NumPy (C extension, no GIL)\nimport numpy as np\ntotal = np.sum(np.arange(10_000_000) ** 2)  # single C call\n\n# Fastest: PyTorch on GPU (CUDA)\nimport torch\nx = torch.arange(10_000_000, device='cuda', dtype=torch.float32)\ntotal = (x ** 2).sum()  # runs on GPU in parallel\n```\n\nSpeedup: Python loop \u2192 NumPy: ~50\u00d7. NumPy \u2192 GPU: ~100\u00d7.\n\n## JIT Compilation: The Best of Both Worlds\n\n```python\nimport torch\n\n# torch.compile() JIT-compiles a Python function to optimised GPU code\n@torch.compile\ndef training_step(model, batch):\n    output = model(batch)\n    loss = criterion(output)\n    loss.backward()\n    return loss\n\n# First call: compiles (slow)\n# Subsequent calls: runs compiled native code (2-3\u00d7 faster)\n```\n\n## Profiling: Finding the Real Bottleneck\n\n```python\nimport cProfile\ncProfile.run('training_loop()')\n```\n\nThis shows exactly which functions consume the most time. In AI code, the bottleneck is almost never where you think:\n- Suspected: model forward pass\n- Actual: data loading, preprocessing, Python overhead between GPU calls",
+  "common_mistakes": [
+    "Optimising Python loops instead of vectorising \u2014 any loop over tensors should be replaced with a tensor operation",
+    "Using Python threading for CPU-bound parallelism \u2014 GIL prevents true parallelism; use multiprocessing instead",
+    "Not compiling hot paths with torch.compile \u2014 free 2\u00d7 speedup on supported models"
+  ],
+  "mini_exercise": "Profile a slow Python function with cProfile. Find the top 3 time consumers. Then replace the inner loop with a NumPy operation. Re-profile and compare."
+}

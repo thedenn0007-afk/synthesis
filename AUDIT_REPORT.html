@@ -1,0 +1,850 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Synaptic — Full Implementation Audit Report</title>
+<style>
+:root {
+  --bg:      #0a0a0f;
+  --bg2:     #111118;
+  --bg3:     #17171f;
+  --bg4:     #1e1e28;
+  --border:  rgba(255,255,255,0.07);
+  --text:    #e8e8f0;
+  --muted:   #9898b0;
+  --faint:   #5a5a72;
+  --xfaint:  #3a3a50;
+  --purple:  #7c6eff;
+  --green:   #34d399;
+  --yellow:  #fbbf24;
+  --red:     #f87171;
+  --blue:    #60a5fa;
+  --orange:  #fb923c;
+  --teal:    #2dd4bf;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:14px;line-height:1.65}
+a{color:var(--purple);text-decoration:none}
+code{font-family:'JetBrains Mono',monospace,monospace;font-size:12px;color:var(--blue);background:var(--bg3);padding:1px 5px;border-radius:4px}
+pre{background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:16px 18px;font-family:monospace;font-size:12px;color:var(--muted);line-height:1.9;overflow-x:auto;margin:12px 0}
+
+/* ─ Layout ─ */
+.shell{display:flex;min-height:100vh}
+.sidebar{width:240px;flex-shrink:0;position:sticky;top:0;height:100vh;overflow-y:auto;background:var(--bg2);border-right:1px solid var(--border);padding:24px 0}
+.sidebar::-webkit-scrollbar{width:4px}
+.sidebar::-webkit-scrollbar-thumb{background:var(--bg4)}
+.logo{font-family:Georgia,serif;font-style:italic;font-size:18px;padding:0 20px 20px;border-bottom:1px solid var(--border);margin-bottom:12px;color:var(--text)}
+.logo span{color:var(--purple)}
+.logo sub{font-style:normal;font-size:10px;font-family:monospace;color:var(--faint);display:block;margin-top:2px}
+.ns{font-size:10px;font-family:monospace;color:var(--xfaint);text-transform:uppercase;letter-spacing:.12em;padding:12px 20px 4px}
+.nl{display:block;padding:6px 20px;font-size:12px;color:var(--faint);border-left:2px solid transparent;transition:all .15s}
+.nl:hover,.nl.active{color:var(--muted);border-left-color:var(--purple);background:rgba(124,110,255,.05)}
+.nl.sub{padding-left:32px;font-size:11px}
+.main{flex:1;max-width:1000px;padding:48px 56px;overflow:hidden}
+@media(max-width:800px){.shell{flex-direction:column}.sidebar{width:100%;height:auto;position:static}.main{padding:24px 20px}}
+
+/* ─ Typography ─ */
+h1{font-family:Georgia,serif;font-style:italic;font-size:38px;font-weight:normal;color:var(--text);margin-bottom:10px}
+h2{font-family:Georgia,serif;font-style:italic;font-size:24px;font-weight:normal;color:var(--text);margin-bottom:14px;margin-top:4px}
+h3{font-size:14px;font-weight:600;color:var(--text);margin-bottom:10px;margin-top:20px}
+h4{font-size:12px;font-weight:600;color:var(--muted);margin-bottom:8px;margin-top:16px;font-family:monospace;text-transform:uppercase;letter-spacing:.08em}
+p{color:var(--muted);margin-bottom:12px;line-height:1.7}
+ul,ol{color:var(--muted);padding-left:18px;margin-bottom:12px}
+li{margin-bottom:5px;line-height:1.6}
+
+/* ─ Section wrappers ─ */
+section{margin-bottom:60px}
+.sec-label{font-size:10px;font-family:monospace;text-transform:uppercase;letter-spacing:.14em;color:var(--faint);margin-bottom:20px;display:flex;align-items:center;gap:10px}
+.sec-label::after{content:'';flex:1;height:1px;background:var(--border)}
+.sec-num{font-size:10px;font-family:monospace;color:var(--purple);background:rgba(124,110,255,.12);border:1px solid rgba(124,110,255,.2);padding:2px 7px;border-radius:20px}
+
+/* ─ Badges ─ */
+.badge{display:inline-flex;align-items:center;font-family:monospace;font-size:11px;padding:3px 9px;border-radius:20px;border:1px solid;white-space:nowrap}
+.b-green {color:var(--green); border-color:rgba(52,211,153,.25); background:rgba(52,211,153,.08)}
+.b-yellow{color:var(--yellow);border-color:rgba(251,191,36,.25); background:rgba(251,191,36,.08)}
+.b-red   {color:var(--red);   border-color:rgba(248,113,113,.25);background:rgba(248,113,113,.08)}
+.b-purple{color:var(--purple);border-color:rgba(124,110,255,.25);background:rgba(124,110,255,.08)}
+.b-blue  {color:var(--blue);  border-color:rgba(96,165,250,.25); background:rgba(96,165,250,.08)}
+.b-orange{color:var(--orange);border-color:rgba(251,146,60,.25); background:rgba(251,146,60,.08)}
+
+/* ─ Status pills ─ */
+.s-done   {color:var(--green); border-color:rgba(52,211,153,.3); background:rgba(52,211,153,.1); font-family:monospace;font-size:10px;padding:2px 8px;border-radius:4px;border:1px solid;white-space:nowrap}
+.s-partial{color:var(--yellow);border-color:rgba(251,191,36,.3); background:rgba(251,191,36,.1); font-family:monospace;font-size:10px;padding:2px 8px;border-radius:4px;border:1px solid;white-space:nowrap}
+.s-missing{color:var(--red);   border-color:rgba(248,113,113,.3);background:rgba(248,113,113,.1);font-family:monospace;font-size:10px;padding:2px 8px;border-radius:4px;border:1px solid;white-space:nowrap}
+
+/* ─ Cards ─ */
+.card{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:20px 24px;margin-bottom:14px}
+.card-sm{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:14px 18px;margin-bottom:10px}
+.card-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px;flex-wrap:wrap}
+
+/* ─ Stat grid ─ */
+.stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:20px 0}
+.stat-card{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:18px}
+.stat-val{font-family:Georgia,serif;font-size:30px;line-height:1;margin-bottom:5px}
+.stat-lbl{font-family:monospace;font-size:10px;color:var(--faint);text-transform:uppercase;letter-spacing:.1em}
+
+/* ─ Tables ─ */
+.tw{overflow-x:auto;margin-bottom:12px}
+table{width:100%;border-collapse:collapse;font-size:12px}
+thead tr{border-bottom:1px solid var(--border)}
+th{text-align:left;font-family:monospace;font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:var(--faint);padding:0 16px 10px 0;font-weight:normal}
+td{padding:9px 16px 9px 0;border-bottom:1px solid rgba(255,255,255,.03);color:var(--muted);vertical-align:top}
+td.mono{font-family:monospace;font-size:11px;color:var(--purple)}
+td.path{font-family:monospace;font-size:11px;color:var(--blue)}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:rgba(255,255,255,.01)}
+
+/* ─ Progress bars ─ */
+.pb{height:4px;background:var(--bg3);border-radius:4px;overflow:hidden;margin-top:8px}
+.pf{height:100%;border-radius:4px}
+
+/* ─ File tree ─ */
+.tree{background:var(--bg3);border:1px solid var(--border);border-radius:12px;padding:18px 20px;font-family:monospace;font-size:12px;line-height:2;overflow-x:auto}
+.t-dir {color:var(--purple)}
+.t-file{color:var(--muted)}
+.t-done{color:var(--green)}
+.t-partial{color:var(--yellow)}
+.t-missing{color:var(--red)}
+.t-comment{color:var(--xfaint)}
+
+/* ─ Step list ─ */
+.steps{counter-reset:step}
+.step{display:flex;gap:14px;margin-bottom:18px;align-items:flex-start}
+.step-num{min-width:26px;height:26px;border-radius:50%;background:rgba(124,110,255,.15);border:1px solid rgba(124,110,255,.3);color:var(--purple);font-family:monospace;font-size:11px;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+.step-body{flex:1}
+.step-title{font-size:13px;font-weight:600;color:var(--text);margin-bottom:4px}
+.step-desc{font-size:12px;color:var(--muted);line-height:1.6}
+
+/* ─ Gap callout ─ */
+.gap-box{border-radius:10px;padding:14px 18px;margin-bottom:12px;border:1px solid}
+.gap-green{border-color:rgba(52,211,153,.2);background:rgba(52,211,153,.05)}
+.gap-yellow{border-color:rgba(251,191,36,.2);background:rgba(251,191,36,.05)}
+.gap-red{border-color:rgba(248,113,113,.2);background:rgba(248,113,113,.05)}
+.gap-label{font-family:monospace;font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.1em;margin-bottom:6px}
+.gap-green .gap-label{color:var(--green)}
+.gap-yellow .gap-label{color:var(--yellow)}
+.gap-red .gap-label{color:var(--red)}
+.gap-text{font-size:12px;color:var(--muted);line-height:1.6}
+
+/* ─ Req row ─ */
+.req-table td:first-child{font-size:12px;font-weight:600;color:var(--text);min-width:160px}
+.req-table td:nth-child(2){font-size:11px;min-width:90px}
+.req-table td:nth-child(3){font-family:monospace;font-size:11px;color:var(--blue);min-width:220px}
+.req-table td:nth-child(4){font-size:11px;color:var(--muted);min-width:200px}
+
+/* ─ Report header ─ */
+.report-header{border-bottom:1px solid var(--border);padding-bottom:32px;margin-bottom:44px}
+.meta-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:14px}
+</style>
+</head>
+<body>
+<div class="shell">
+
+<!-- ══════════ SIDEBAR ══════════ -->
+<nav class="sidebar">
+  <div class="logo">Synaptic<span>.</span><sub>Full Audit Report — March 2026</sub></div>
+  <div class="ns">Sections</div>
+  <a class="nl" href="#s1">1. Structure &amp; How It Works</a>
+  <a class="nl sub" href="#s1-tree">File Tree</a>
+  <a class="nl sub" href="#s1-flow">Content Flow</a>
+  <a class="nl" href="#s2">2. What Is There</a>
+  <a class="nl sub" href="#s2-engines">Engines</a>
+  <a class="nl sub" href="#s2-api">API Layer</a>
+  <a class="nl sub" href="#s2-ui">UI &amp; Components</a>
+  <a class="nl sub" href="#s2-content">Content</a>
+  <a class="nl" href="#s3">3. What Is Missing</a>
+  <a class="nl" href="#s4">4. Complete System Spec</a>
+  <a class="nl" href="#s5">5. Requirement Status</a>
+  <a class="nl" href="#s6">6. Gap Analysis</a>
+  <a class="nl" href="#s7">7. Missing Content Guide</a>
+  <a class="nl sub" href="#s7-content">Content Gaps</a>
+  <a class="nl sub" href="#s7-phases">Phase Gaps</a>
+  <a class="nl sub" href="#s7-tech">Technical Guide</a>
+  <a class="nl sub" href="#s7-content-guide">Content Guide</a>
+  <a class="nl" href="#s8">8. Integration Plan</a>
+</nav>
+
+<!-- ══════════ MAIN ══════════ -->
+<main class="main">
+
+<!-- ─ HEADER ─ -->
+<div class="report-header">
+  <h1>Full Implementation Audit</h1>
+  <p style="color:var(--muted);font-size:15px">Synaptic — Adaptive AI Engineering Learning Platform</p>
+  <div class="meta-row">
+    <span class="badge b-green">✅ Validator: 0 errors, 0 warnings</span>
+    <span class="badge b-purple">133 project files</span>
+    <span class="badge b-blue">21 skills with full content (P1+P2)</span>
+    <span class="badge b-yellow">10 stub skills (P3–P8)</span>
+    <span class="badge b-orange">57 / 63 explanation files missing extended fields</span>
+  </div>
+</div>
+
+
+<!-- ══════════ SECTION 1 ══════════ -->
+<section id="s1">
+  <div class="sec-label"><span class="sec-num">01</span> Folder Structure, How It Works, and What Is Being Achieved</div>
+  <h2>Current Structure Overview</h2>
+  <p>Synaptic is a full-stack adaptive learning platform built on <strong>Next.js 14 App Router + TypeScript + Tailwind CSS</strong>, backed by <strong>Supabase</strong> (PostgreSQL + Auth + RLS). Content lives in plain JSON files in the <code>content/</code> directory and is loaded at build-time via Node <code>require()</code>. The adaptive engine runs entirely in TypeScript on the server — no external ML service needed. Deployment target is Vercel + GitHub.</p>
+
+  <div id="s1-tree">
+  <h3 style="margin-top:24px">Annotated File Tree</h3>
+  <div class="tree">
+<span class="t-dir">synaptic/</span>
+├── <span class="t-dir">content/</span>                         <span class="t-comment">← All teaching content (JSON, loaded at build time)</span>
+│   ├── <span class="t-dir">graph/</span>
+│   │   ├── <span class="t-done">nodes.json</span>              <span class="t-comment">← 31 skill nodes: id, phase, intuition, analogy, why_it_matters</span>
+│   │   ├── <span class="t-done">edges.json</span>              <span class="t-comment">← 37 prerequisite edges (hard/soft), wired into DAG engine</span>
+│   │   └── <span class="t-done">meta.json</span>               <span class="t-comment">← Graph version string</span>
+│   ├── <span class="t-dir">questions/</span>
+│   │   ├── <span class="t-dir">by-skill/</span>
+│   │   │   ├── <span class="t-done">p1_*.json  (12 files)</span>   <span class="t-comment">← Phase 1: COMPLETE — 3–4 questions each, tiers: same/harder/review</span>
+│   │   │   ├── <span class="t-done">p2_*.json  (9 files)</span>    <span class="t-comment">← Phase 2: COMPLETE — same structure</span>
+│   │   │   └── <span class="t-missing">p3–p8: ABSENT</span>          <span class="t-comment">← 10 stub skills have empty question_ids arrays</span>
+│   │   └── <span class="t-done">diagnostic/questions.json</span>   <span class="t-comment">← 12 placement questions, skill-weighted for BKT init</span>
+│   ├── <span class="t-dir">explanations/</span>
+│   │   ├── <span class="t-done">p1_*/ (12 dirs × 3 depths)</span>  <span class="t-comment">← 36 files: key_insight, body, common_mistakes, mini_exercise present in ALL</span>
+│   │   ├── <span class="t-done">p2_*/ (9 dirs × 3 depths)</span>   <span class="t-comment">← 27 files: same schema</span>
+│   │   └── <span class="t-missing">p3–p8: ABSENT</span>              <span class="t-comment">← No explanation dirs for 10 stub skills</span>
+│   └── <span class="t-dir">templates/</span>
+│       ├── <span class="t-done">explanation_file.json</span>       <span class="t-comment">← Complete template including real_world, build_task, explain_back</span>
+│       └── <span class="t-done">question_file.json</span>          <span class="t-comment">← Complete template with format guide and all fields</span>
+│
+├── <span class="t-dir">src/</span>
+│   ├── <span class="t-dir">app/</span>                            <span class="t-comment">← Next.js App Router pages</span>
+│   │   ├── <span class="t-done">page.tsx</span>                    <span class="t-comment">← Landing page (8-phase curriculum overview)</span>
+│   │   ├── <span class="t-done">layout.tsx</span>                  <span class="t-comment">← Root layout with global styles</span>
+│   │   ├── <span class="t-done">(auth)/login/ + signup/</span>     <span class="t-comment">← Auth forms, Supabase auth wired</span>
+│   │   ├── <span class="t-done">dashboard/page.tsx</span>          <span class="t-comment">← Knowledge graph viz, p_know bars, due reviews</span>
+│   │   ├── <span class="t-done">learn/page.tsx</span>              <span class="t-comment">← Full study session: MCQ+fill, keyboard shortcuts, motivation</span>
+│   │   ├── <span class="t-done">learn/diagnostic/page.tsx</span>   <span class="t-comment">← 12-question adaptive placement flow</span>
+│   │   ├── <span class="t-done">profile/page.tsx</span>            <span class="t-comment">← Stats, heatmap, sessions, top skills</span>
+│   │   └── <span class="t-dir">api/</span>
+│   │       ├── <span class="t-done">attempt/route.ts</span>        <span class="t-comment">← Hardened: server-side verify, latency clamp, ownership check</span>
+│   │       ├── <span class="t-done">session/route.ts</span>        <span class="t-comment">← start/next/end with adaptive task selection</span>
+│   │       ├── <span class="t-done">explanation/route.ts</span>    <span class="t-comment">← Retrieval-first gate, depth by p_know</span>
+│   │       ├── <span class="t-done">diagnostic/route.ts</span>     <span class="t-comment">← Placement + 31-skill state init</span>
+│   │       ├── <span class="t-done">onboard/route.ts</span>        <span class="t-comment">← Profile + motivation state creation</span>
+│   │       └── <span class="t-done">analytics/route.ts</span>      <span class="t-comment">← sendBeacon receiver (9 event types)</span>
+│   ├── <span class="t-dir">components/</span>
+│   │   ├── <span class="t-dir">learning/</span>
+│   │   │   ├── <span class="t-done">ExplanationPanel.tsx</span>    <span class="t-comment">← Renders: body, key_insight, mini_exercise, common_mistakes</span>
+│   │   │   │                               <span class="t-comment">   TABS: real_world, build_task, explain_back (UI ready, needs content)</span>
+│   │   │   ├── <span class="t-done">QuestionCard.tsx</span>        <span class="t-comment">← Renders mcq (full) + fill (full) + explain (textarea stub)</span>
+│   │   │   ├── <span class="t-done">FeedbackBanner.tsx</span>      <span class="t-comment">← Post-answer correct/wrong feedback</span>
+│   │   │   └── <span class="t-done">MotivationBanner.tsx</span>    <span class="t-comment">← Motivation state overlay (bored/frustrated/winning)</span>
+│   │   ├── <span class="t-dir">ui/</span>
+│   │   │   ├── <span class="t-done">Badge.tsx, ProgressBar.tsx, Spinner.tsx</span>
+│   │   │   └── <span class="t-done">mdToHtml.ts</span>             <span class="t-comment">← Lightweight markdown renderer</span>
+│   │   └── <span class="t-missing">layout/</span>                     <span class="t-comment">← EMPTY directory — no shared nav/header components</span>
+│   ├── <span class="t-dir">lib/</span>                            <span class="t-comment">← Server-side engines (pure TypeScript, zero deps)</span>
+│   │   ├── <span class="t-done">bkt/index.ts</span>                <span class="t-comment">← Bayesian Knowledge Tracing (112 lines)</span>
+│   │   ├── <span class="t-done">sm2/index.ts</span>                <span class="t-comment">← Spaced repetition + BKT↔SM2 sync (94 lines)</span>
+│   │   ├── <span class="t-done">session/engine.ts</span>           <span class="t-comment">← Adaptive task selection, 4 priority levels (146 lines)</span>
+│   │   ├── <span class="t-done">graph/index.ts</span>              <span class="t-comment">← DAG: Kahn's sort, prereq check, placeLearner() (166 lines)</span>
+│   │   ├── <span class="t-done">motivation/index.ts</span>         <span class="t-comment">← 4-state FSM, 10-min cooldown (87 lines)</span>
+│   │   └── <span class="t-done">supabase/client.ts + server.ts</span>
+│   ├── <span class="t-done">hooks/useAnalytics.ts</span>           <span class="t-comment">← 9 typed event types</span>
+│   ├── <span class="t-done">middleware.ts</span>                   <span class="t-comment">← Route protection: /dashboard, /learn, /profile</span>
+│   └── <span class="t-done">types/index.ts</span>                  <span class="t-comment">← Full type system including BuildTask, VisualElement, DepthLevel, SessionPhase</span>
+├── <span class="t-done">supabase/migrations/001 + 002.sql</span>  <span class="t-comment">← 12 tables, RLS, RPCs, indexes</span>
+├── <span class="t-done">scripts/validate-content.js</span>        <span class="t-comment">← CI content validator</span>
+├── <span class="t-done">content/CONTENT_GUIDE.md</span>           <span class="t-comment">← Author guide for adding content</span>
+└── <span class="t-done">README.md, ARCHITECTURE.md, AUDIT_REPORT.md</span>
+  </div>
+  </div>
+
+  <div id="s1-flow" style="margin-top:28px">
+  <h3>How the System Works — Content Flow</h3>
+  <div class="card">
+    <h4>Learner Journey</h4>
+    <p><strong>1. Onboard</strong> → <code>/api/onboard</code> creates <code>learner_profiles</code> + <code>motivation_states</code> rows in Supabase.</p>
+    <p><strong>2. Diagnostic</strong> → <code>/learn/diagnostic</code> loads 12 questions via <code>require()</code>, shows them in sequence. On submit, <code>/api/diagnostic</code> runs <code>placeLearner()</code> from <code>src/lib/graph/index.ts</code>, initialises all 31 <code>learner_skill_states</code> rows, and writes SM-2 schedules.</p>
+    <p><strong>3. Study loop</strong> → <code>/api/session</code> (start) calls <code>selectNextTask()</code> from <code>src/lib/session/engine.ts</code>. Engine reads skill states, SM-2 schedules, and motivation state from DB; picks the optimal next question using 4-priority selection; returns <code>SessionTask</code> object. Learner answers → <code>/api/attempt</code> verifies answer server-side, updates BKT (p_know), SM-2 interval, motivation state, and unlocks prereq graph. On correct answer, <code>/api/explanation</code> serves the explanation at the right depth (beginner/mid/advanced) based on <code>p_know</code>.</p>
+    <p><strong>4. Explanation panel</strong> → <code>ExplanationPanel.tsx</code> renders <code>body</code>, <code>key_insight</code>, <code>mini_exercise</code>, <code>common_mistakes</code>, and (if present in JSON) tabs for <code>real_world_usage</code>, <code>build_task</code>, and <code>explain_back_prompt</code>.</p>
+    <p><strong>5. Dashboard</strong> → Server component reads all skill states, groups by phase, renders p_know progress bars and mastery legend.</p>
+  </div>
+  </div>
+</section>
+
+
+<!-- ══════════ SECTION 2 ══════════ -->
+<section id="s2">
+  <div class="sec-label"><span class="sec-num">02</span> Current Implemented Items</div>
+  <h2>What Is There</h2>
+
+  <div class="stat-grid">
+    <div class="stat-card"><div class="stat-val" style="color:var(--green)">21</div><div class="stat-lbl">Skills with full content</div></div>
+    <div class="stat-card"><div class="stat-val" style="color:var(--purple)">66</div><div class="stat-lbl">Total questions</div></div>
+    <div class="stat-card"><div class="stat-val" style="color:var(--blue)">63</div><div class="stat-lbl">Explanation files</div></div>
+    <div class="stat-card"><div class="stat-val" style="color:var(--yellow)">164 KB</div><div class="stat-lbl">Explanation content</div></div>
+  </div>
+
+  <div id="s2-engines">
+  <h3>Engine Layer — All Fully Implemented</h3>
+  <div class="tw"><table>
+    <thead><tr><th>Module</th><th>Status</th><th>Location</th><th>What It Does</th></tr></thead>
+    <tbody>
+      <tr><td class="mono">BKT Engine</td><td><span class="s-done">Implemented</span></td><td class="path">src/lib/bkt/index.ts</td><td>4-parameter Bayesian Knowledge Tracing. 5 mastery states. <code>bktUpdate()</code>, <code>deriveMasteryState()</code>, <code>initSkillState()</code>.</td></tr>
+      <tr><td class="mono">SM-2 Engine</td><td><span class="s-done">Implemented</span></td><td class="path">src/lib/sm2/index.ts</td><td>Spaced repetition with bidirectional BKT↔SM-2 sync. Interval capped at 60 days. <code>updateSM2()</code>, <code>reconcileBktSm2()</code>.</td></tr>
+      <tr><td class="mono">Graph Engine</td><td><span class="s-done">Implemented</span></td><td class="path">src/lib/graph/index.ts</td><td>DAG loader, Kahn's topological sort, <code>prereqsSatisfied()</code>, <code>computeUnblocked()</code>, <code>placeLearner()</code>.</td></tr>
+      <tr><td class="mono">Session Engine</td><td><span class="s-done">Implemented</span></td><td class="path">src/lib/session/engine.ts</td><td>4-priority adaptive task selection. Difficulty calibration: bored→harder, 2+ wrong→review, blocked→prerequisite, interleaving.</td></tr>
+      <tr><td class="mono">Motivation FSM</td><td><span class="s-done">Implemented</span></td><td class="path">src/lib/motivation/index.ts</td><td>4-state machine: frustrated / neutral / winning / bored. 10-min intervention cooldown.</td></tr>
+    </tbody>
+  </table></div>
+  </div>
+
+  <div id="s2-api">
+  <h3>API Layer — All Implemented and Security-Hardened</h3>
+  <div class="tw"><table>
+    <thead><tr><th>Endpoint</th><th>Status</th><th>Location</th><th>Notes</th></tr></thead>
+    <tbody>
+      <tr><td class="mono">/api/attempt</td><td><span class="s-done">Implemented</span></td><td class="path">src/app/api/attempt/route.ts</td><td>Server-side answer verification, latency clamped [100ms–5min], skill_id validated, session ownership checked. <code>explain/code</code> formats fall through to client-reported.</td></tr>
+      <tr><td class="mono">/api/session</td><td><span class="s-done">Implemented</span></td><td class="path">src/app/api/session/route.ts</td><td>start / next / end with full adaptive engine.</td></tr>
+      <tr><td class="mono">/api/explanation</td><td><span class="s-done">Implemented</span></td><td class="path">src/app/api/explanation/route.ts</td><td>Retrieval-first gate (requires valid attempt_id). Depth routing: p_know≥0.75→advanced, ≥0.45→mid, else beginner.</td></tr>
+      <tr><td class="mono">/api/diagnostic</td><td><span class="s-done">Implemented</span></td><td class="path">src/app/api/diagnostic/route.ts</td><td>Full placement algorithm. Initialises all 31 skill states + SM-2 schedules.</td></tr>
+      <tr><td class="mono">/api/onboard</td><td><span class="s-done">Implemented</span></td><td class="path">src/app/api/onboard/route.ts</td><td>Creates learner_profile + motivation_state rows.</td></tr>
+      <tr><td class="mono">/api/analytics</td><td><span class="s-done">Implemented</span></td><td class="path">src/app/api/analytics/route.ts</td><td>sendBeacon receiver, 9 typed event types.</td></tr>
+    </tbody>
+  </table></div>
+  </div>
+
+  <div id="s2-ui">
+  <h3>UI &amp; Component Layer</h3>
+  <div class="tw"><table>
+    <thead><tr><th>Component / Page</th><th>Status</th><th>Location</th><th>Notes</th></tr></thead>
+    <tbody>
+      <tr><td class="mono">learn/page.tsx</td><td><span class="s-done">Implemented</span></td><td class="path">src/app/learn/page.tsx</td><td>349-line study session. Handles: MCQ, fill, keyboard shortcuts (1–4 + Enter), motivation banners, explanation panel, analytics. <code>build_task</code> and <code>explain_back</code> phases wired to ExplanationPanel but not saved to DB.</td></tr>
+      <tr><td class="mono">dashboard/page.tsx</td><td><span class="s-done">Implemented</span></td><td class="path">src/app/dashboard/page.tsx</td><td>Knowledge graph with p_know bars, mastery legend, due reviews count, streak.</td></tr>
+      <tr><td class="mono">profile/page.tsx</td><td><span class="s-done">Implemented</span></td><td class="path">src/app/profile/page.tsx</td><td>Stats grid, 7-day activity heatmap, session history, top skills.</td></tr>
+      <tr><td class="mono">ExplanationPanel</td><td><span class="s-partial">Partial</span></td><td class="path">src/components/learning/ExplanationPanel.tsx</td><td>Fully renders: body, key_insight, mini_exercise, common_mistakes. Tab UI for real_world/build_task/explain_back is built and functional. <strong>Missing: explain_back submission not saved to DB.</strong></td></tr>
+      <tr><td class="mono">QuestionCard</td><td><span class="s-partial">Partial</span></td><td class="path">src/components/learning/QuestionCard.tsx</td><td>MCQ: fully rendered. Fill: fully rendered. Explain: textarea placeholder only (no grading). Code/Order: not rendered at all.</td></tr>
+      <tr><td class="mono">FeedbackBanner</td><td><span class="s-done">Implemented</span></td><td class="path">src/components/learning/FeedbackBanner.tsx</td><td>42-line correct/wrong banner with explanation_after text.</td></tr>
+      <tr><td class="mono">MotivationBanner</td><td><span class="s-done">Implemented</span></td><td class="path">src/components/learning/MotivationBanner.tsx</td><td>Motivation state overlay displayed above questions.</td></tr>
+      <tr><td class="mono">layout/ components</td><td><span class="s-missing">Missing</span></td><td class="path">src/components/layout/</td><td>Directory exists but is completely empty. No shared Navbar, Header, or Footer component.</td></tr>
+    </tbody>
+  </table></div>
+  </div>
+
+  <div id="s2-content">
+  <h3>Content Layer — Field Presence Audit</h3>
+  <div class="tw"><table>
+    <thead><tr><th>Field</th><th>Present In</th><th>Coverage</th><th>Notes</th></tr></thead>
+    <tbody>
+      <tr><td class="mono">skill_id, depth, title</td><td>63 / 63</td><td><span class="s-done">100%</span></td><td>All required base fields</td></tr>
+      <tr><td class="mono">key_insight</td><td>63 / 63</td><td><span class="s-done">100%</span></td><td>One-sentence takeaway, always present</td></tr>
+      <tr><td class="mono">body</td><td>63 / 63</td><td><span class="s-done">100%</span></td><td>Full markdown body with code examples</td></tr>
+      <tr><td class="mono">common_mistakes</td><td>63 / 63</td><td><span class="s-done">100%</span></td><td>3 items per file, consistently</td></tr>
+      <tr><td class="mono">mini_exercise</td><td>63 / 63</td><td><span class="s-done">100%</span></td><td>Short hands-on task</td></tr>
+      <tr><td class="mono">real_world_usage</td><td>6 / 63</td><td><span class="s-missing">10%</span></td><td>Only a handful of files. UI tab is built; content is missing.</td></tr>
+      <tr><td class="mono">explain_back_prompt</td><td>6 / 63</td><td><span class="s-missing">10%</span></td><td>Only a handful of files. UI is built; content is missing.</td></tr>
+      <tr><td class="mono">build_task</td><td>3 / 63</td><td><span class="s-missing">5%</span></td><td>Only a handful of files. UI renders it fully; content is almost absent.</td></tr>
+      <tr><td class="mono">visual_element</td><td>0 / 63</td><td><span class="s-missing">0%</span></td><td>Typed in types/index.ts but not rendered anywhere in UI.</td></tr>
+      <tr><td class="mono">level_breakdown</td><td>0 / 63</td><td><span class="s-missing">0%</span></td><td>Typed in types/index.ts but not rendered and not in any content file.</td></tr>
+      <tr><td class="mono">Node: intuition</td><td>31 / 31</td><td><span class="s-done">100%</span></td><td>All nodes have intuition, analogy, why_it_matters fields</td></tr>
+    </tbody>
+  </table></div>
+  <p style="font-size:12px;color:var(--faint);font-family:monospace">Question formats: mcq=50, fill=16. Tiers: same=28, harder=21, review=17. No <code>code</code>, <code>order</code>, or <code>explain</code> format questions exist in any content file.</p>
+  </div>
+</section>
+
+
+<!-- ══════════ SECTION 3 ══════════ -->
+<section id="s3">
+  <div class="sec-label"><span class="sec-num">03</span> What Is Missing</div>
+  <h2>Missing Items</h2>
+
+  <div class="tw"><table>
+    <thead><tr><th>Missing Item</th><th>Expected Location</th><th>Why It Matters</th><th>Impact</th></tr></thead>
+    <tbody>
+      <tr>
+        <td><strong>Phase 3–8 question files</strong></td>
+        <td class="path">content/questions/by-skill/p3_*.json … p8_*.json</td>
+        <td>10 stub skills exist in the graph with empty <code>question_ids</code> arrays. The adaptive engine cannot route learners to these skills.</td>
+        <td>Entire AI engineering curriculum (the product's core value) is locked.</td>
+      </tr>
+      <tr>
+        <td><strong>Phase 3–8 explanation files</strong></td>
+        <td class="path">content/explanations/p3_*/  …  p8_*/</td>
+        <td>Even if questions were added, there would be no explanation content to show after correct answers.</td>
+        <td>Same impact as above.</td>
+      </tr>
+      <tr>
+        <td><strong>real_world_usage field</strong> (57 files)</td>
+        <td class="path">content/explanations/*/{beginner,mid,advanced}.json</td>
+        <td>UI tab labelled "Used in practice" exists and renders this field. 90% of files have no content for it.</td>
+        <td>The "Level 5 — Real World" teaching layer is dead for 90% of skills.</td>
+      </tr>
+      <tr>
+        <td><strong>build_task field</strong> (60 files)</td>
+        <td class="path">content/explanations/*/{beginner,mid,advanced}.json</td>
+        <td>ExplanationPanel renders build_task title, context, steps, expected_output, hint, starter_code fully. Only 3 files have this field.</td>
+        <td>The "Level 6 — Mini Build" teaching layer is almost completely absent.</td>
+      </tr>
+      <tr>
+        <td><strong>explain_back_prompt field</strong> (57 files)</td>
+        <td class="path">content/explanations/*/{beginner,mid,advanced}.json</td>
+        <td>ExplanationPanel renders the explain-back textarea and submit. Only 6 files have a prompt to show.</td>
+        <td>Learner retrieval practice loop is broken for 90% of content.</td>
+      </tr>
+      <tr>
+        <td><strong>visual_element field</strong> (all 63 files)</td>
+        <td class="path">content/explanations/*/*.json + src/components/learning/ExplanationPanel.tsx</td>
+        <td>Typed in <code>src/types/index.ts</code> (VisualElement interface with 4 types) but never rendered in the UI and absent from all content files.</td>
+        <td>Visual/interactive learning layer entirely absent — both code and content side.</td>
+      </tr>
+      <tr>
+        <td><strong>level_breakdown field</strong> (all 63 files)</td>
+        <td class="path">content/explanations/*/*.json + ExplanationPanel</td>
+        <td>Typed (DepthLevel interface) but never rendered or populated. Intended for recursive concept breakdown.</td>
+        <td>Structured depth progression is absent.</td>
+      </tr>
+      <tr>
+        <td><strong>explain_back submission saved to DB</strong></td>
+        <td class="path">src/app/api/ (new route or extend /api/attempt)</td>
+        <td>When a learner submits an explain-back response, only an analytics event fires. No DB write. No BKT update. No retrieval credit.</td>
+        <td>The explain-back loop has no effect on the adaptive model.</td>
+      </tr>
+      <tr>
+        <td><strong>build_task completion saved to DB</strong></td>
+        <td class="path">src/app/api/ (extend /api/attempt or new route)</td>
+        <td>Same as above — clicking "Done" only fires an analytics event.</td>
+        <td>Build task completion has no adaptive effect.</td>
+      </tr>
+      <tr>
+        <td><strong>code/order question format UI</strong></td>
+        <td class="path">src/components/learning/QuestionCard.tsx</td>
+        <td>Both formats are typed in <code>QuestionFormat</code>. No rendering exists for either. The <code>explain</code> format has a textarea but no grading.</td>
+        <td>Cannot add code or ordering questions to any skill.</td>
+      </tr>
+      <tr>
+        <td><strong>Layout component library</strong></td>
+        <td class="path">src/components/layout/</td>
+        <td>Directory is empty. Each page re-implements its own nav/header inline.</td>
+        <td>Code duplication across pages; UI inconsistency risk.</td>
+      </tr>
+      <tr>
+        <td><strong>Validator extended field checks</strong></td>
+        <td class="path">scripts/validate-content.js</td>
+        <td>Validator checks body and key_insight only. Does not warn when real_world_usage, build_task, or explain_back_prompt are absent.</td>
+        <td>Content authors get no feedback about missing extended fields.</td>
+      </tr>
+      <tr>
+        <td><strong>Monaco / proper code editor</strong></td>
+        <td class="path">src/app/learn/page.tsx + QuestionCard.tsx</td>
+        <td>Fill-in and explain-format answers use plain <code>&lt;textarea&gt;</code>. No syntax highlighting, no completion.</td>
+        <td>Code-based exercises are poor UX for a developer-learning platform.</td>
+      </tr>
+      <tr>
+        <td><strong>Study schedule / intentions UI</strong></td>
+        <td class="path">src/app/dashboard/ or /profile/</td>
+        <td><code>implementation_intentions</code> table exists in migrations. No UI reads or writes it.</td>
+        <td>Spaced repetition nudging / scheduling feature is dead in the water.</td>
+      </tr>
+      <tr>
+        <td><strong>Content templates for phases 3–8</strong></td>
+        <td class="path">content/templates/</td>
+        <td>Only generic templates exist. No phase-specific guidance on what deeper AI concepts need.</td>
+        <td>Minor — generic templates work, but phase-specific notes would help authors.</td>
+      </tr>
+    </tbody>
+  </table></div>
+</section>
+
+
+<!-- ══════════ SECTION 4 ══════════ -->
+<section id="s4">
+  <div class="sec-label"><span class="sec-num">04</span> Items That Should Exist in a Complete System</div>
+  <h2>Complete System Specification</h2>
+  <p>Based on the master instructional design prompt, here is every element that should exist in the full system.</p>
+
+  <h3>Teaching Layer Requirements</h3>
+  <div class="tw"><table>
+    <thead><tr><th>Required Item</th><th>Purpose</th><th>Ideal Location</th><th>Current State</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Level 0 — Super Simple Start</strong></td><td>One-sentence hook before anything technical. Draws the learner in before they feel overwhelmed.</td><td><code>content/explanations/{skill}/beginner.json</code> → body opening</td><td><span class="s-partial">Partial</span> — body starts with intuition but no explicit "Level 0" hook structure enforced</td></tr>
+      <tr><td><strong>Level 1 — Intuition Layer</strong></td><td>Build mental model before any technical definition. Use everyday analogy first.</td><td><code>nodes.json</code> → intuition field + beginner.json body</td><td><span class="s-done">Implemented</span> — all 31 nodes have <code>intuition</code>; beginner files start with analogies</td></tr>
+      <tr><td><strong>Level 2 — Analogy Section</strong></td><td>Memorable story or comparison that makes concept sticky.</td><td><code>nodes.json</code> → analogy field + explanation body</td><td><span class="s-done">Implemented</span> — all 31 nodes have <code>analogy</code> field</td></tr>
+      <tr><td><strong>Level 3 — Recursive Breakdown</strong></td><td>Progressive depth: break concept into 2–4 sub-parts, each explained at increasing detail.</td><td><code>level_breakdown</code> field in explanation files + UI renderer</td><td><span class="s-missing">Missing</span> — field typed but never populated or rendered</td></tr>
+      <tr><td><strong>Level 4 — Technical Understanding</strong></td><td>Precise technical explanation with code. Where mid.json and advanced.json live.</td><td><code>content/explanations/{skill}/mid.json</code> and <code>advanced.json</code></td><td><span class="s-done">Implemented</span> — mid and advanced files all present with code examples</td></tr>
+      <tr><td><strong>Level 5 — Real-World Usage</strong></td><td>Explicit connection: "This is used in GPT-4/PyTorch/Hugging Face because…". Motivates why to learn.</td><td><code>real_world_usage</code> field in explanation files + tab in ExplanationPanel</td><td><span class="s-partial">Partial</span> — UI tab built, field in 6/63 files only</td></tr>
+      <tr><td><strong>Level 6 — Mini Build Task</strong></td><td>Learner builds something small. Creates production-memory. Strongest retention mechanism.</td><td><code>build_task</code> field in explanation files + ExplanationPanel render</td><td><span class="s-partial">Partial</span> — UI fully built, field in 3/63 files only, completion not saved</td></tr>
+      <tr><td><strong>Explain-Back Loop</strong></td><td>Learner explains concept back in own words. Retrieval practice — strongest memory technique.</td><td><code>explain_back_prompt</code> + ExplanationPanel textarea + API save</td><td><span class="s-partial">Partial</span> — UI built, 6/63 files have prompt, not saved to DB</td></tr>
+      <tr><td><strong>Visual / Interactive Element</strong></td><td>A diagram, mental model prompt, or simulation link. Supports non-verbal learners.</td><td><code>visual_element</code> field + renderer in ExplanationPanel</td><td><span class="s-missing">Missing</span> — typed only, no content or renderer</td></tr>
+      <tr><td><strong>Confusion / Simplification Loop</strong></td><td>When learner is frustrated or stuck, system simplifies and tries an easier entry point.</td><td>Motivation FSM (frustrated state) → session engine (serve easier skill/question)</td><td><span class="s-done">Implemented</span> — motivation FSM drives prerequisite fallback in session engine</td></tr>
+      <tr><td><strong>Quiz / MCQ Questions</strong></td><td>Test recall and application of concepts.</td><td><code>content/questions/by-skill/{skill}.json</code></td><td><span class="s-partial">Partial</span> — 21 skills complete, 10 stub skills have none</td></tr>
+      <tr><td><strong>Fill-in Questions</strong></td><td>Lower-format recall test. Tests key term memory.</td><td>Same as above</td><td><span class="s-partial">Partial</span> — same coverage as MCQ</td></tr>
+      <tr><td><strong>Code Questions</strong></td><td>Learner writes Python. Tests practical application, not just recall.</td><td><code>content/questions</code> + QuestionCard code renderer</td><td><span class="s-missing">Missing</span> — format typed, no content, no renderer</td></tr>
+      <tr><td><strong>Order Questions</strong></td><td>Drag-to-order: sequence steps of an algorithm or process.</td><td><code>content/questions</code> + QuestionCard order renderer</td><td><span class="s-missing">Missing</span> — format typed, no content, no renderer</td></tr>
+      <tr><td><strong>Adaptive Difficulty Tiers</strong></td><td>review / same / harder — engine picks tier based on learner performance.</td><td>Session engine + question difficulty_tier field</td><td><span class="s-done">Implemented</span></td></tr>
+      <tr><td><strong>Spaced Repetition</strong></td><td>SM-2 scheduling ensures skills are reviewed at optimal intervals.</td><td><code>src/lib/sm2/</code> + review_schedules DB table</td><td><span class="s-done">Implemented</span></td></tr>
+      <tr><td><strong>Prerequisite Graph</strong></td><td>Skills unlock only when prerequisites are mastered. Prevents jumping ahead.</td><td><code>content/graph/edges.json</code> + DAG engine</td><td><span class="s-done">Implemented</span></td></tr>
+      <tr><td><strong>Content Quality Validation</strong></td><td>CI check that all declared questions and explanation files exist and are valid JSON.</td><td><code>scripts/validate-content.js</code></td><td><span class="s-partial">Partial</span> — checks existence and body/key_insight; does NOT check extended fields</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+
+<!-- ══════════ SECTION 5 ══════════ -->
+<section id="s5">
+  <div class="sec-label"><span class="sec-num">05</span> Requirement-by-Requirement Status</div>
+  <h2>Master Prompt Requirement Status</h2>
+
+  <div class="tw"><table class="req-table">
+    <thead><tr><th>Requirement</th><th>Status</th><th>Current Location</th><th>Gap / Recommended Fix</th></tr></thead>
+    <tbody>
+      <tr><td>Super Simple Start (L0)</td><td><span class="s-partial">Partial</span></td><td class="path">beginner.json body</td><td>Body opens with analogies but no enforced "hook sentence" structure. Add a required <code>hook</code> field to the explanation schema and validator.</td></tr>
+      <tr><td>Intuition Layer (L1)</td><td><span class="s-done">Implemented</span></td><td class="path">nodes.json → intuition + beginner.json</td><td>—</td></tr>
+      <tr><td>Analogy Section (L2)</td><td><span class="s-done">Implemented</span></td><td class="path">nodes.json → analogy</td><td>Analogy is in nodes but not surfaced in the explanation body as a dedicated UI section. Consider rendering it above the body.</td></tr>
+      <tr><td>Recursive Breakdown (L3)</td><td><span class="s-missing">Missing</span></td><td class="path">types/index.ts → DepthLevel (typed only)</td><td>Add <code>level_breakdown</code> content to explanation files. Build renderer in ExplanationPanel.</td></tr>
+      <tr><td>Technical Depth (L4)</td><td><span class="s-done">Implemented</span></td><td class="path">mid.json + advanced.json (63 files)</td><td>—</td></tr>
+      <tr><td>Real-World Usage (L5)</td><td><span class="s-partial">Partial</span></td><td class="path">ExplanationPanel tab + 6/63 files</td><td>Add <code>real_world_usage</code> to remaining 57 explanation files. UI is ready.</td></tr>
+      <tr><td>Mini Build Task (L6)</td><td><span class="s-partial">Partial</span></td><td class="path">ExplanationPanel + 3/63 files</td><td>Add <code>build_task</code> to 60 files. Wire completion to DB via <code>/api/attempt</code> or new route.</td></tr>
+      <tr><td>Explain-Back Loop</td><td><span class="s-partial">Partial</span></td><td class="path">ExplanationPanel + 6/63 files</td><td>Add <code>explain_back_prompt</code> to 57 files. Save submission to DB (new attempt event type).</td></tr>
+      <tr><td>Visual/Interactive Element</td><td><span class="s-missing">Missing</span></td><td class="path">types/index.ts (typed only)</td><td>Add visual_element content to explanation files. Build renderer in ExplanationPanel.</td></tr>
+      <tr><td>MCQ Questions</td><td><span class="s-partial">Partial</span></td><td class="path">content/questions/by-skill/ (21/31 skills)</td><td>Add for 10 stub skills (P3–P8).</td></tr>
+      <tr><td>Fill-in Questions</td><td><span class="s-partial">Partial</span></td><td class="path">Same as MCQ</td><td>Same gap.</td></tr>
+      <tr><td>Code Questions (format)</td><td><span class="s-missing">Missing</span></td><td class="path">QuestionFormat type (typed)</td><td>Build QuestionCard code renderer + add <code>code</code> format questions to content files.</td></tr>
+      <tr><td>Order Questions (format)</td><td><span class="s-missing">Missing</span></td><td class="path">QuestionFormat type (typed)</td><td>Build drag-to-order renderer + add <code>order</code> format questions.</td></tr>
+      <tr><td>Adaptive Difficulty</td><td><span class="s-done">Implemented</span></td><td class="path">src/lib/session/engine.ts</td><td>—</td></tr>
+      <tr><td>Spaced Repetition (SM-2)</td><td><span class="s-done">Implemented</span></td><td class="path">src/lib/sm2/index.ts</td><td>—</td></tr>
+      <tr><td>Bayesian Knowledge Tracing</td><td><span class="s-done">Implemented</span></td><td class="path">src/lib/bkt/index.ts</td><td>—</td></tr>
+      <tr><td>Prerequisite DAG</td><td><span class="s-done">Implemented</span></td><td class="path">content/graph/ + src/lib/graph/</td><td>—</td></tr>
+      <tr><td>Motivation State Machine</td><td><span class="s-done">Implemented</span></td><td class="path">src/lib/motivation/index.ts</td><td>—</td></tr>
+      <tr><td>Diagnostic Placement</td><td><span class="s-done">Implemented</span></td><td class="path">src/app/learn/diagnostic/ + /api/diagnostic</td><td>—</td></tr>
+      <tr><td>8-Phase Curriculum</td><td><span class="s-partial">Partial</span></td><td class="path">content/graph/nodes.json</td><td>All 8 phases defined in graph. Only P1 and P2 have content. P3–P8 are stubs.</td></tr>
+      <tr><td>Feedback Loops (post-answer)</td><td><span class="s-done">Implemented</span></td><td class="path">FeedbackBanner + explanation_after field</td><td>—</td></tr>
+      <tr><td>Confusion Simplification Loop</td><td><span class="s-done">Implemented</span></td><td class="path">Motivation FSM → session engine → prerequisite fallback</td><td>—</td></tr>
+      <tr><td>Suggestions Only (not restrictions)</td><td><span class="s-done">Implemented</span></td><td class="path">Session engine — suggestions, not locks</td><td>—</td></tr>
+      <tr><td>Content Validator / CI</td><td><span class="s-partial">Partial</span></td><td class="path">scripts/validate-content.js</td><td>Checks structure. Does not warn on missing extended fields (real_world, build_task, explain_back).</td></tr>
+      <tr><td>Content Templates</td><td><span class="s-done">Implemented</span></td><td class="path">content/templates/</td><td>Both templates exist with full field guidance including depth_guide.</td></tr>
+      <tr><td>Content Author Guide</td><td><span class="s-done">Implemented</span></td><td class="path">content/CONTENT_GUIDE.md</td><td>—</td></tr>
+      <tr><td>Database Schema (Supabase)</td><td><span class="s-done">Implemented</span></td><td class="path">supabase/migrations/001 + 002</td><td>12 tables, RLS, RPCs, indexes.</td></tr>
+      <tr><td>Route Protection / Auth</td><td><span class="s-done">Implemented</span></td><td class="path">src/middleware.ts</td><td>—</td></tr>
+      <tr><td>Profile Page</td><td><span class="s-done">Implemented</span></td><td class="path">src/app/profile/page.tsx</td><td>—</td></tr>
+      <tr><td>Shared Layout Components</td><td><span class="s-missing">Missing</span></td><td class="path">src/components/layout/</td><td>Empty directory. Each page has inline nav. Refactor into shared Navbar component.</td></tr>
+      <tr><td>Code Editor (Monaco)</td><td><span class="s-missing">Missing</span></td><td class="path">QuestionCard.tsx + learn/page.tsx</td><td>Plain textarea used. Install @monaco-editor/react for code questions.</td></tr>
+      <tr><td>Study Schedule UI</td><td><span class="s-missing">Missing</span></td><td class="path">implementation_intentions table exists; no UI</td><td>Build schedule widget in dashboard or profile.</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+
+<!-- ══════════ SECTION 6 ══════════ -->
+<section id="s6">
+  <div class="sec-label"><span class="sec-num">06</span> Gap Analysis Against the Master Prompt</div>
+  <h2>Gap Analysis</h2>
+
+  <div class="gap-box gap-green">
+    <div class="gap-label">✓ Strongly Aligned</div>
+    <div class="gap-text">
+      <strong>Adaptive engine</strong> — BKT + SM-2 + motivation FSM + session engine are all fully implemented, integrated, and hardened. This is the technical core of the platform and it works correctly.<br><br>
+      <strong>Prerequisite graph</strong> — 31 nodes, 37 edges, Kahn's sort, and prereq checking are all live. Learners are correctly unblocked as they progress.<br><br>
+      <strong>Base explanation layers (L1–L2)</strong> — All 31 nodes have intuition and analogy fields. All 63 explanation files have key_insight, body, common_mistakes, mini_exercise. The foundational teaching layer is solid.<br><br>
+      <strong>Security</strong> — 9 critical vulnerabilities found and fixed. Server-side verification, RLS, ownership checks all applied.<br><br>
+      <strong>Content quality infrastructure</strong> — Templates, CONTENT_GUIDE.md, validate script, and package.json <code>validate</code> script all exist and work.
+    </div>
+  </div>
+
+  <div class="gap-box gap-yellow">
+    <div class="gap-label">⚠ Weak — Present But Incomplete</div>
+    <div class="gap-text">
+      <strong>Level 5 (Real-World Usage)</strong> — The UI tab in ExplanationPanel is built and renders correctly. The <code>real_world_usage</code> field is in the template and types. But only 6 of 63 files actually have this content. The feature exists and works for 10% of skills; 90% show no tab at all.<br><br>
+      <strong>Level 6 (Build Task)</strong> — ExplanationPanel renders <code>build_task.title</code>, <code>.context</code>, <code>.steps[]</code>, <code>.expected_output</code>, <code>.hint</code>, and <code>.starter_code</code> fully. But only 3 of 63 files have a build_task. And even when a learner clicks "Done", only an analytics event fires — no BKT credit, no DB write.<br><br>
+      <strong>Explain-Back Loop</strong> — The textarea, submit button, and analytics tracking are all built. But 57 of 63 files have no <code>explain_back_prompt</code>, and submissions are never saved to DB. The loop has no adaptive effect.<br><br>
+      <strong>8-Phase Curriculum</strong> — All phases are defined and visualised in the dashboard. Only Phase 1 (12 skills) and Phase 2 (9 skills) have questions and explanations. Phases 3–8 are navigable stubs — learners can see them on the dashboard but the engine will never route them there.<br><br>
+      <strong>Question variety</strong> — Only MCQ and fill formats are used across all 66 questions. The <code>explain</code> format has a textarea renderer (no grading). <code>code</code> and <code>order</code> formats are typed but have no UI renderer and no questions in any file.
+    </div>
+  </div>
+
+  <div class="gap-box gap-red">
+    <div class="gap-label">✗ Absent — Concept Only or Not Started</div>
+    <div class="gap-text">
+      <strong>Level 3 (Recursive Breakdown)</strong> — <code>DepthLevel</code> interface is in types/index.ts but <code>level_breakdown</code> is absent from all 63 content files and not rendered anywhere in the UI. This is design intent only.<br><br>
+      <strong>Visual / Interactive Element</strong> — <code>VisualElement</code> interface is in types/index.ts with 4 subtypes (<code>mental_model</code>, <code>diagram_ref</code>, <code>walkthrough</code>, <code>simulation_prompt</code>). Zero content files have this field. ExplanationPanel does not render it. This is a named but completely unimplemented teaching layer.<br><br>
+      <strong>Code and Order question formats</strong> — Both typed in <code>QuestionFormat</code>. Zero questions of these formats exist in any content file. QuestionCard has no renderer for either. These formats are aspirational only.<br><br>
+      <strong>Layout component library</strong> — <code>src/components/layout/</code> is an empty directory. Each of the 5 pages has its own inline navigation header. No shared component has been extracted.<br><br>
+      <strong>Monaco code editor</strong> — Not installed. Plain textareas are used everywhere. A developer-learning platform with no syntax highlighting is a UX gap.<br><br>
+      <strong>Study schedule UI</strong> — <code>implementation_intentions</code> table exists in migrations/001. No UI reads or writes it anywhere in the codebase.<br><br>
+      <strong>Explain-back + build-task DB persistence</strong> — Mentioned above as "partial" but since no API writes happen, functionally these are absent from the adaptive model.
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════ SECTION 7 ══════════ -->
+<section id="s7">
+  <div class="sec-label"><span class="sec-num">07</span> Missing Content and Missing Phases Guide</div>
+  <h2>What Is Missing and How to Add It</h2>
+
+  <div id="s7-content">
+  <h3>7.1 Missing Content — Priority Matrix</h3>
+  <div class="tw"><table>
+    <thead><tr><th>Content Item</th><th>Count Missing</th><th>Priority</th><th>Effort per File</th></tr></thead>
+    <tbody>
+      <tr><td>Phase 3 questions + explanations (3 skills)</td><td>3 q-files + 9 exp-files</td><td><span class="badge b-red">Highest</span></td><td>30–60 min per skill</td></tr>
+      <tr><td>Phase 4 questions + explanations (2 skills)</td><td>2 q-files + 6 exp-files</td><td><span class="badge b-red">Highest</span></td><td>60–90 min per skill</td></tr>
+      <tr><td>Phase 5 questions + explanations (1 skill)</td><td>1 q-file + 3 exp-files</td><td><span class="badge b-red">Highest</span></td><td>60–90 min</td></tr>
+      <tr><td>Phase 6–8 questions + explanations (4 skills)</td><td>4 q-files + 12 exp-files</td><td><span class="badge b-orange">High</span></td><td>90+ min per skill</td></tr>
+      <tr><td>real_world_usage field — existing 57 files</td><td>57 additions</td><td><span class="badge b-orange">High</span></td><td>5–10 min per file</td></tr>
+      <tr><td>explain_back_prompt field — existing 57 files</td><td>57 additions</td><td><span class="badge b-orange">High</span></td><td>3–5 min per file</td></tr>
+      <tr><td>build_task field — existing 60 files</td><td>60 additions</td><td><span class="badge b-yellow">Medium</span></td><td>15–25 min per file</td></tr>
+      <tr><td>review tier questions — 3 skills missing it</td><td>3 additions</td><td><span class="badge b-blue">Low</span></td><td>10 min per skill</td></tr>
+    </tbody>
+  </table></div>
+  </div>
+
+  <div id="s7-phases">
+  <h3>7.2 Missing Phases — Phase 3–8 Stub Skills</h3>
+  <div class="card-sm">
+    <h4>Skills that need content (in prerequisite order)</h4>
+    <ul>
+      <li><code>p3_what_is_ai</code> → <code>p3_ai_vs_ml_vs_dl</code> → <code>p4_data_pipeline</code> → <code>p4_supervised_learning</code></li>
+      <li><code>p5_neural_network_basics</code> → <code>p6_transformers</code> → <code>p6_embeddings</code> → <code>p6_rag_systems</code></li>
+      <li><code>p7_ai_apis</code> → <code>p8_system_design_ai</code></li>
+    </ul>
+    <p style="margin-top:10px;font-size:12px">Each skill needs: (a) a question file with ≥3 questions covering same/harder/review tiers, and (b) three explanation files (beginner/mid/advanced). All node metadata (intuition, analogy, why_it_matters) is already populated.</p>
+  </div>
+  </div>
+
+  <div id="s7-tech">
+  <h3>7.3 Technical Guide to Add Missing Parts</h3>
+
+  <h4>A. Add extended fields to existing explanation files</h4>
+  <p>Open any explanation file. Add the missing fields at the end of the JSON object. Example for <code>real_world_usage</code>:</p>
+  <pre>{
+  "skill_id": "p1_loops",
+  "depth": "beginner",
+  ...existing fields...,
+  "real_world_usage": "PyTorch's training loop is literally a nested for loop over epochs and batches. Every model you'll ever train starts with `for epoch in range(N): for batch in dataloader: ...`. Understanding this makes training code readable immediately.",
+  "explain_back_prompt": "Without looking at your notes, explain what a loop is and why it's essential for training AI models. Use your own words and one analogy.",
+  "build_task": {
+    "title": "Build a Training Loop Counter",
+    "context": "Every real training loop tracks progress.",
+    "steps": [
+      "Create a variable called total_loss = 0",
+      "Write a for loop that runs 100 iterations",
+      "Inside the loop, add a simulated loss: total_loss += 1/i (handle division by zero)",
+      "Print the average loss after the loop: total_loss / 100"
+    ],
+    "expected_output": "A single printed number — the average simulated loss across 100 iterations.",
+    "hint": "Use range(1, 101) to avoid dividing by zero."
+  }
+}</pre>
+  <p>Then run <code>npm run validate</code> — it will pass as long as the JSON is valid.</p>
+
+  <h4>B. Add validator checks for extended fields</h4>
+  <p>In <code>scripts/validate-content.js</code>, after the existing body/key_insight checks (around line 150), add:</p>
+  <pre>if (exp && !exp.real_world_usage)   warn(`${node.id}/${depth}.json missing 'real_world_usage'`)
+if (exp && !exp.explain_back_prompt) warn(`${node.id}/${depth}.json missing 'explain_back_prompt'`)
+if (exp && !exp.build_task)          warn(`${node.id}/${depth}.json missing 'build_task'`)</pre>
+
+  <h4>C. Add Phase 3–8 question files</h4>
+  <p>1. Copy <code>content/templates/question_file.json</code>. 2. Rename to <code>content/questions/by-skill/{skill_id}.json</code>. 3. Fill all fields. 4. Update <code>nodes.json</code>: add the new question IDs to the skill's <code>question_ids</code> array. 5. Run <code>npm run validate</code>.</p>
+
+  <h4>D. Wire explain-back submission to DB</h4>
+  <p>In <code>src/app/learn/page.tsx</code>, the <code>onExplainBack</code> callback currently only fires an analytics event. Extend it to POST to <code>/api/attempt</code> with <code>format: 'explain'</code>, <code>correct: true</code> (self-reported), and the user's text. This will trigger a BKT update and give the learner retrieval credit.</p>
+
+  <h4>E. Add visual_element renderer</h4>
+  <p>In <code>src/components/learning/ExplanationPanel.tsx</code>, add a new <code>SubPhase</code> entry for <code>'visual'</code>, and render it based on <code>explanation.visual_element.type</code>: for <code>mental_model</code>, show a prompt box; for <code>diagram_ref</code>, show a link; for <code>simulation_prompt</code>, show a callout with a Python Tutor link.</p>
+
+  <h4>F. Install Monaco editor</h4>
+  <pre>npm install @monaco-editor/react</pre>
+  <p>In <code>QuestionCard.tsx</code>, for <code>q.format === 'code'</code>, render: <code>&lt;Editor height="200px" language="python" value={fillAnswer} onChange={setFillAnswer} theme="vs-dark" /&gt;</code></p>
+  </div>
+
+  <div id="s7-content-guide">
+  <h3>7.4 Content Guide — How to Write Missing Content</h3>
+
+  <h4>Question Writing Guide</h4>
+  <div class="card-sm">
+    <p><strong>Every question must pass this test:</strong> "If a learner gets this wrong, what exactly did they misunderstand about AI engineering?" The distractor options should reflect real misconceptions, not random wrong answers.</p>
+    <ul>
+      <li><strong>same-tier MCQ</strong>: Test the core concept at face value. One clear correct answer. Distractors should be plausible (things beginners actually believe).</li>
+      <li><strong>harder-tier MCQ</strong>: Apply the concept in an AI/ML context. Numbers, code snippets, or real system scenarios. Requires understanding, not just recall.</li>
+      <li><strong>review-tier fill</strong>: Complete a sentence with the key term or short phrase. Should be the thing learners most often forget. <code>correct_answer</code> should be 1–4 words.</li>
+      <li><strong>explanation_after</strong>: Always connect to AI engineering. "This matters because in PyTorch you'll…" or "GPT-4's architecture uses this because…".</li>
+    </ul>
+  </div>
+
+  <h4>Explanation Writing Guide by Depth</h4>
+  <div class="card-sm">
+    <p><strong>beginner.json</strong>: Start with a real-world analogy (not a computing analogy). No jargon in the first paragraph. Include one simple code example (5–10 lines). End with a mini_exercise that takes 2–3 minutes and uses no imports.</p>
+    <p><strong>mid.json</strong>: Introduce correct technical terminology. Show patterns from real ML code. Code examples 10–30 lines using numpy, pandas, or PyTorch basics. mini_exercise should require running code.</p>
+    <p><strong>advanced.json</strong>: Production concerns, performance characteristics, trade-offs, research connections. Reference specific papers, tools (FAISS, Flash Attention, etc.), or frameworks. mini_exercise should involve a real library or profiling step.</p>
+  </div>
+
+  <h4>real_world_usage Writing Guide</h4>
+  <div class="card-sm">
+    <p>One paragraph, 3–5 sentences. Structure: <em>"[Concept] is used in [specific production system / tool / company] because [technical reason]. The concrete consequence is [what engineers actually do / decide because of this]. Without understanding [concept], you would [common error or confusion]."</em></p>
+    <p>Always name something real: PyTorch, Hugging Face, FAISS, OpenAI API, Llama.cpp, vLLM, Weights &amp; Biases, etc.</p>
+  </div>
+
+  <h4>build_task Writing Guide</h4>
+  <div class="card-sm">
+    <p>A build task should take 10–20 minutes in a Python notebook. Structure:</p>
+    <ul>
+      <li><strong>title</strong>: Action verb + short noun. "Build a Tokeniser Counter", "Implement Gradient Descent", "Create a FAISS Index".</li>
+      <li><strong>context</strong>: One sentence — why a real engineer would do this.</li>
+      <li><strong>steps</strong>: 4–6 concrete steps. Each step is one action. No ambiguity.</li>
+      <li><strong>expected_output</strong>: Describe exactly what the learner should see when it works. Numbers, shapes, printed values.</li>
+      <li><strong>hint</strong>: Reveal the smallest possible nudge. Don't give away the answer.</li>
+      <li><strong>starter_code</strong>: Optional. If the setup is complex, provide imports and scaffolding with <code># TODO</code> comments.</li>
+    </ul>
+  </div>
+
+  <h4>Persona Consideration</h4>
+  <div class="card-sm">
+    <p>The platform serves three implicit learner types. Every question and explanation should be legible to all three:</p>
+    <ul>
+      <li><strong>Career Switcher</strong>: Has used software but never programmed. Needs strong analogies and no assumed CS knowledge. Beginner depth is their primary entry.</li>
+      <li><strong>Domain Expert</strong>: Strong in their field (biology, finance, law) but new to coding. Motivate by connecting to their domain. Mid depth is their target.</li>
+      <li><strong>Junior Dev</strong>: Can code in Python but has never done ML. Needs to understand why ML patterns exist, not just how they work. Advanced depth is their graduation point.</li>
+    </ul>
+  </div>
+  </div>
+</section>
+
+
+<!-- ══════════ SECTION 8 ══════════ -->
+<section id="s8">
+  <div class="sec-label"><span class="sec-num">08</span> Practical Integration Plan</div>
+  <h2>Direct Execution Plan</h2>
+  <p>This plan is ordered by priority. Each step is independent — you can stop after any step and the system remains valid and deployable.</p>
+
+  <h3>Wave 1 — Content Fill (No Code Changes)</h3>
+  <p>All of these are JSON file additions. Run <code>npm run validate</code> after each wave.</p>
+
+  <div class="step">
+    <div class="step-num">1</div>
+    <div class="step-body">
+      <div class="step-title">Add real_world_usage + explain_back_prompt to all 57 existing explanation files</div>
+      <div class="step-desc">Open each <code>content/explanations/{skill}/{depth}.json</code>. Add the two string fields. Reference the real_world_usage guide above. These are the highest-impact additions — the UI is already built to display them. No code changes needed. Run <code>npm run validate</code> after each batch.</div>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-num">2</div>
+    <div class="step-body">
+      <div class="step-title">Add build_task to all 60 explanation files missing it</div>
+      <div class="step-desc">Same as above. Add the <code>build_task</code> object to each file. The ExplanationPanel renders all fields (title, context, steps, expected_output, hint, starter_code). Already fully wired to the UI tab. No code changes needed.</div>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-num">3</div>
+    <div class="step-body">
+      <div class="step-title">Create Phase 3 question + explanation files (3 skills)</div>
+      <div class="step-desc">
+        Create: <code>content/questions/by-skill/p3_what_is_ai.json</code>, <code>p3_ai_vs_ml_vs_dl.json</code>, <code>p4_data_pipeline.json</code>. Follow prerequisite order.<br>
+        Create: <code>content/explanations/p3_what_is_ai/{beginner,mid,advanced}.json</code> (same for others).<br>
+        Update: <code>content/graph/nodes.json</code> — add question IDs to each node's <code>question_ids</code> array.<br>
+        Run: <code>npm run validate</code> — must show 0 errors.
+      </div>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-num">4</div>
+    <div class="step-body">
+      <div class="step-title">Create Phase 4–8 question + explanation files (remaining 7 skills)</div>
+      <div class="step-desc">Same process as Step 3. Order: <code>p4_supervised_learning → p5_neural_network_basics → p6_transformers → p6_embeddings → p6_rag_systems → p7_ai_apis → p8_system_design_ai</code>. Each new set unlocks the next group in the prerequisite graph.</div>
+    </div>
+  </div>
+
+  <h3>Wave 2 — Validator Enhancement (Minor Code Change)</h3>
+
+  <div class="step">
+    <div class="step-num">5</div>
+    <div class="step-body">
+      <div class="step-title">Extend scripts/validate-content.js to warn on missing extended fields</div>
+      <div class="step-desc">File: <code>scripts/validate-content.js</code>, around line 150. Add three <code>warn()</code> calls after the existing body/key_insight checks. This gives content authors feedback when they forget to fill the extended fields. No breaking changes.</div>
+    </div>
+  </div>
+
+  <h3>Wave 3 — UI Features (Moderate Code Changes)</h3>
+
+  <div class="step">
+    <div class="step-num">6</div>
+    <div class="step-body">
+      <div class="step-title">Wire explain-back and build-task completion to DB</div>
+      <div class="step-desc">File: <code>src/app/learn/page.tsx</code>. In the <code>onExplainBack</code> callback (line 295) and <code>onBuildTaskDone</code> callback (line 300), call <code>/api/attempt</code> with <code>format: 'explain'</code>, <code>correct: true</code>, and the relevant question_id. This gives BKT credit for retrieval practice. No API route changes needed — the attempt route already handles <code>explain</code> format.</div>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-num">7</div>
+    <div class="step-body">
+      <div class="step-title">Extract shared Navbar into src/components/layout/Navbar.tsx</div>
+      <div class="step-desc">All 5 pages (<code>dashboard</code>, <code>learn</code>, <code>profile</code>, <code>learn/diagnostic</code>, and <code>(auth)/layout</code>) implement their own navigation inline. Extract the common sticky header pattern into <code>src/components/layout/Navbar.tsx</code>. Import it in each page. No logic changes needed — pure refactor.</div>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-num">8</div>
+    <div class="step-body">
+      <div class="step-title">Add visual_element renderer to ExplanationPanel</div>
+      <div class="step-desc">File: <code>src/components/learning/ExplanationPanel.tsx</code>. Add <code>'visual'</code> to <code>SubPhase</code> type. Add tab button when <code>explanation.visual_element</code> is present. Render based on type: mental_model → styled prompt card; diagram_ref → link with description; simulation_prompt → callout with external tool link (Python Tutor, etc.). Then add <code>visual_element</code> fields to content files.</div>
+    </div>
+  </div>
+
+  <h3>Wave 4 — Advanced Features (Significant Code Changes)</h3>
+
+  <div class="step">
+    <div class="step-num">9</div>
+    <div class="step-body">
+      <div class="step-title">Install Monaco editor and build code question renderer</div>
+      <div class="step-desc">Run: <code>npm install @monaco-editor/react</code>. File: <code>src/components/learning/QuestionCard.tsx</code>. Add a branch for <code>q.format === 'code'</code>: render <code>&lt;Editor height="180px" language="python" theme="vs-dark" /&gt;</code>. Grading for code questions: compare output or check for required function/variable names in the submission. Add first code-format questions to a skill's question file.</div>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-num">10</div>
+    <div class="step-body">
+      <div class="step-title">Build order question renderer (drag-to-sort)</div>
+      <div class="step-desc">File: <code>src/components/learning/QuestionCard.tsx</code>. Add branch for <code>q.format === 'order'</code>. Use HTML5 drag API or a small lib like <code>@dnd-kit/core</code>. Render shuffled <code>q.options</code> as draggable cards. On submit, compare order to <code>q.correct_order</code> field (add to Question type). Grading: all items in correct position = correct.</div>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-num">11</div>
+    <div class="step-body">
+      <div class="step-title">Build level_breakdown renderer in ExplanationPanel</div>
+      <div class="step-desc">Add <code>'breakdown'</code> to SubPhase. When <code>explanation.level_breakdown</code> is present, render an accordion or progressive-reveal of depth levels 1→4. Then backfill <code>level_breakdown</code> arrays into explanation files (start with advanced.json for each skill, where recursive depth adds the most value).</div>
+    </div>
+  </div>
+
+  <h3>After Each Wave — Verification Checklist</h3>
+  <div class="card-sm">
+    <ul style="margin:0">
+      <li>Run <code>npm run validate</code> → must show ✅ 0 errors, 0 warnings</li>
+      <li>Run <code>npm run dev</code> → app boots without TypeScript errors</li>
+      <li>For content additions: navigate to a skill on the dashboard, start a study session, verify the new content appears in the explanation panel</li>
+      <li>For code changes: test each new format type end-to-end (attempt → feedback → explanation)</li>
+      <li>For DB changes: create a new migration file (<code>003_*.sql</code>) — never edit existing migration files</li>
+    </ul>
+  </div>
+
+  <h3>What Must Never Be Changed</h3>
+  <div class="card-sm" style="border-color:rgba(248,113,113,.2)">
+    <pre style="margin:0;font-size:12px"><span style="color:var(--red)">✗ NEVER</span> delete nodes from nodes.json → set "deprecated": true
+<span style="color:var(--red)">✗ NEVER</span> edit 001_initial_schema.sql or 002_functions_and_rls_fixes.sql
+<span style="color:var(--red)">✗ NEVER</span> restore trusting body.correct in /api/attempt
+<span style="color:var(--green)">✓ ALWAYS</span> sync question_ids in nodes.json when adding question files
+<span style="color:var(--green)">✓ ALWAYS</span> run npm run validate before committing content changes
+<span style="color:var(--green)">✓ ALWAYS</span> use require() not fetch() for loading content files in Next.js</pre>
+  </div>
+</section>
+
+<div style="border-top:1px solid var(--border);padding-top:20px;margin-top:8px">
+  <p style="font-family:monospace;font-size:11px;color:var(--xfaint)">
+    Synaptic Full Audit Report · Generated March 2026 · Validator: ✅ 0 errors, 0 warnings
+  </p>
+</div>
+
+</main>
+</div>
+</body>
+</html>

@@ -1,0 +1,15 @@
+{
+  "skill_id": "p1_what_is_computer",
+  "depth": "mid",
+  "title": "How Computers Actually Work",
+  "key_insight": "Everything a computer does is a cascade of electrical signals through logic gates \u2014 no magic, just physics.",
+  "body": "## How a Computer Actually Works\n\n### The Hardware Stack\n\n```\nYou type a key\n    \u2193\nElectrical signal sent to CPU\n    \u2193\nCPU decodes the signal using the instruction set\n    \u2193\nData stored temporarily in registers/cache\n    \u2193\nResult written to RAM\n    \u2193\nDisplay controller reads RAM \u2192 pixels update on screen\n```\n\n### CPU: The Fetch-Decode-Execute Cycle\n\nThe CPU runs this loop billions of times per second:\n\n1. **Fetch** \u2014 Get the next instruction from memory\n2. **Decode** \u2014 Figure out what the instruction means\n3. **Execute** \u2014 Do it (add numbers, move data, compare values)\n\nThat's it. Everything a computer does \u2014 from running Chrome to training a neural network \u2014 is this loop running very, very fast.\n\n### Memory Hierarchy (Speed vs Cost)\n\n| Level | Name | Speed | Size |\n|-------|------|-------|------|\n| 1 | CPU Registers | ~1 cycle | Bytes |\n| 2 | L1/L2 Cache | ~5 cycles | KB\u2013MB |\n| 3 | RAM | ~100 cycles | GB |\n| 4 | SSD/HDD | ~100,000 cycles | TB |\n\nAI training is slow partly because GPUs must constantly move data between these layers.\n\n### Why GPUs for AI?\n\nA CPU has 8\u201332 cores \u2014 great for sequential tasks.\nA GPU has 10,000+ cores \u2014 great for doing the same operation on thousands of numbers at once.\n\nNeural network training is matrix multiplication: multiply two grids of numbers. Each multiplication is independent. A GPU can do all of them simultaneously.\n\nA CPU does it like a line of one cashier serving customers one by one.\nA GPU does it like opening 10,000 checkout lanes at once.",
+  "common_mistakes": [
+    "Assuming more RAM means a faster CPU \u2014 they're separate",
+    "Thinking CPU speed (GHz) is the only performance metric \u2014 parallelism matters more for AI",
+    "Forgetting that data movement (CPU\u2194RAM\u2194GPU) is often the bottleneck, not computation itself"
+  ],
+  "mini_exercise": "Why do you think it would be bad to train a large neural network on a CPU instead of a GPU? Think about what operation neural networks repeat most.",
+  "real_world_usage": "When teams choose cloud infrastructure for AI workloads, they reason from first principles: 'Our model is 14GB, inference needs 16GB VRAM minimum \u2192 A10G GPU instance. We need 8 replicas for latency \u2192 $X/hour.' Von Neumann architecture is why you can't just 'make the AI think faster' \u2014 compute, memory, and bandwidth are separate, fundamental limits.",
+  "explain_back_prompt": "Explain the fetch-decode-execute cycle in your own words. Then explain why this cycle creates a bottleneck for AI inference, and what modern hardware does to work around it."
+}

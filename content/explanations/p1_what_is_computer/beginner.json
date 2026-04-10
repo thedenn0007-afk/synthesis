@@ -1,0 +1,28 @@
+{
+  "skill_id": "p1_what_is_computer",
+  "depth": "beginner",
+  "title": "What is a Computer? (Simple Version)",
+  "key_insight": "A computer is a machine that follows instructions to process information \u2014 it doesn't think, it just obeys.",
+  "body": "## What is a Computer?\n\nImagine you have a very obedient robot friend. You give this friend a recipe, and they follow it **exactly**. Step 1, Step 2, Step 3... they never skip, never improvise, never get creative.\n\nThat's a computer.\n\n### The Four Main Parts\n\n**1. Input** \u2014 How you give the computer information\n- Keyboard (you type something)\n- Mouse (you click)\n- Camera (you show it an image)\n\n**2. Processing (CPU)** \u2014 The 'brain' that follows instructions\n- Reads one instruction at a time\n- Executes it at incredible speed (billions per second)\n- Has no understanding \u2014 just follows rules\n\n**3. Memory (RAM)** \u2014 Short-term working space\n- Like your desk \u2014 holds what you're currently working on\n- Everything disappears when you turn off the computer\n\n**4. Output** \u2014 How the computer gives you results\n- Screen (shows you something)\n- Speaker (plays sound)\n- File saved to disk\n\n### The Important Bit\n\nA computer **cannot**:\n- Think for itself\n- Guess what you mean\n- Feel bored or excited\n- Decide to do something different\n\nA computer **can only**:\n- Follow instructions precisely\n- Do this extremely fast\n- Do it billions of times without making mistakes\n\nThis is why programming matters: **you write the instructions**.",
+  "common_mistakes": [
+    "Thinking computers are 'smart' \u2014 they're fast, not smart",
+    "Confusing RAM (temporary) with storage (permanent)",
+    "Thinking AI means the computer can think \u2014 AI is still just following instructions, just very complex ones"
+  ],
+  "mini_exercise": "Name one input device and one output device you used today. Think about what 'processing' happened in between.",
+  "real_world_usage": "Every AI product you use \u2014 ChatGPT, Google Search, Spotify recommendations \u2014 runs on computers in data centres. Understanding that these are physical machines with RAM, storage, CPUs, and GPUs lets you ask the right questions: 'How much memory does this model need?' 'How fast is inference?' These questions start with understanding what a computer is.",
+  "explain_back_prompt": "Without looking at the explanation, describe in your own words: what does a computer actually do? Use a non-technical analogy. Pretend you're explaining to a friend who has never thought about this.",
+  "build_task": {
+    "title": "Map an AI pipeline to computer components",
+    "context": "Pick any AI product (ChatGPT, Siri, Netflix recommendations). Identify what each component does.",
+    "steps": [
+      "Choose one AI product you use regularly",
+      "Draw a simple diagram with boxes: User, Input Device, Computer/Server, Storage, Output Device",
+      "Label what type of data flows between each box",
+      "Identify: where does the AI model live? (storage) Where does it run? (RAM/GPU)",
+      "Write 2 sentences explaining why the model can't just stay on disk while generating a response"
+    ],
+    "expected_output": "A labelled diagram showing data flow through computer components for one AI product",
+    "hint": "When ChatGPT answers you, the model weights travel from SSD \u2192 RAM \u2192 GPU \u2192 back to RAM \u2192 network \u2192 your screen"
+  }
+}

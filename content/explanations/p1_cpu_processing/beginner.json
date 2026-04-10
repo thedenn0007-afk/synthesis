@@ -1,0 +1,13 @@
+{
+  "skill_id": "p1_cpu_processing",
+  "depth": "beginner",
+  "title": "CPU & GPU \u2014 The Computer's Engines",
+  "key_insight": "The CPU is one super-smart worker. The GPU is thousands of simple workers. AI needs the thousands.",
+  "body": "## CPU: One Smart Worker\n\nImagine the world's fastest chef. They can cook any dish perfectly, but only one thing at a time.\n\nThat's a CPU (Central Processing Unit). It:\n- Executes one instruction at a time\n- Is incredibly fast (billions of instructions per second)\n- Can handle any type of task\n- Has 4\u201332 'workers' (cores) in a modern laptop\n\n## GPU: An Army of Simple Workers\n\nNow imagine 10,000 simple chefs who can each only make toast. Useless for cooking a feast \u2014 unless your feast is 10,000 pieces of toast.\n\nThat's a GPU (Graphics Processing Unit). It:\n- Has thousands of simple cores (NVIDIA H100: 16,896 cores)\n- Each core is much weaker than a CPU core\n- But they all work at the same time (in parallel)\n- Originally designed for graphics \u2014 turning 3D models into pixels simultaneously\n\n## Why GPUs for AI?\n\nTraining a neural network means doing the same math on thousands of numbers simultaneously:\n\n```\nFor each of 256 training examples:\n  For each of 4096 neurons:\n    Compute: output = weight \u00d7 input + bias\n```\n\nThese computations are completely independent of each other. The GPU does all 256 \u00d7 4096 = ~1 million computations at the same time.\n\nA CPU does them one (or 16, with 16 cores) at a time.\n\n## Analogy Summary\n\n| | CPU | GPU |\n|---|---|---|\n| Like | 1 brilliant chef | 10,000 toast-makers |\n| Best for | Complex sequential tasks | Simple parallel tasks |\n| AI training | Too slow | Perfect |\n| Running your browser | Perfect | Overkill |",
+  "common_mistakes": [
+    "Thinking a faster CPU makes AI training faster \u2014 GPU speed matters far more for training",
+    "Confusing CPU cores (4\u201332) with GPU cores (thousands) \u2014 totally different scale",
+    "Assuming you need a GPU to learn AI \u2014 you can learn everything on CPU, it just trains slower"
+  ],
+  "mini_exercise": "Open Python and try: import time; start=time.time(); total=sum(range(10_000_000)); print(time.time()-start). This runs on CPU. For comparison, GPU PyTorch operations run 10-100\u00d7 faster for matrix math."
+}

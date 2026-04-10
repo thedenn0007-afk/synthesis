@@ -1,0 +1,13 @@
+{
+  "skill_id": "p2_dictionaries",
+  "depth": "beginner",
+  "title": "Dictionaries \u2014 Look Up Anything by Name",
+  "key_insight": "A dictionary maps names to values. Instead of remembering positions, you look things up by meaningful keys.",
+  "body": "## What is a Dictionary?\n\nA Python dictionary works like a real dictionary:\n- You look up a KEY\n- You get back its VALUE\n\n```python\nages = {'Alice': 25, 'Bob': 30, 'Charlie': 22}\n\nprint(ages['Alice'])   # 25\nprint(ages['Bob'])     # 30\n```\n\n## Creating and Modifying\n\n```python\nconfig = {'lr': 0.001, 'batch_size': 32, 'epochs': 10}\n\nconfig['dropout'] = 0.1  # Add new key\nconfig['lr'] = 0.0001    # Update value\n\nif 'dropout' in config:\n    print('Dropout is set to:', config['dropout'])\n\nvalue = config.get('momentum', 0.9)  # default if missing\n```\n\n## Real AI Use Cases\n\n```python\n# Model configuration:\nmodel_config = {\n    'name': 'gpt-small',\n    'vocab_size': 50257,\n    'n_layers': 12,\n    'n_heads': 8,\n    'n_embd': 768,\n}\n\n# Vocabulary mapping:\nvocab = {'hello': 7592, 'world': 995}\ntoken_id = vocab['hello']  # 7592\n```",
+  "common_mistakes": [
+    "Looking up a key that doesn't exist: config['missing'] gives KeyError. Use .get() for safe lookup.",
+    "Using mutable types (lists) as keys \u2014 only immutable types (strings, numbers) can be dict keys",
+    "Assuming dicts are sorted \u2014 use OrderedDict if order matters"
+  ],
+  "mini_exercise": "Create a dictionary representing a training example with keys: 'text' (a sentence), 'label' (0 or 1), and 'id' (any number). Print each key-value pair."
+}

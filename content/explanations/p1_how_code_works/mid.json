@@ -1,0 +1,13 @@
+{
+  "skill_id": "p1_how_code_works",
+  "depth": "mid",
+  "title": "How Code Works \u2014 Execution Model and Control Flow",
+  "key_insight": "Programs are instruction sequences. Control flow constructs (loops, functions, conditions) change which instruction runs next.",
+  "body": "## Execution Model\n\nThe Python interpreter maintains an instruction pointer that steps through your code:\n\n```python\nx = 10        # instruction 1: store 10 in x\ny = 20        # instruction 2: store 20 in y\nz = x + y     # instruction 3: add x+y, store in z\nprint(z)      # instruction 4: output 30\n```\n\nLinear execution. No surprises.\n\n## Control Flow\n\nControl flow changes WHERE the instruction pointer jumps next:\n\n```python\n# Conditional: jump over some instructions\nif score > 80:\n    print('Pass')   # only executes if condition is True\n\n# Loop: jump backward repeatedly\nfor i in range(3):\n    print(i)  # executes 3 times (i=0, i=1, i=2)\n\n# Function call: jump to another block, then return\ndef square(x):\n    return x * x\nresult = square(5)  # jump to square(), execute it, jump back with 25\n```\n\n## The Call Stack\n\nWhen a function calls another function, Python tracks where to return:\n\n```python\ndef C():\n    return 42\n\ndef B():\n    return C() + 1  # calls C, waits for result\n\ndef A():\n    return B() + 1  # calls B, waits for result\n\nprint(A())  # prints 44\n```\n\nCall stack at the deepest point:\n```\nA \u2192 B \u2192 C    (C executes, returns 42)\n         \u2191\n    B gets 42, returns 43\n    \u2191\nA gets 43, returns 44\n```\n\n## Why This Matters for AI\n\n```python\n# A training loop is just control flow:\nfor epoch in range(100):           # loop: repeat 100 times\n    for batch in dataloader:       # nested loop: each batch\n        output = model(batch)      # function call: forward pass\n        loss = criterion(output)   # function call: compute loss\n        loss.backward()            # function call: backprop\n        optimizer.step()           # function call: update weights\n```\n\nEvery training loop you write is sequential execution with loops and function calls \u2014 no magic.",
+  "common_mistakes": [
+    "Assuming Python code runs in parallel by default \u2014 it doesn't; one instruction at a time (GIL)",
+    "Deep call stacks causing RecursionError \u2014 Python has a recursion limit (~1000 by default)",
+    "Forgetting that function calls have overhead \u2014 calling a tiny function millions of times in a loop is slow"
+  ],
+  "mini_exercise": "Write a function called cube(x) that returns x**3. Call it inside a list comprehension to get the cubes of 1 through 10. This combines functions, expressions, and loops \u2014 the core building blocks."
+}

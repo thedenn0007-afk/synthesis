@@ -1,0 +1,13 @@
+{
+  "skill_id": "p1_memory_storage",
+  "depth": "beginner",
+  "title": "Memory & Storage \u2014 Your Computer's Two Types of Remembering",
+  "key_insight": "RAM is what the computer is working on right now. Storage is what it keeps forever.",
+  "body": "## Two Ways to Remember\n\nYour brain has two kinds of memory:\n- **Working memory** \u2014 what you're thinking about right now (limited, fast)\n- **Long-term memory** \u2014 everything you've ever learned (large, slower to access)\n\nComputers have the exact same split:\n\n### RAM (Random Access Memory) \u2014 Working Memory\n\n- Very fast to read and write\n- Loses everything when power turns off\n- Usually 8\u201364 GB in a laptop\n- Holds what you're currently working on: open programs, data being processed\n\n### Storage (SSD/HDD) \u2014 Long-term Memory\n\n- Slower than RAM\n- Keeps data forever (even without power)\n- Usually 256 GB to several TB\n- Holds your files, photos, installed programs, AI model weights\n\n### How They Work Together\n\n```\n1. You open a photo editing app (Storage \u2192 RAM)\n2. You load an image file (Storage \u2192 RAM)\n3. You apply a filter (CPU works in RAM)\n4. You save the file (RAM \u2192 Storage)\n5. You close the app (RAM freed)\n```\n\nEverything the CPU works on must pass through RAM first. Storage is too slow for the CPU to use directly.\n\n### AI Connection\n\nAn AI model's weights are stored on disk (Storage). When you run the model, the weights load into RAM (or GPU memory). This is why:\n- A 7B model needs 14 GB of GPU RAM to run at fp16\n- First-use of a model is slow (loading from disk)\n- Subsequent uses are faster (already in RAM)",
+  "common_mistakes": [
+    "Thinking more storage = faster computer. Storage holds data. RAM + CPU speed = computer speed.",
+    "Confusing 'my computer is running out of memory' (RAM) with 'my disk is full' (storage) \u2014 very different problems",
+    "Forgetting that GPU VRAM is also RAM \u2014 it's just RAM on the graphics card, separate from system RAM"
+  ],
+  "mini_exercise": "Open your computer's task manager or Activity Monitor. Find how much RAM is being used right now vs how much is free. Then find how much storage space is used vs free. These are completely separate resources."
+}

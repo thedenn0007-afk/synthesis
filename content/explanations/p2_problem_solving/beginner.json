@@ -1,0 +1,13 @@
+{
+  "skill_id": "p2_problem_solving",
+  "depth": "beginner",
+  "title": "Problem-Solving \u2014 Breaking Big Problems Down (Beginner)",
+  "key_insight": "Every complex problem is just a collection of small problems. The skill is knowing how to break it apart.",
+  "body": "## The Problem-Solving Process\n\n```\n1. UNDERSTAND the problem before writing code\n   \u2192 What exactly is the input?\n   \u2192 What exactly should the output be?\n\n2. DECOMPOSE into smaller pieces\n   \u2192 What are the independent sub-tasks?\n\n3. SOLVE each piece\n   \u2192 Start with the simplest first\n   \u2192 Test each piece independently\n\n4. COMBINE the pieces\n   \u2192 Connect them together\n   \u2192 Test the whole thing\n```\n\n## The ML Debugging Checklist\n\n```\nWhen training fails:\n\u25a1 Is the loss decreasing at all?\n\u25a1 Is loss = NaN anywhere?\n\u25a1 Are all tensors on the same device?\n\u25a1 Is train loss decreasing but val loss plateauing?\n\u25a1 Did you check the DATA before blaming the model?\n```\n\n## Metrics Trap\n\n```python\n# 95% accuracy sounds great...\n# Until you realise: dataset is 95% non-spam\n# So model that always says 'not spam' = 95% accuracy!\n\n# Always ask: is accuracy actually what we care about?\n# Sometimes use: precision, recall, F1, AUC instead\n```",
+  "common_mistakes": [
+    "Trying to solve everything at once \u2014 start with one piece, get it working, then add the next",
+    "Writing code before understanding the problem \u2014 5 minutes of thinking saves hours of debugging",
+    "Fixing symptoms instead of root causes \u2014 if model output is wrong, check data first, then training"
+  ],
+  "mini_exercise": "You want to build a semantic search system. Break this into sub-problems (don't write code yet). What data do you need? What algorithm? What interface? Spending time on structure is the most valuable step."
+}

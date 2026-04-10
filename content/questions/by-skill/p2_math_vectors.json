@@ -1,0 +1,75 @@
+[
+  {
+    "id": "p2_vec_q1",
+    "skill_id": "p2_math_vectors",
+    "format": "mcq",
+    "difficulty_tier": "same",
+    "stem": "What is the dot product of [1, 2, 3] and [4, 5, 6]?",
+    "options": [
+      {
+        "id": "a",
+        "text": "[4, 10, 18]"
+      },
+      {
+        "id": "b",
+        "text": "32"
+      },
+      {
+        "id": "c",
+        "text": "15"
+      },
+      {
+        "id": "d",
+        "text": "[5, 7, 9]"
+      }
+    ],
+    "correct_option_id": "b",
+    "explanation_after": "Dot product: multiply each pair and sum. (1\u00d74)+(2\u00d75)+(3\u00d76) = 4+10+18 = 32. It gives one scalar measuring similarity. Every attention score, every recommendation engine, is built on dot products.",
+    "graph_placement_weight": {
+      "p2_math_vectors": 1.0
+    }
+  },
+  {
+    "id": "p2_vec_q2",
+    "skill_id": "p2_math_vectors",
+    "format": "mcq",
+    "difficulty_tier": "harder",
+    "stem": "Word embeddings represent words as vectors. The classic result 'king - man + woman \u2248 queen' works because:",
+    "options": [
+      {
+        "id": "a",
+        "text": "Computers memorised these relationships from a dictionary"
+      },
+      {
+        "id": "b",
+        "text": "Vector arithmetic captures semantic relationships: the gender direction is consistent across related pairs"
+      },
+      {
+        "id": "c",
+        "text": "Random chance \u2014 it only works for royalty words"
+      },
+      {
+        "id": "d",
+        "text": "The words have similar letter counts"
+      }
+    ],
+    "correct_option_id": "b",
+    "explanation_after": "In embedding space, queen - king \u2248 woman - man (same gender direction). This vector arithmetic on word meanings is why embeddings are so powerful for NLP.",
+    "graph_placement_weight": {
+      "p2_math_vectors": 1.0,
+      "p6_embeddings": 0.5
+    }
+  },
+  {
+    "id": "p2_vec_q3",
+    "skill_id": "p2_math_vectors",
+    "format": "fill",
+    "difficulty_tier": "review",
+    "prompt": "A vector is simply a ______ of numbers. In Python with NumPy: v = np.array([1, 2, 3])",
+    "correct_answer": "list",
+    "explanation_after": "A vector is a list (or array) of numbers. A 768-dimensional embedding vector (like in BERT) is a list of 768 numbers.",
+    "graph_placement_weight": {
+      "p2_math_vectors": 0.9
+    }
+  }
+]

@@ -1,0 +1,44 @@
+[
+  {
+    "id": "p1_dt_q1",
+    "skill_id": "p1_data_types",
+    "format": "mcq",
+    "difficulty_tier": "same",
+    "stem": "What is the data type of the value 3.14 in Python?",
+    "options": [
+      { "id": "a", "text": "int (integer)" },
+      { "id": "b", "text": "str (string)" },
+      { "id": "c", "text": "float (floating-point number)" },
+      { "id": "d", "text": "bool (boolean)" }
+    ],
+    "correct_option_id": "c",
+    "explanation_after": "3.14 has a decimal point, making it a float. Integers (int) are whole numbers like 3 or -7. Floats have decimal points like 3.14 or -0.001. This matters in ML because model weights are floats — storing millions of precise decimal values. The difference between float32 and float16 directly affects model memory requirements.",
+    "graph_placement_weight": { "p1_data_types": 1.0 }
+  },
+  {
+    "id": "p1_dt_q2",
+    "skill_id": "p1_data_types",
+    "format": "mcq",
+    "difficulty_tier": "harder",
+    "stem": "What will this code output?\n\nx = 10\ny = 3\nprint(x / y)\nprint(x // y)",
+    "options": [
+      { "id": "a", "text": "3.333... and 3" },
+      { "id": "b", "text": "3 and 3" },
+      { "id": "c", "text": "3.333... and 3.333..." },
+      { "id": "d", "text": "Error — can't divide integers" }
+    ],
+    "correct_option_id": "a",
+    "explanation_after": "/ is true division — always returns a float. 10/3 = 3.3333... // is floor division — discards the decimal. 10//3 = 3. In ML, you'll often use // to calculate batch indices: batch_number = sample_index // batch_size.",
+    "graph_placement_weight": { "p1_data_types": 1.0 }
+  },
+  {
+    "id": "p1_dt_q3",
+    "skill_id": "p1_data_types",
+    "format": "fill",
+    "difficulty_tier": "review",
+    "prompt": "In Python, text values (like names and sentences) are stored as the ______ data type, written with quotes.",
+    "correct_answer": "str",
+    "explanation_after": "str stands for string — a sequence of characters. 'hello', 'AI engineering', and '42' (with quotes) are all strings. Without quotes, 42 is an int and hello would be a variable name. In NLP and LLMs, all text input is processed as strings before being tokenised into numbers.",
+    "graph_placement_weight": { "p1_data_types": 0.9 }
+  }
+]

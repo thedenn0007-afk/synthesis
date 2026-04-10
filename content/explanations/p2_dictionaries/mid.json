@@ -1,0 +1,13 @@
+{
+  "skill_id": "p2_dictionaries",
+  "depth": "mid",
+  "title": "Dictionaries \u2014 Nested Structures and Performance",
+  "key_insight": "Dictionaries are O(1) \u2014 instant lookup regardless of size. This is why they're used for vocabularies with millions of entries.",
+  "body": "## Dictionary Time Complexity\n\n```python\nimport time\n\nvocab = {f'word_{i}': i for i in range(1_000_000)}\nstart = time.time()\nid = vocab['word_999999']  # ~0.0001 seconds regardless of size\n```\n\n## Nested Dictionaries\n\n```python\ncheckpoint = {\n    'epoch': 42,\n    'config': {'lr': 0.001, 'batch_size': 32},\n    'metrics': {'train_loss': 0.24, 'val_loss': 0.31}\n}\n\n# Access nested values:\nprint(checkpoint['metrics']['val_loss'])  # 0.31\n```\n\n## defaultdict: Automatic Default Values\n\n```python\nfrom collections import defaultdict\n\nword_count = defaultdict(int)  # int() returns 0\nfor word in text.split():\n    word_count[word] += 1  # no KeyError\n```\n\n## JSON: Dicts All the Way Down\n\n```python\nimport json\n\nconfig = {'lr': 0.001, 'model': 'gpt2'}\nwith open('config.json', 'w') as f:\n    json.dump(config, f, indent=2)\n\nwith open('config.json') as f:\n    loaded = json.load(f)\n```",
+  "common_mistakes": [
+    "Deeply nesting dicts (5+ levels) \u2014 use dataclasses instead for structured configs",
+    "Modifying a dict while iterating \u2014 causes RuntimeError; iterate over dict.copy()",
+    "Using dict when you need ordered sequence \u2014 dicts preserve insertion order but prefer lists"
+  ],
+  "mini_exercise": "Build a nested dict for a mini-dataset: two examples, each with 'text', 'label', and 'metadata' (containing 'source' and 'length'). Access the source of the second example using chained indexing."
+}

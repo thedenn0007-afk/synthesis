@@ -1,0 +1,75 @@
+[
+  {
+    "id": "p2_ps_q1",
+    "skill_id": "p2_problem_solving",
+    "format": "mcq",
+    "difficulty_tier": "same",
+    "stem": "You need to build an AI that detects spam emails. What is the RIGHT first step?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Train a neural network immediately"
+      },
+      {
+        "id": "b",
+        "text": "Decompose the problem: what data do you need? What does 'spam' mean? How will you measure success?"
+      },
+      {
+        "id": "c",
+        "text": "Download the largest possible model from the internet"
+      },
+      {
+        "id": "d",
+        "text": "Write code first, ask questions later"
+      }
+    ],
+    "correct_option_id": "b",
+    "explanation_after": "Decomposition is the first engineering skill. Before writing a line of code: define what 'spam' means, determine what data you have, decide how to measure success.",
+    "graph_placement_weight": {
+      "p2_problem_solving": 1.0
+    }
+  },
+  {
+    "id": "p2_ps_q2",
+    "skill_id": "p2_problem_solving",
+    "format": "mcq",
+    "difficulty_tier": "harder",
+    "stem": "Your ML model's accuracy is 95% but the product team says it's not working. What should you investigate first?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Train for more epochs"
+      },
+      {
+        "id": "b",
+        "text": "Check if accuracy is the right metric \u2014 maybe the failure cases are the 5% that matter most"
+      },
+      {
+        "id": "c",
+        "text": "Switch to a different model architecture immediately"
+      },
+      {
+        "id": "d",
+        "text": "Collect more training data"
+      }
+    ],
+    "correct_option_id": "b",
+    "explanation_after": "95% accuracy sounds great \u2014 until you realise the dataset is 95% non-spam and the model just says 'not spam' for everything. Always ask: Is accuracy actually what we care about here?",
+    "graph_placement_weight": {
+      "p2_problem_solving": 1.0,
+      "p4_supervised_learning": 0.3
+    }
+  },
+  {
+    "id": "p2_ps_q3",
+    "skill_id": "p2_problem_solving",
+    "format": "fill",
+    "difficulty_tier": "review",
+    "prompt": "Breaking a large, complex problem into smaller, manageable sub-problems is called ______.",
+    "correct_answer": "decomposition",
+    "explanation_after": "Decomposition is the core problem-solving technique in engineering. The best way to solve any hard problem is to make it not one hard problem.",
+    "graph_placement_weight": {
+      "p2_problem_solving": 0.9
+    }
+  }
+]

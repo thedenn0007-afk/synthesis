@@ -1,0 +1,13 @@
+{
+  "skill_id": "p2_math_vectors",
+  "depth": "advanced",
+  "title": "Vectors \u2014 Lists of Numbers with Direction (Advanced)",
+  "key_insight": "A vector is just a list of numbers. In AI, it represents anything \u2014 a word, an image, a concept.",
+  "body": "## What is a Vector?\n\n```python\nimport numpy as np\n\nposition   = np.array([3, 4])      # 2D location\ncolour     = np.array([255, 128, 0])  # RGB\nword_embed = np.array([0.3, -0.1, 0.8])  # word meaning\n```\n\n## Dot Product \u2014 Measuring Similarity\n\n```python\na = np.array([1, 2, 3])\nb = np.array([4, 5, 6])\n\ndot = np.dot(a, b)  # (1\u00d74)+(2\u00d75)+(3\u00d76) = 32\n# Or:\ndot = a @ b\n```\n\nLarge positive dot product = vectors point in similar directions = similar meaning.\n\n## Word Embeddings\n\n```python\n# Words are vectors \u2014 similar words have similar vectors\n# king - man + woman \u2248 queen\n# This is how word2vec and all modern embeddings work\n```",
+  "common_mistakes": [
+    "Confusing a vector with just any list \u2014 vectors represent direction and magnitude",
+    "Forgetting dot product requires same-length vectors",
+    "Thinking dot product = vector length \u2014 it's a scalar measuring relationship between two vectors"
+  ],
+  "mini_exercise": "Create two vectors: a=[1,0] (pointing right) and b=[0,1] (pointing up). Compute their dot product \u2014 should be 0 (perpendicular = unrelated). Then try a=[1,0] and c=[1,0]. Dot product = 1 (identical direction)."
+}

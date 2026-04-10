@@ -1,0 +1,13 @@
+{
+  "skill_id": "p1_conditionals",
+  "depth": "mid",
+  "title": "Conditionals \u2014 Boolean Logic and Truthiness",
+  "key_insight": "Python's truthiness system is broader than True/False \u2014 any object can be truthy or falsy.",
+  "body": "## Python Truthiness\n\nIn Python, any value can be used in a boolean context:\n\n```python\n# Falsy values (evaluate to False in boolean context):\nbool(0)       # False\nbool(0.0)     # False\nbool('')      # False (empty string)\nbool([])      # False (empty list)\nbool({})      # False (empty dict)\nbool(None)    # False\n\n# Truthy values (evaluate to True):\nbool(1)       # True\nbool(-5)      # True (any non-zero number)\nbool('hi')    # True (non-empty string)\nbool([1])     # True (non-empty list)\n```\n\nThis lets you write clean code:\n\n```python\ndata = load_data()  # might return empty list\n\n# Verbose:\nif len(data) > 0:\n    process(data)\n\n# Pythonic (uses truthiness):\nif data:\n    process(data)\n```\n\n## Short-Circuit Evaluation\n\n```python\n# 'and': if first is False, second is never evaluated\nresult = expensive_check() and another_check()  # short-circuits\n\n# 'or': if first is True, second is never evaluated\nconfig = user_config or default_config  # uses default if user_config is falsy\n\n# Common pattern for default values:\nname = user_input or 'Anonymous'  # if user_input is empty, use 'Anonymous'\n```\n\n## Ternary Expression\n\n```python\n# Traditional:\nif score >= 60:\n    status = 'pass'\nelse:\n    status = 'fail'\n\n# Ternary (one line):\nstatus = 'pass' if score >= 60 else 'fail'\n```\n\n## Conditionals in ML Code\n\n```python\n# Training vs evaluation mode conditional:\nif model.training:\n    output = model(input, dropout=0.1)\nelse:\n    with torch.no_grad():\n        output = model(input)\n\n# Gradient clipping conditional:\nif grad_norm > max_grad_norm:\n    torch.nn.utils.clip_grad_norm_(model.parameters(), max_grad_norm)\n\n# Early stopping:\nif val_loss > best_val_loss:\n    patience_counter += 1\n    if patience_counter >= patience:\n        print('Early stopping triggered')\n        break\n```",
+  "common_mistakes": [
+    "Checking 'if x == True' instead of 'if x' \u2014 redundant, and fails for objects that aren't exactly True but are truthy",
+    "Checking 'if x == None' instead of 'if x is None' \u2014 use is for None comparison",
+    "Forgetting that 0, 0.0, and '' are falsy \u2014 a model loss of 0.0 would fail 'if loss' even though it's a valid value"
+  ],
+  "mini_exercise": "Write a function validate_batch(batch) that returns True if batch is a non-empty list, has more than 0 elements, and its first element is not None. Use truthiness and short-circuit evaluation \u2014 no len() needed."
+}

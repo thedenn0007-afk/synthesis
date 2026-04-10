@@ -1,0 +1,13 @@
+{
+  "skill_id": "p1_python_intro",
+  "depth": "mid",
+  "title": "Python \u2014 The Language of AI Engineering",
+  "key_insight": "Python's power for AI comes from its ecosystem, not its speed. The Python code is the glue; the fast code is in C/C++/CUDA underneath.",
+  "body": "## Why Python Dominates AI\n\nPython isn't the fastest language. It's the most productive language for AI work because:\n1. Readable syntax \u2192 faster iteration\n2. REPL (interactive shell) \u2192 test ideas instantly\n3. Massive ecosystem \u2192 every AI tool has Python bindings\n4. NumPy/PyTorch \u2192 fast math via C/CUDA, called from Python\n\n## Python Ecosystem for AI\n\n```python\nimport numpy as np          # fast array math (C under the hood)\nimport pandas as pd         # data manipulation and analysis\nimport matplotlib.pyplot as plt  # plotting and visualisation\nimport torch                # deep learning (CUDA under the hood)\nfrom sklearn import ...     # classical ML algorithms\nfrom transformers import ... # pretrained models (Hugging Face)\n```\n\nEvery import gives you access to years of optimised C/C++/CUDA code.\n\n## Key Python Patterns for AI\n\n```python\n# List comprehension: concise loop\nsquares = [x**2 for x in range(10)]\n# [0, 1, 4, 9, 16, 25, 36, 49, 64, 81]\n\n# Unpacking: extract multiple values\nfirst, *rest = [1, 2, 3, 4, 5]\n# first=1, rest=[2,3,4,5]\n\n# f-strings: embed variables in strings\nloss = 0.342\nprint(f'Epoch 5: loss={loss:.4f}')  # 'Epoch 5: loss=0.3420'\n\n# Dictionary comprehension\nvocab = {word: i for i, word in enumerate(['the', 'cat', 'sat'])}\n# {'the': 0, 'cat': 1, 'sat': 2}\n\n# *args and **kwargs: flexible function signatures\ndef train(model, *args, lr=0.001, **kwargs):\n    # args: positional arguments as tuple\n    # kwargs: keyword arguments as dict\n    pass\n```\n\n## Working in Notebooks vs Scripts\n\n**Notebooks (Jupyter)**: Great for exploration, visualisation, and experimenting. Each cell runs independently. Bad for production code.\n\n**Scripts (.py files)**: For production, training pipelines, and anything you'd run repeatedly. Import your notebook experiments here.",
+  "common_mistakes": [
+    "Writing Python as if it's fast \u2014 always move inner loops to NumPy/PyTorch/vectorised operations",
+    "Using Jupyter for everything \u2014 notebooks become messy; refactor working code into .py modules",
+    "Mutable default arguments: def f(x, data=[]): is a famous Python bug \u2014 the list is shared across all calls"
+  ],
+  "mini_exercise": "Write a list comprehension that generates the first 20 Fibonacci numbers. Then convert it to use f-strings: print each as 'Fib(n) = value'. Practice both patterns \u2014 you'll use them constantly in data pipelines."
+}

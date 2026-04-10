@@ -1,0 +1,13 @@
+{
+  "skill_id": "p1_data_types",
+  "depth": "mid",
+  "title": "Data Types \u2014 Mutability, Collections, and Type System",
+  "key_insight": "Python's type system is dynamic but disciplined. Knowing types prevents 90% of beginner bugs.",
+  "body": "## Python's Type System\n\nPython is dynamically typed \u2014 variables can change type:\n\n```python\nx = 42       # x is int\nx = 'hello'  # x is now str \u2014 valid in Python\n```\n\nBut operations still require compatible types:\n\n```python\nx = '5'\ny = 3\nprint(x + y)    # TypeError: can only concatenate str to str\nprint(int(x) + y)  # 8 \u2014 explicit conversion works\n```\n\n## Collection Types\n\n```python\n# list: ordered, mutable, allows duplicates\ndata = [1, 2, 3, 2, 1]\ndata[0] = 99      # modify by index\ndata.append(4)    # add to end\n\n# tuple: ordered, IMMUTABLE, allows duplicates\nshape = (32, 128, 768)  # batch, seq, dim\nshape[0] = 64  # TypeError! tuples cannot be changed\n# Used for shapes and coordinates \u2014 things that shouldn't change\n\n# set: unordered, no duplicates\nvocab = {'cat', 'dog', 'cat', 'fish'}  # {'cat', 'dog', 'fish'}\n\n# dict: key-value, ordered (Python 3.7+)\nconfig = {'lr': 0.001, 'batch': 32, 'epochs': 10}\n```\n\n## None: The Absence of a Value\n\n```python\nresult = None   # means 'no value yet'\n\ndef find_user(id):\n    if id not in database:\n        return None  # not found\n    return database[id]\n\nuser = find_user(999)\nif user is None:  # always use 'is None', not '== None'\n    print('User not found')\n```\n\n## Type Hints in Practice\n\n```python\nfrom typing import Optional, Union\n\ndef tokenise(\n    text: str,\n    max_length: Optional[int] = None\n) -> list[int]:\n    '''Convert text to token IDs.'''\n    tokens = vocab.encode(text)\n    if max_length:\n        tokens = tokens[:max_length]\n    return tokens\n```",
+  "common_mistakes": [
+    "Using == None instead of is None \u2014 None is a singleton, is None is the correct idiom",
+    "Modifying a list while iterating over it \u2014 always iterate over a copy: for x in list.copy()",
+    "Treating tuple and list as interchangeable \u2014 tuples are immutable and hashable (can be dict keys)"
+  ],
+  "mini_exercise": "Create a config dictionary for a neural network training run with keys: model_name (str), lr (float), batch_size (int), use_gpu (bool). Add a new key 'dropout' = 0.1 after creation. Print the dict. This is how real model configs look."
+}

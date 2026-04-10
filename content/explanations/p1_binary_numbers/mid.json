@@ -1,0 +1,13 @@
+{
+  "skill_id": "p1_binary_numbers",
+  "depth": "mid",
+  "title": "Binary, Bits, and Number Representation",
+  "key_insight": "How numbers are stored in binary directly determines precision, memory cost, and computation speed in ML.",
+  "body": "## Number Representation in Computing\n\n### Integer Types\n\n```python\nimport numpy as np\n\n# Unsigned integers: only positive\nuint8  = np.uint8(255)    # 8 bits, range: 0 to 255\nuint16 = np.uint16(65535) # 16 bits, range: 0 to 65535\n\n# Signed integers: positive and negative\nint8   = np.int8(-128)    # 8 bits, range: -128 to 127\nint32  = np.int32(2**31)  # 32 bits, range: \u00b12.1 billion\n```\n\nPixel values in images are uint8 (0-255). Sequence lengths in transformers are int32.\n\n### Floating-Point Types (Critical for ML)\n\n```\nfloat32 (32 bits):\n  [1 sign bit][8 exponent bits][23 mantissa bits]\n  Range: \u00b13.4 \u00d7 10^38   Precision: ~7 decimal digits\n\nfloat16 (16 bits):\n  [1 sign bit][5 exponent bits][10 mantissa bits]\n  Range: \u00b165504          Precision: ~3 decimal digits\n\nbfloat16 (16 bits, Google's format):\n  [1 sign bit][8 exponent bits][7 mantissa bits]\n  Same range as float32, less precision \u2014 better for training\n```\n\n### Why This Matters in ML\n\n| Format | Bytes | Memory for 7B params | Speed |\n|--------|-------|----------------------|-------|\n| float32 | 4 | 28 GB | 1\u00d7 |\n| float16 | 2 | 14 GB | 2\u00d7 |\n| bfloat16 | 2 | 14 GB | 2\u00d7 |\n| int8 | 1 | 7 GB | 4\u00d7 |\n| int4 | 0.5 | 3.5 GB | 8\u00d7 |\n\nQuant from float32 \u2192 int4 reduces memory by 8\u00d7. This is why `llama.cpp` can run a 7B model on a laptop.\n\n### Overflow and Underflow\n\n```python\nimport numpy as np\nx = np.float16(65504)   # max float16 value\ny = x * 2               # overflow! \u2192 inf\nprint(y)  # inf\n\nz = np.float16(0.0001)  # very small number\nw = z / 1000            # underflow \u2192 0\nprint(w)  # 0.0 (lost precision)\n```\n\nOverflow during training = loss becomes `inf` = training collapses. This is why gradient clipping exists.",
+  "common_mistakes": [
+    "Using float16 for training without loss scaling \u2014 gradients underflow to zero and the model stops learning",
+    "Forgetting that int quantisation loses precision \u2014 8-bit weights round to nearest, causing slight accuracy drops",
+    "Mixing float32 and float16 tensors without explicit casting \u2014 causes dtype errors in PyTorch"
+  ],
+  "mini_exercise": "In Python: import numpy as np; print(np.float16(65504) + np.float16(1)). What do you get? Why? (Hint: float16 can't represent numbers > 65504)"
+}
