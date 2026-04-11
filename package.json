@@ -12,6 +12,8 @@
     "db:reset": "node scripts/reset-db.js"
   },
   "dependencies": {
+    "@dagrejs/dagre": "^3.0.0",
+    "@xyflow/react": "^12.10.2",
     "bcryptjs": "^2.4.3",
     "better-sqlite3": "^12.8.0",
     "clsx": "^2.1.1",

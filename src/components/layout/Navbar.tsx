@@ -13,6 +13,7 @@ export function Navbar() {
 
   const links = [
     { href: '/dashboard', label: 'Dashboard' },
+    { href: '/graph',     label: 'Graph' },
     { href: '/learn',     label: 'Study' },
     { href: '/profile',   label: 'Profile' },
   ]

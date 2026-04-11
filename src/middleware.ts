@@ -1,6 +1,6 @@
 import { NextResponse, type NextRequest } from 'next/server'
 
-const PROTECTED = ['/dashboard', '/learn', '/profile']
+const PROTECTED = ['/dashboard', '/learn', '/profile', '/graph']
 const AUTH_PAGES = ['/login', '/signup']
 
 export function middleware(request: NextRequest) {

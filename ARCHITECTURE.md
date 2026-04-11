@@ -59,3 +59,13 @@ Supabase migration files are in `supabase/migrations/`.
 | POST /api/session       | start / next / end study session |
 | POST /api/attempt       | Submit answer (server-side verified) |
 | GET  /api/explanation   | Get explanation for skill (after correct attempt) |
+| GET  /api/graph         | All 31 nodes + 37 edges + per-user mastery states |
+
+## UI Routes
+
+| Route      | Purpose |
+|------------|---------|
+| /dashboard | Skill list grouped by phase with mastery bars |
+| /graph     | Interactive SVG prerequisite graph (click to explore) |
+| /learn     | Adaptive study session (question → feedback → explanation) |
+| /profile   | Analytics: heatmap, top skills, session history |
