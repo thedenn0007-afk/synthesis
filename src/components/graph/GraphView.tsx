@@ -24,25 +24,33 @@ export type GraphNodeWithState = SkillNode & {
 }
 
 interface Props {
-  nodes: GraphNodeWithState[]
-  edges: SkillEdge[]
+  nodes:    GraphNodeWithState[]
+  edges:    SkillEdge[]
   onSelect: (node: GraphNodeWithState | null) => void
 }
 
-// ─── Mastery colours (matches design system) ─────────────────────────────────
+// ─── Mastery colours ─────────────────────────────────────────────────────────
 
 export const MASTERY_COLOUR: Record<MasteryState, string> = {
   mastered: '#34d399',
   fragile:  '#fbbf24',
   learning: '#7c6eff',
-  ready:    '#5a5a72',
-  blocked:  '#3a3a50',
+  ready:    '#5a8a9f',   /* teal-ish — more distinct from blocked */
+  blocked:  '#5a5a72',
+}
+
+export const MASTERY_LABEL: Record<MasteryState, string> = {
+  mastered: 'Mastered',
+  fragile:  'Fragile',
+  learning: 'Learning',
+  ready:    'Ready',
+  blocked:  'Locked',
 }
 
 // ─── Layout constants ─────────────────────────────────────────────────────────
 
-const NODE_W = 160
-const NODE_H = 48
+const NODE_W = 175
+const NODE_H = 52
 
 // ─── Dagre layout ─────────────────────────────────────────────────────────────
 
@@ -52,7 +60,7 @@ function computeLayout(
 ): { nodes: Node[]; edges: Edge[] } {
   const g = new graphlib.Graph()
   g.setDefaultEdgeLabel(() => ({}))
-  g.setGraph({ rankdir: 'LR', nodesep: 44, ranksep: 80, marginx: 24, marginy: 24 })
+  g.setGraph({ rankdir: 'LR', nodesep: 48, ranksep: 90, marginx: 32, marginy: 32 })
 
   skillNodes.forEach(n => g.setNode(n.id, { width: NODE_W, height: NODE_H }))
   skillEdges.forEach(e => g.setEdge(e.from, e.to))
@@ -73,8 +81,9 @@ function computeLayout(
     source: e.from,
     target: e.to,
     type:   'smoothstep',
-    style:  {
-      stroke:          e.strength === 'hard' ? 'rgba(124,110,255,0.45)' : 'rgba(90,90,114,0.30)',
+    animated: false,
+    style: {
+      stroke:          e.strength === 'hard' ? 'rgba(124,110,255,0.5)' : 'rgba(90,90,114,0.28)',
       strokeWidth:     e.strength === 'hard' ? 1.5 : 1,
       strokeDasharray: e.strength === 'hard' ? undefined : '5 4',
     },
@@ -86,7 +95,7 @@ function computeLayout(
 // ─── Custom skill node ────────────────────────────────────────────────────────
 
 interface SkillNodeProps {
-  data:     { skillNode: GraphNodeWithState }
+  data:      { skillNode: GraphNodeWithState }
   selected?: boolean
 }
 
@@ -94,89 +103,109 @@ function SkillNodeComponent({ data, selected }: SkillNodeProps) {
   const sn      = data.skillNode
   const color   = MASTERY_COLOUR[sn.mastery_state]
   const blocked = sn.mastery_state === 'blocked'
-  const label   = sn.label.length > 19 ? sn.label.slice(0, 18) + '…' : sn.label
+  // Truncate at 22 chars so text is readable at 11px
+  const label   = sn.label.length > 22 ? sn.label.slice(0, 21) + '…' : sn.label
 
   return (
     <>
       <Handle
         type="target"
         position={Position.Left}
-        style={{ background: color, opacity: 0.55, width: 6, height: 6, border: 'none' }}
+        style={{ background: color, opacity: 0.6, width: 6, height: 6, border: 'none' }}
       />
 
       <div
         style={{
           width:        NODE_W,
           height:       NODE_H,
-          background:   selected ? '#16162a' : '#111118',
-          border:       `${selected ? 2 : 1}px solid ${color}`,
-          borderRadius: 7,
-          opacity:      blocked ? 0.55 : 1,
+          background:   selected ? 'var(--node-bg-sel)' : 'var(--node-bg)',
+          border:       `${selected ? 2 : 1}px solid ${selected ? color : color + '70'}`,
+          borderRadius: 8,
+          opacity:      blocked ? 0.5 : 1,
           position:     'relative',
           display:      'flex',
           alignItems:   'center',
-          padding:      '0 10px',
+          padding:      '0 11px',
           overflow:     'hidden',
           cursor:       'pointer',
-          boxShadow:    selected ? `0 0 0 1px ${color}30` : 'none',
+          boxShadow:    selected ? `0 0 0 2px ${color}22, 0 2px 8px rgba(0,0,0,0.18)` : '0 1px 3px rgba(0,0,0,0.12)',
+          transition:   'border-color 0.15s, box-shadow 0.15s',
         }}
       >
-        {/* p_know progress strip at node bottom */}
+        {/* p_know progress strip at bottom */}
         {!blocked && sn.p_know > 0 && (
           <div
             style={{
               position:     'absolute',
-              bottom:       3,
-              left:         4,
-              width:        Math.max(0, (NODE_W - 8) * sn.p_know),
-              height:       2,
+              bottom:       0,
+              left:         0,
+              width:        `${Math.max(0, sn.p_know * 100)}%`,
+              height:       3,
               background:   color,
-              opacity:      0.55,
-              borderRadius: 1,
+              opacity:      0.45,
+              borderRadius: '0 2px 0 0',
             }}
           />
         )}
 
+        {/* Mastery dot */}
+        <div
+          style={{
+            width:        8,
+            height:       8,
+            borderRadius: '50%',
+            background:   color,
+            flexShrink:   0,
+            marginRight:  8,
+            boxShadow:    blocked ? 'none' : `0 0 4px ${color}88`,
+          }}
+        />
+
         {/* Skill label */}
         <span
           style={{
-            fontFamily:   'ui-monospace, SFMono-Regular, Menlo, monospace',
-            fontSize:     10,
-            color:        blocked ? '#4a4a60' : '#c8c8d8',
+            fontFamily:   'system-ui, -apple-system, sans-serif',
+            fontSize:     11,
+            fontWeight:   blocked ? 400 : 500,
+            color:        blocked ? 'var(--node-blocked)' : 'var(--node-text)',
             flex:         1,
             overflow:     'hidden',
             textOverflow: 'ellipsis',
             whiteSpace:   'nowrap',
-            lineHeight:   1,
             userSelect:   'none',
+            letterSpacing: '0.01em',
           }}
         >
           {label}
         </span>
 
-        {/* Mastery dot */}
-        <div
-          style={{
-            width:        6,
-            height:       6,
-            borderRadius: '50%',
-            background:   color,
-            flexShrink:   0,
-            marginLeft:   6,
-          }}
-        />
+        {/* p_know % badge for non-blocked */}
+        {!blocked && sn.p_know > 0 && (
+          <span
+            style={{
+              fontFamily:   'ui-monospace, monospace',
+              fontSize:     9,
+              color:        color,
+              opacity:      0.75,
+              flexShrink:   0,
+              marginLeft:   5,
+            }}
+          >
+            {Math.round(sn.p_know * 100)}%
+          </span>
+        )}
       </div>
 
       <Handle
         type="source"
         position={Position.Right}
-        style={{ background: color, opacity: 0.55, width: 6, height: 6, border: 'none' }}
+        style={{ background: color, opacity: 0.6, width: 6, height: 6, border: 'none' }}
       />
     </>
   )
 }
 
-// nodeTypes must be defined outside the component to avoid remounting on render
+// nodeTypes must be defined outside render to avoid remounting
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const nodeTypes: Record<string, any> = { skillNode: SkillNodeComponent }
 
@@ -186,7 +215,6 @@ export function GraphView({ nodes: skillNodes, edges: skillEdges, onSelect }: Pr
   const [nodes, setNodes, onNodesChange] = useNodesState<Node>([])
   const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>([])
 
-  // Recompute layout whenever skill data arrives/updates
   useEffect(() => {
     if (skillNodes.length === 0) return
     const { nodes: n, edges: e } = computeLayout(skillNodes, skillEdges)
@@ -214,28 +242,20 @@ export function GraphView({ nodes: skillNodes, edges: skillEdges, onSelect }: Pr
       onPaneClick={handlePaneClick}
       nodeTypes={nodeTypes}
       fitView
-      fitViewOptions={{ padding: 0.12 }}
-      minZoom={0.25}
-      maxZoom={1.8}
+      fitViewOptions={{ padding: 0.14 }}
+      minZoom={0.2}
+      maxZoom={2}
       nodesDraggable={false}
       nodesConnectable={false}
       elementsSelectable
     >
       <Background
-        color="#1e1e30"
+        color="var(--border-hi)"
         variant={BackgroundVariant.Dots}
-        gap={22}
+        gap={24}
         size={1.2}
       />
-      <Controls
-        showInteractive={false}
-        style={{
-          background:   '#111118',
-          border:       '1px solid rgba(255,255,255,0.07)',
-          borderRadius: 8,
-          boxShadow:    'none',
-        }}
-      />
+      <Controls showInteractive={false} />
     </ReactFlow>
   )
 }

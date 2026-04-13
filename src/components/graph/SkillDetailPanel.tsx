@@ -1,21 +1,13 @@
 'use client'
 import type { SkillEdge } from '@/types'
 import type { GraphNodeWithState } from './GraphView'
-import { MASTERY_COLOUR } from './GraphView'
+import { MASTERY_COLOUR, MASTERY_LABEL } from './GraphView'
 
 interface Props {
   node:     GraphNodeWithState
   edges:    SkillEdge[]
   nodesMap: Map<string, GraphNodeWithState>
   onClose:  () => void
-}
-
-const MASTERY_LABEL: Record<string, string> = {
-  mastered: 'Mastered',
-  fragile:  'Fragile — review due',
-  learning: 'Learning',
-  ready:    'Ready to start',
-  blocked:  'Locked',
 }
 
 const PHASE_LABEL: Record<string, string> = {
@@ -29,153 +21,169 @@ const PHASE_LABEL: Record<string, string> = {
   phase_8_mastery:          'Phase 8 — Mastery & System Design',
 }
 
+function NodeTag({ node, strength }: { node: GraphNodeWithState; strength?: 'hard' | 'soft' }) {
+  const c = MASTERY_COLOUR[node.mastery_state]
+  return (
+    <span
+      className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[11px] font-medium border"
+      style={{ color: c, borderColor: c + '38', background: c + '10' }}
+    >
+      {strength && (
+        <span style={{ opacity: 0.7 }}>{strength === 'hard' ? '⬤' : '○'}</span>
+      )}
+      {node.label}
+    </span>
+  )
+}
+
 export function SkillDetailPanel({ node, edges, nodesMap, onClose }: Props) {
   const color      = MASTERY_COLOUR[node.mastery_state]
   const pKnowPct   = Math.round(node.p_know * 100)
   const isBlocked  = node.mastery_state === 'blocked'
   const isMastered = node.mastery_state === 'mastered'
 
-  // Inbound edges (prerequisites of this skill)
   const prerequisites = edges
     .filter(e => e.to === node.id)
     .map(e => ({ strength: e.strength, node: nodesMap.get(e.from) }))
     .filter((p): p is { strength: 'hard' | 'soft'; node: GraphNodeWithState } => !!p.node)
 
-  // Outbound edges (skills this unlocks)
   const unlocks = edges
     .filter(e => e.from === node.id)
     .map(e => ({ strength: e.strength, node: nodesMap.get(e.to) }))
     .filter((u): u is { strength: 'hard' | 'soft'; node: GraphNodeWithState } => !!u.node)
 
-  // For blocked skills, find which hard prerequisites are still unmet
   const unmetHardPrereqs = prerequisites.filter(
     p => p.strength === 'hard' && p.node.mastery_state !== 'mastered'
   )
 
   return (
-    <div className="mt-4 rounded-xl border border-white/[0.07] bg-[#111118] overflow-hidden animate-slide-up">
+    <div className="rounded-xl border border-[var(--border)] bg-c-bg2 overflow-hidden animate-slide-up">
+
       {/* ── Header ─────────────────────────────────────────────────────── */}
-      <div className="px-5 py-4 border-b border-white/[0.05] flex items-start justify-between">
-        <div>
-          <div className="flex items-center gap-2 mb-1">
-            <div className="w-2 h-2 rounded-full flex-shrink-0" style={{ background: color }} />
-            <h2 className="text-[#e8e8f0] text-[15px] font-medium leading-tight">{node.label}</h2>
+      <div className="px-5 py-4 border-b border-[var(--border)] flex items-start justify-between gap-4">
+        <div className="min-w-0">
+          {/* Title row */}
+          <div className="flex items-center gap-2.5 mb-2">
+            <div
+              className="w-3 h-3 rounded-full flex-shrink-0"
+              style={{ background: color, boxShadow: `0 0 5px ${color}66` }}
+            />
+            <h2 className="text-c-text text-[16px] font-semibold leading-tight truncate">{node.label}</h2>
           </div>
-          <div className="flex items-center gap-3 pl-4">
-            <span className="font-mono text-[10px] uppercase tracking-[0.08em]" style={{ color }}>
+
+          {/* Meta pills row */}
+          <div className="flex flex-wrap items-center gap-2 pl-5">
+            <span
+              className="px-2 py-0.5 rounded-md text-[11px] font-mono font-medium"
+              style={{ color, background: color + '18' }}
+            >
               {MASTERY_LABEL[node.mastery_state]}
             </span>
-            <span className="font-mono text-[10px] text-[#5a5a72]">{pKnowPct}% known</span>
-            <span className="font-mono text-[10px] text-[#3a3a50]">
+            <span className="text-[11px] font-mono text-c-muted">
+              {pKnowPct}% known
+            </span>
+            <span className="text-[11px] font-mono text-c-faint truncate">
               {PHASE_LABEL[node.phase] ?? node.phase}
             </span>
           </div>
         </div>
+
         <button
           onClick={onClose}
-          className="text-[#5a5a72] hover:text-[#9898b0] transition-colors text-[11px] font-mono ml-4 flex-shrink-0"
+          className="text-c-faint hover:text-c-muted transition-colors text-[20px] leading-none flex-shrink-0 mt-0.5"
           aria-label="Close detail panel"
         >
-          ✕ close
+          ×
         </button>
       </div>
 
+      {/* ── Body ───────────────────────────────────────────────────────── */}
       <div className="px-5 py-4 space-y-4">
-        {/* ── Intuition ──────────────────────────────────────────────── */}
-        <p className="text-[12px] text-[#9898b0] leading-relaxed">{node.intuition}</p>
 
-        {/* ── Blocked notice ─────────────────────────────────────────── */}
-        {isBlocked && unmetHardPrereqs.length > 0 && (
-          <div className="rounded-lg border border-white/[0.05] bg-[#0d0d13] px-4 py-3">
-            <p className="font-mono text-[10px] text-[#5a5a72] uppercase tracking-[0.08em] mb-2">
-              🔒 Requires first
-            </p>
-            <div className="flex flex-wrap gap-2">
-              {unmetHardPrereqs.map(p => {
-                const c = MASTERY_COLOUR[p.node.mastery_state]
-                return (
-                  <span
-                    key={p.node.id}
-                    className="px-2.5 py-1 rounded-lg text-[11px] font-mono border"
-                    style={{ color: c, borderColor: c + '40', background: c + '12' }}
-                  >
-                    {p.node.label}
-                  </span>
-                )
-              })}
+        {/* Intuition */}
+        <p className="text-[13px] text-c-muted leading-relaxed">{node.intuition}</p>
+
+        {/* Progress bar */}
+        {!isBlocked && (
+          <div>
+            <div className="flex justify-between items-center mb-1.5">
+              <span className="text-[10px] font-mono text-c-faint uppercase tracking-[0.07em]">Mastery</span>
+              <span className="text-[10px] font-mono" style={{ color }}>{pKnowPct}%</span>
+            </div>
+            <div className="h-1.5 bg-c-bg3 rounded-full overflow-hidden">
+              <div
+                className="h-full rounded-full transition-all duration-700"
+                style={{ width: `${pKnowPct}%`, background: color }}
+              />
             </div>
           </div>
         )}
 
-        {/* ── Prerequisites ───────────────────────────────────────────── */}
+        {/* Blocked notice */}
+        {isBlocked && unmetHardPrereqs.length > 0 && (
+          <div className="rounded-lg border border-[var(--border)] bg-c-bg4 px-4 py-3">
+            <p className="text-[10px] font-mono text-c-faint uppercase tracking-[0.08em] mb-2.5">
+              🔒 Requires first
+            </p>
+            <div className="flex flex-wrap gap-2">
+              {unmetHardPrereqs.map(p => (
+                <NodeTag key={p.node.id} node={p.node} />
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Prerequisites */}
         {prerequisites.length > 0 && (
           <div>
-            <p className="font-mono text-[10px] text-[#5a5a72] uppercase tracking-[0.08em] mb-2">
+            <p className="text-[10px] font-mono text-c-faint uppercase tracking-[0.08em] mb-2">
               Prerequisites
             </p>
             <div className="flex flex-wrap gap-2">
-              {prerequisites.map(p => {
-                const c = MASTERY_COLOUR[p.node.mastery_state]
-                return (
-                  <span
-                    key={p.node.id}
-                    className="px-2.5 py-1 rounded-lg text-[11px] font-mono border"
-                    style={{ color: c, borderColor: c + '40', background: c + '12' }}
-                  >
-                    {p.strength === 'hard' ? '⬤' : '○'}&nbsp;{p.node.label}
-                  </span>
-                )
-              })}
+              {prerequisites.map(p => (
+                <NodeTag key={p.node.id} node={p.node} strength={p.strength} />
+              ))}
             </div>
-            <p className="font-mono text-[9px] text-[#3a3a50] mt-1.5">
+            <p className="text-[9px] font-mono text-c-ghost mt-1.5">
               ⬤ required &nbsp;·&nbsp; ○ helpful
             </p>
           </div>
         )}
 
-        {/* ── Unlocks ─────────────────────────────────────────────────── */}
+        {/* Unlocks */}
         {unlocks.length > 0 && (
           <div>
-            <p className="font-mono text-[10px] text-[#5a5a72] uppercase tracking-[0.08em] mb-2">
+            <p className="text-[10px] font-mono text-c-faint uppercase tracking-[0.08em] mb-2">
               Unlocks
             </p>
             <div className="flex flex-wrap gap-2">
-              {unlocks.map(u => {
-                const c = MASTERY_COLOUR[u.node.mastery_state]
-                return (
-                  <span
-                    key={u.node.id}
-                    className="px-2.5 py-1 rounded-lg text-[11px] font-mono border"
-                    style={{ color: c, borderColor: c + '40', background: c + '12' }}
-                  >
-                    {u.node.label}
-                  </span>
-                )
-              })}
+              {unlocks.map(u => (
+                <NodeTag key={u.node.id} node={u.node} />
+              ))}
             </div>
           </div>
         )}
 
-        {/* ── CTA ────────────────────────────────────────────────────── */}
+        {/* CTA */}
         <div className="pt-1">
           {isMastered ? (
-            <div className="flex items-center gap-2">
-              <span className="text-[#34d399] text-[12px] font-mono">✓ Skill mastered</span>
+            <div className="flex items-center gap-3">
+              <span className="text-c-green text-[12px] font-mono">✓ Skill mastered</span>
               <a
                 href="/learn"
-                className="text-[11px] font-mono text-[#5a5a72] hover:text-[#9898b0] transition-colors underline underline-offset-2"
+                className="text-[12px] font-mono text-c-faint hover:text-c-muted transition-colors underline underline-offset-2"
               >
                 review anyway →
               </a>
             </div>
           ) : isBlocked ? (
-            <p className="text-[11px] font-mono text-[#5a5a72]">
+            <p className="text-[12px] font-mono text-c-faint">
               Complete the required skills above to unlock this.
             </p>
           ) : (
             <a
               href="/learn"
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-[#7c6eff] hover:bg-[#6a5cdd] text-white text-[12px] font-medium transition-all hover:scale-[1.02]"
+              className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-c-purple hover:bg-[var(--purple-hover)] text-white text-[13px] font-medium transition-all hover:scale-[1.02] shadow-sm"
             >
               Study this skill →
             </a>

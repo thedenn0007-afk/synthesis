@@ -87,9 +87,17 @@ export interface MotivationState {
   intervention_cooldown_until: string | null; updated_at: string
 }
 
+export type TaskReason =
+  | 'review_due'          // overdue SM-2 review
+  | 'confidence_boost'    // frustrated → easy win
+  | 'weak_area'           // lowest p_know skill
+  | 'varied_practice'     // interleaving logic
+
 export interface SessionTask {
   skill_id: string; skill_label: string; skill_intuition: string; skill_analogy: string
   question: Question; difficulty_tier: DifficultyTier; source: 'review' | 'learning' | 'diagnostic'
+  reason: TaskReason
+  p_know: number           // current mastery % for context display
 }
 
 export interface SessionSummary {
