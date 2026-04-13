@@ -5,6 +5,7 @@ type EventName =
   | 'diagnostic_start' | 'diagnostic_complete'
   | 'attempt_submit' | 'explanation_viewed'
   | 'skill_unlocked' | 'streak_milestone'
+  | 'skill_study_start' | 'explain_back_submit'
 
 export function useAnalytics() {
   function track(event: { name: EventName; props?: Record<string, unknown> }) {

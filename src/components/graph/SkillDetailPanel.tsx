@@ -167,13 +167,13 @@ export function SkillDetailPanel({ node, edges, nodesMap, onClose }: Props) {
         {/* CTA */}
         <div className="pt-1">
           {isMastered ? (
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-3 flex-wrap">
               <span className="text-c-green text-[12px] font-mono">✓ Skill mastered</span>
               <a
-                href="/learn"
+                href={`/learn/skill/${node.id}`}
                 className="text-[12px] font-mono text-c-faint hover:text-c-muted transition-colors underline underline-offset-2"
               >
-                review anyway →
+                revise again →
               </a>
             </div>
           ) : isBlocked ? (
@@ -181,12 +181,21 @@ export function SkillDetailPanel({ node, edges, nodesMap, onClose }: Props) {
               Complete the required skills above to unlock this.
             </p>
           ) : (
-            <a
-              href="/learn"
-              className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-c-purple hover:bg-[var(--purple-hover)] text-white text-[13px] font-medium transition-all hover:scale-[1.02] shadow-sm"
-            >
-              Study this skill →
-            </a>
+            <div className="flex items-center gap-2 flex-wrap">
+              <a
+                href={`/learn/skill/${node.id}`}
+                className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-c-purple hover:bg-[var(--purple-hover)] text-white text-[13px] font-medium transition-all hover:scale-[1.02] shadow-sm"
+              >
+                Study this skill →
+              </a>
+              <a
+                href="/learn"
+                className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl border border-[var(--border)] text-c-faint hover:text-c-muted text-[12px] font-mono transition-all"
+                title="Let the engine pick the next skill for you"
+              >
+                Auto-session
+              </a>
+            </div>
           )}
         </div>
       </div>
