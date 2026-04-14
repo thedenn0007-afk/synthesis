@@ -526,25 +526,28 @@ export default function SkillLearnPage() {
 
           {/* Action buttons */}
           <div className="space-y-2 animate-slide-up">
+            {/* Primary: done with topic */}
+            <button
+              onClick={() => setMode('done')}
+              className="w-full py-3.5 rounded-xl bg-c-purple hover:bg-[var(--purple-hover)] text-white text-[14px] font-medium transition-all hover:scale-[1.01]"
+            >
+              Done with this topic →
+            </button>
+            {/* Optional: apply / review deepening */}
             {(hasApply || hasReview) && (
               <button
                 onClick={advanceFromResult}
-                className="w-full py-3.5 rounded-xl bg-c-purple hover:bg-[var(--purple-hover)] text-white text-[14px] font-medium transition-all hover:scale-[1.01]"
+                className="w-full py-3 rounded-xl border border-c-purple/30 bg-c-purple/[0.06] text-c-purple text-[13px] hover:bg-c-purple/10 transition-all"
               >
-                {hasApply ? 'Apply it — try the build task →' : 'Explain it back →'}
+                <span className="font-mono text-[10px] uppercase tracking-[0.1em] text-c-purple/60 mr-2">optional</span>
+                {hasApply ? 'Try the build task →' : 'Explain it back →'}
               </button>
             )}
             <button
               onClick={() => finish('next')}
-              className="w-full py-3 rounded-xl border border-[var(--border)] text-c-muted hover:text-c-text text-[13px] transition-all"
+              className="w-full py-2.5 rounded-xl border border-[var(--border)] text-c-muted hover:text-c-text text-[13px] transition-all"
             >
-              Next skill (auto-session) →
-            </button>
-            <button
-              onClick={() => finish('dashboard')}
-              className="w-full py-2.5 text-c-ghost hover:text-c-faint text-[12px] font-mono transition-colors"
-            >
-              Back to dashboard
+              Next skill →
             </button>
           </div>
         </div>

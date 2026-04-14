@@ -60,7 +60,7 @@ export function selectNextTask(p: SelectTaskParams): SessionTask | null {
 
   // ── Priority 4: lowest p_know learnable ─────────────────────────────────
   const learnable = Array.from(skillStates.values())
-    .filter(s => ['ready', 'learning'].includes(s.mastery_state))
+    .filter(s => ['ready', 'learning', 'fragile'].includes(s.mastery_state))
     .filter(s => !overRep.has(s.skill_id))
     .sort((a, b) => a.p_know - b.p_know)
     .slice(0, 5)

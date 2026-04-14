@@ -40,9 +40,11 @@ See `supabase/migrations/` for the schema to run in Supabase SQL Editor.
 ```
 synaptic/
 ├── content/              ← Teaching content (JSON files)
-│   ├── graph/            ← 31 skill nodes, 37 prerequisite edges
-│   ├── questions/        ← 66 questions (P1+P2 complete)
-│   └── explanations/     ← 63 explanation files (P1+P2 complete)
+│   ├── graph/            ← 53 skill nodes, prerequisite edges (P1–P8)
+│   ├── questions/
+│   │   ├── by-skill/     ← 45 question files (P1+P2+P3 complete) — used by session engine
+│   │   └── diagnostic/   ← diagnostic quiz questions
+│   └── explanations/     ← explanation files (P1+P2+P3 complete)
 ├── src/
 │   ├── app/              ← Next.js pages and API routes
 │   ├── components/       ← UI components

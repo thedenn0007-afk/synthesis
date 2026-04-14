@@ -1,6 +1,6 @@
 import type { LearnerSkillState, MasteryState } from '@/types'
 export const BKT_DEFAULTS = { p_know: 0.10, p_transit: 0.15, p_slip: 0.10, p_guess: 0.20 } as const
-export const MASTERY_THRESHOLD = 0.85; export const FRAGILE_THRESHOLD = 0.75; export const LEARNING_THRESHOLD = 0.40
+export const MASTERY_THRESHOLD = 0.65; export const FRAGILE_THRESHOLD = 0.55; export const LEARNING_THRESHOLD = 0.30
 
 export function bktUpdate(state: LearnerSkillState, correct: boolean, sm2Reps = 0): LearnerSkillState {
   const { p_know, p_slip, p_guess, p_transit } = state
@@ -14,7 +14,7 @@ export function bktUpdate(state: LearnerSkillState, correct: boolean, sm2Reps = 
 
 export function deriveMasteryState(p_know: number, state: LearnerSkillState, sm2Reps = 0): MasteryState {
   if (state.mastery_state === 'blocked') return 'blocked'
-  if (p_know >= MASTERY_THRESHOLD && sm2Reps >= 3) return 'mastered'
+  if (p_know >= MASTERY_THRESHOLD && sm2Reps >= 1) return 'mastered'
   if (p_know >= FRAGILE_THRESHOLD) return 'fragile'
   if (p_know >= LEARNING_THRESHOLD) return 'learning'
   return 'ready'
