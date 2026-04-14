@@ -93,11 +93,15 @@ export type TaskReason =
   | 'weak_area'           // lowest p_know skill
   | 'varied_practice'     // interleaving logic
 
+export type SessionMode = 'learn' | 'review'
+
 export interface SessionTask {
   skill_id: string; skill_label: string; skill_intuition: string; skill_analogy: string
   question: Question; difficulty_tier: DifficultyTier; source: 'review' | 'learning' | 'diagnostic'
   reason: TaskReason
   p_know: number           // current mastery % for context display
+  days_overdue?: number    // set when reason === 'review_due'
+  review_repetition?: number  // SM-2 rep count for display
 }
 
 export interface SessionSummary {

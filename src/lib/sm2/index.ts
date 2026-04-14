@@ -16,7 +16,7 @@ export function updateSM2(schedule: ReviewSchedule, quality: number): ReviewSche
 }
 
 export function initSM2(learner_id: string, skill_id: string): ReviewSchedule {
-  return { learner_id, skill_id, interval_days: 1, ease_factor: 2.5, repetitions: 0, due_at: new Date().toISOString(), last_reviewed_at: null }
+  return { learner_id, skill_id, interval_days: 1, ease_factor: 2.5, repetitions: 0, due_at: addDays(new Date(), 1).toISOString(), last_reviewed_at: null }
 }
 
 export function bktToQuality(correct: boolean, latency_ms: number): number {

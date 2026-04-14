@@ -1,77 +1,164 @@
-{
-  "skill_id": "p2_linear_functions",
-  "questions": [
-    {
-      "id": "p2_linear_functions_q1",
-      "stem": "In y = 3x + 5, what does the coefficient 3 (the slope) mean?",
-      "options": [
-        "y starts at 3",
-        "For every 1 unit increase in x, y increases by 3",
-        "The line crosses the y-axis at 3",
-        "x is always 3 times larger than y"
-      ],
-      "answer": 1,
-      "explanation": "The slope (coefficient of x) is the rate of change. A slope of 3 means: for every 1 unit increase in x, y increases by 3 units. The intercept (5) is where the line crosses the y-axis (x=0)."
-    },
-    {
-      "id": "p2_linear_functions_q2",
-      "stem": "R² = 0.85 for a linear regression model means:",
-      "options": [
-        "The model is correct 85% of the time",
-        "85% of the variance in y is explained by the model's features",
-        "The prediction error is 15%",
-        "15% of predictions are wrong"
-      ],
-      "answer": 1,
-      "explanation": "R² measures the proportion of variance in the target explained by the model. R²=0.85 means 85% of variation is captured; 15% is unexplained noise or missing features."
-    },
-    {
-      "id": "p2_linear_functions_q3",
-      "stem": "What does a negative coefficient in linear regression mean?",
-      "options": [
-        "The feature is unimportant",
-        "As the feature increases, the prediction decreases (negative relationship)",
-        "The model made an error",
-        "The feature should be removed"
-      ],
-      "answer": 1,
-      "explanation": "A negative coefficient means as that feature increases, the predicted value decreases. For example, 'distance from city centre' having coefficient -3000 means houses farther from the centre are predicted to cost £3000 less per km."
-    },
-    {
-      "id": "p2_linear_functions_q4",
-      "stem": "What is the purpose of gradient descent in linear regression?",
-      "options": [
-        "To find the exact closed-form solution",
-        "To iteratively adjust weights to minimise the prediction error, useful when the exact solution is too expensive",
-        "To visualise the data",
-        "To select features"
-      ],
-      "answer": 1,
-      "explanation": "The closed-form OLS solution requires inverting an n×n matrix — O(n³). For large datasets, gradient descent iteratively improves weights by taking small steps in the direction of decreasing loss, running in O(nd) per step."
-    },
-    {
-      "id": "p2_linear_functions_q5",
-      "stem": "Logistic regression differs from linear regression because:",
-      "options": [
-        "It uses a different programming library",
-        "It outputs a probability between 0 and 1 via a sigmoid function, used for classification",
-        "It can only handle two features",
-        "It does not use weights"
-      ],
-      "answer": 1,
-      "explanation": "Logistic regression applies a sigmoid (logistic) function to the linear output: P(y=1) = σ(wx+b). This squishes any value into [0,1], making it a probability estimate for binary classification."
-    },
-    {
-      "id": "p2_linear_functions_q6",
-      "stem": "What is multicollinearity and why is it a problem for linear regression?",
-      "options": [
-        "When the target variable has multiple modes",
-        "When two or more features are highly correlated, making individual coefficients unstable and hard to interpret",
-        "When the model has too many layers",
-        "When R² is above 0.99"
-      ],
-      "answer": 1,
-      "explanation": "When features are correlated (e.g. 'size_sqft' and 'size_m2'), the model can't determine which one explains the outcome. Coefficients become unstable — small data changes cause wild swings. Variance Inflation Factor (VIF) detects this."
-    }
-  ]
-}
+[
+  {
+    "id": "p2_linear_functions_q1",
+    "skill_id": "p2_linear_functions",
+    "format": "mcq",
+    "difficulty_tier": "same",
+    "stem": "In y = 3x + 5, what does the coefficient 3 (the slope) mean?",
+    "options": [
+      {
+        "id": "a",
+        "text": "y starts at 3"
+      },
+      {
+        "id": "b",
+        "text": "For every 1 unit increase in x, y increases by 3"
+      },
+      {
+        "id": "c",
+        "text": "The line crosses the y-axis at 3"
+      },
+      {
+        "id": "d",
+        "text": "x is always 3 times larger than y"
+      }
+    ],
+    "correct_option_id": "b",
+    "explanation_after": "The slope (coefficient of x) is the rate of change. A slope of 3 means: for every 1 unit increase in x, y increases by 3 units. The intercept (5) is where the line crosses the y-axis (x=0)."
+  },
+  {
+    "id": "p2_linear_functions_q2",
+    "skill_id": "p2_linear_functions",
+    "format": "mcq",
+    "difficulty_tier": "same",
+    "stem": "R² = 0.85 for a linear regression model means:",
+    "options": [
+      {
+        "id": "a",
+        "text": "The model is correct 85% of the time"
+      },
+      {
+        "id": "b",
+        "text": "85% of the variance in y is explained by the model's features"
+      },
+      {
+        "id": "c",
+        "text": "The prediction error is 15%"
+      },
+      {
+        "id": "d",
+        "text": "15% of predictions are wrong"
+      }
+    ],
+    "correct_option_id": "b",
+    "explanation_after": "R² measures the proportion of variance in the target explained by the model. R²=0.85 means 85% of variation is captured; 15% is unexplained noise or missing features."
+  },
+  {
+    "id": "p2_linear_functions_q3",
+    "skill_id": "p2_linear_functions",
+    "format": "mcq",
+    "difficulty_tier": "same",
+    "stem": "What does a negative coefficient in linear regression mean?",
+    "options": [
+      {
+        "id": "a",
+        "text": "The feature is unimportant"
+      },
+      {
+        "id": "b",
+        "text": "As the feature increases, the prediction decreases (negative relationship)"
+      },
+      {
+        "id": "c",
+        "text": "The model made an error"
+      },
+      {
+        "id": "d",
+        "text": "The feature should be removed"
+      }
+    ],
+    "correct_option_id": "b",
+    "explanation_after": "A negative coefficient means as that feature increases, the predicted value decreases. For example, 'distance from city centre' having coefficient -3000 means houses farther from the centre are predicted to cost £3000 less per km."
+  },
+  {
+    "id": "p2_linear_functions_q4",
+    "skill_id": "p2_linear_functions",
+    "format": "mcq",
+    "difficulty_tier": "same",
+    "stem": "What is the purpose of gradient descent in linear regression?",
+    "options": [
+      {
+        "id": "a",
+        "text": "To find the exact closed-form solution"
+      },
+      {
+        "id": "b",
+        "text": "To iteratively adjust weights to minimise the prediction error, useful when the exact solution is too expensive"
+      },
+      {
+        "id": "c",
+        "text": "To visualise the data"
+      },
+      {
+        "id": "d",
+        "text": "To select features"
+      }
+    ],
+    "correct_option_id": "b",
+    "explanation_after": "The closed-form OLS solution requires inverting an n×n matrix — O(n³). For large datasets, gradient descent iteratively improves weights by taking small steps in the direction of decreasing loss, running in O(nd) per step."
+  },
+  {
+    "id": "p2_linear_functions_q5",
+    "skill_id": "p2_linear_functions",
+    "format": "mcq",
+    "difficulty_tier": "same",
+    "stem": "Logistic regression differs from linear regression because:",
+    "options": [
+      {
+        "id": "a",
+        "text": "It uses a different programming library"
+      },
+      {
+        "id": "b",
+        "text": "It outputs a probability between 0 and 1 via a sigmoid function, used for classification"
+      },
+      {
+        "id": "c",
+        "text": "It can only handle two features"
+      },
+      {
+        "id": "d",
+        "text": "It does not use weights"
+      }
+    ],
+    "correct_option_id": "b",
+    "explanation_after": "Logistic regression applies a sigmoid (logistic) function to the linear output: P(y=1) = σ(wx+b). This squishes any value into [0,1], making it a probability estimate for binary classification."
+  },
+  {
+    "id": "p2_linear_functions_q6",
+    "skill_id": "p2_linear_functions",
+    "format": "mcq",
+    "difficulty_tier": "same",
+    "stem": "What is multicollinearity and why is it a problem for linear regression?",
+    "options": [
+      {
+        "id": "a",
+        "text": "When the target variable has multiple modes"
+      },
+      {
+        "id": "b",
+        "text": "When two or more features are highly correlated, making individual coefficients unstable and hard to interpret"
+      },
+      {
+        "id": "c",
+        "text": "When the model has too many layers"
+      },
+      {
+        "id": "d",
+        "text": "When R² is above 0.99"
+      }
+    ],
+    "correct_option_id": "b",
+    "explanation_after": "When features are correlated (e.g. 'size_sqft' and 'size_m2'), the model can't determine which one explains the outcome. Coefficients become unstable — small data changes cause wild swings. Variance Inflation Factor (VIF) detects this."
+  }
+]

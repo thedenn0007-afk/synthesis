@@ -55,6 +55,9 @@ interface SkillData {
   explanation?: Explanation
   question?:    Question
   depth?:       string
+  schedule?: {
+    due_at: string; repetitions: number; interval_days: number
+  } | null
 }
 
 // ─── Mode Step Bar ────────────────────────────────────────────────────────────
@@ -305,10 +308,21 @@ export default function SkillLearnPage() {
     return <div className="min-h-screen bg-c-bg"><Navbar /><Spinner label="Loading skill…" /></div>
   }
 
-  const { node, state } = data
+  const { node, state, schedule } = data
   const pKnow     = state?.p_know ?? 0
   const mastery   = state?.mastery_state ?? 'ready'
   const pct       = Math.round(pKnow * 100)
+
+  // SM-2 display data
+  const scheduleNow       = new Date()
+  const scheduleDue       = schedule ? new Date(schedule.due_at) : null
+  const scheduleIsOverdue = scheduleDue ? scheduleDue <= scheduleNow : false
+  const scheduleDaysOverdue = scheduleDue && scheduleIsOverdue
+    ? Math.floor((scheduleNow.getTime() - scheduleDue.getTime()) / 86400000)
+    : 0
+  const scheduleDaysUntil = scheduleDue && !scheduleIsOverdue
+    ? Math.ceil((scheduleDue.getTime() - scheduleNow.getTime()) / 86400000)
+    : 0
 
   // ── Shared header ───────────────────────────────────────────────────────────
   const Header = (
@@ -333,6 +347,15 @@ export default function SkillLearnPage() {
             {mastery}
           </p>
           <p className="font-mono text-[10px] text-c-ghost">{pct}%</p>
+          {schedule && schedule.repetitions > 0 && (
+            <p className="font-mono text-[10px] mt-0.5" style={{ color: scheduleIsOverdue ? '#fbbf24' : 'var(--text-ghost)' }}>
+              {scheduleIsOverdue
+                ? `Review overdue ${scheduleDaysOverdue}d`
+                : scheduleDaysUntil <= 1
+                ? 'Review due soon'
+                : `Next review in ${scheduleDaysUntil}d`}
+            </p>
+          )}
         </div>
       </div>
     </div>

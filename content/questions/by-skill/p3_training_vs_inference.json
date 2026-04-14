@@ -1,77 +1,164 @@
-{
-  "skill_id": "p3_training_vs_inference",
-  "questions": [
-    {
-      "id": "p3_training_vs_inference_q1",
-      "stem": "During inference, compared to training, a neural network:",
-      "options": [
-        "Updates its weights based on prediction errors",
-        "Uses more memory because it stores gradients",
-        "Uses frozen weights to make predictions without updating them",
-        "Requires the same compute as training"
-      ],
-      "answer": 2,
-      "explanation": "During inference, weights are fixed (frozen). The model only does a forward pass to compute predictions. No gradients are computed or stored, making it much cheaper than training."
-    },
-    {
-      "id": "p3_training_vs_inference_q2",
-      "stem": "Why does training typically require much more compute than inference?",
-      "options": [
-        "Training uses a larger dataset",
-        "Training requires backpropagation to compute and store gradients through the entire network",
-        "Training runs on CPU while inference uses GPU",
-        "Training requires more RAM"
-      ],
-      "answer": 1,
-      "explanation": "Training requires a forward pass AND a backward pass (backpropagation) to compute gradients for every parameter. Gradients must be stored for the update step. This is 2-3x more compute than a single forward pass."
-    },
-    {
-      "id": "p3_training_vs_inference_q3",
-      "stem": "A company trains a model once and then serves it to millions of users daily. Their cost is dominated by:",
-      "options": [
-        "Training cost, because it happens every day",
-        "Inference cost, because it happens billions of times",
-        "Data storage, because datasets are large",
-        "Training and inference cost equally"
-      ],
-      "answer": 1,
-      "explanation": "Training happens once (or infrequently). Inference happens every time a user makes a request — millions of times per day. At scale, inference cost dwarfs training cost."
-    },
-    {
-      "id": "p3_training_vs_inference_q4",
-      "stem": "What does `model.eval()` do in PyTorch?",
-      "options": [
-        "Evaluates the model accuracy on a test set",
-        "Switches the model to inference mode, disabling Dropout and using running stats for BatchNorm",
-        "Exports the model to a file",
-        "Freezes the model weights permanently"
-      ],
-      "answer": 1,
-      "explanation": "`model.eval()` sets the model to inference mode: Dropout is disabled (all neurons active), and BatchNorm uses stored running statistics instead of batch statistics. Forgetting this causes inconsistent predictions."
-    },
-    {
-      "id": "p3_training_vs_inference_q5",
-      "stem": "Which technique reduces inference latency by representing weights with fewer bits?",
-      "options": [
-        "Data augmentation",
-        "Dropout",
-        "Quantization",
-        "Early stopping"
-      ],
-      "answer": 2,
-      "explanation": "Quantization reduces model precision from float32 to int8 or int4, shrinking model size and speeding up inference with minimal accuracy loss. Widely used to deploy large models on phones and edge devices."
-    },
-    {
-      "id": "p3_training_vs_inference_q6",
-      "stem": "Transfer learning works by:",
-      "options": [
-        "Training a model on two datasets simultaneously",
-        "Using the weights of a pre-trained model as starting point for a new task, rather than starting from random weights",
-        "Transferring data from one format to another",
-        "Copying architecture but not weights from another model"
-      ],
-      "answer": 1,
-      "explanation": "Transfer learning uses a model's learned representations (weights) from one task as an initialisation for another. Features learned on ImageNet (edges, textures, shapes) transfer to many vision tasks, reducing required data and training time."
-    }
-  ]
-}
+[
+  {
+    "id": "p3_training_vs_inference_q1",
+    "skill_id": "p3_training_vs_inference",
+    "format": "mcq",
+    "difficulty_tier": "same",
+    "stem": "During inference, compared to training, a neural network:",
+    "options": [
+      {
+        "id": "a",
+        "text": "Updates its weights based on prediction errors"
+      },
+      {
+        "id": "b",
+        "text": "Uses more memory because it stores gradients"
+      },
+      {
+        "id": "c",
+        "text": "Uses frozen weights to make predictions without updating them"
+      },
+      {
+        "id": "d",
+        "text": "Requires the same compute as training"
+      }
+    ],
+    "correct_option_id": "c",
+    "explanation_after": "During inference, weights are fixed (frozen). The model only does a forward pass to compute predictions. No gradients are computed or stored, making it much cheaper than training."
+  },
+  {
+    "id": "p3_training_vs_inference_q2",
+    "skill_id": "p3_training_vs_inference",
+    "format": "mcq",
+    "difficulty_tier": "same",
+    "stem": "Why does training typically require much more compute than inference?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Training uses a larger dataset"
+      },
+      {
+        "id": "b",
+        "text": "Training requires backpropagation to compute and store gradients through the entire network"
+      },
+      {
+        "id": "c",
+        "text": "Training runs on CPU while inference uses GPU"
+      },
+      {
+        "id": "d",
+        "text": "Training requires more RAM"
+      }
+    ],
+    "correct_option_id": "b",
+    "explanation_after": "Training requires a forward pass AND a backward pass (backpropagation) to compute gradients for every parameter. Gradients must be stored for the update step. This is 2-3x more compute than a single forward pass."
+  },
+  {
+    "id": "p3_training_vs_inference_q3",
+    "skill_id": "p3_training_vs_inference",
+    "format": "mcq",
+    "difficulty_tier": "same",
+    "stem": "A company trains a model once and then serves it to millions of users daily. Their cost is dominated by:",
+    "options": [
+      {
+        "id": "a",
+        "text": "Training cost, because it happens every day"
+      },
+      {
+        "id": "b",
+        "text": "Inference cost, because it happens billions of times"
+      },
+      {
+        "id": "c",
+        "text": "Data storage, because datasets are large"
+      },
+      {
+        "id": "d",
+        "text": "Training and inference cost equally"
+      }
+    ],
+    "correct_option_id": "b",
+    "explanation_after": "Training happens once (or infrequently). Inference happens every time a user makes a request — millions of times per day. At scale, inference cost dwarfs training cost."
+  },
+  {
+    "id": "p3_training_vs_inference_q4",
+    "skill_id": "p3_training_vs_inference",
+    "format": "mcq",
+    "difficulty_tier": "same",
+    "stem": "What does `model.eval()` do in PyTorch?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Evaluates the model accuracy on a test set"
+      },
+      {
+        "id": "b",
+        "text": "Switches the model to inference mode, disabling Dropout and using running stats for BatchNorm"
+      },
+      {
+        "id": "c",
+        "text": "Exports the model to a file"
+      },
+      {
+        "id": "d",
+        "text": "Freezes the model weights permanently"
+      }
+    ],
+    "correct_option_id": "b",
+    "explanation_after": "`model.eval()` sets the model to inference mode: Dropout is disabled (all neurons active), and BatchNorm uses stored running statistics instead of batch statistics. Forgetting this causes inconsistent predictions."
+  },
+  {
+    "id": "p3_training_vs_inference_q5",
+    "skill_id": "p3_training_vs_inference",
+    "format": "mcq",
+    "difficulty_tier": "same",
+    "stem": "Which technique reduces inference latency by representing weights with fewer bits?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Data augmentation"
+      },
+      {
+        "id": "b",
+        "text": "Dropout"
+      },
+      {
+        "id": "c",
+        "text": "Quantization"
+      },
+      {
+        "id": "d",
+        "text": "Early stopping"
+      }
+    ],
+    "correct_option_id": "c",
+    "explanation_after": "Quantization reduces model precision from float32 to int8 or int4, shrinking model size and speeding up inference with minimal accuracy loss. Widely used to deploy large models on phones and edge devices."
+  },
+  {
+    "id": "p3_training_vs_inference_q6",
+    "skill_id": "p3_training_vs_inference",
+    "format": "mcq",
+    "difficulty_tier": "same",
+    "stem": "Transfer learning works by:",
+    "options": [
+      {
+        "id": "a",
+        "text": "Training a model on two datasets simultaneously"
+      },
+      {
+        "id": "b",
+        "text": "Using the weights of a pre-trained model as starting point for a new task, rather than starting from random weights"
+      },
+      {
+        "id": "c",
+        "text": "Transferring data from one format to another"
+      },
+      {
+        "id": "d",
+        "text": "Copying architecture but not weights from another model"
+      }
+    ],
+    "correct_option_id": "b",
+    "explanation_after": "Transfer learning uses a model's learned representations (weights) from one task as an initialisation for another. Features learned on ImageNet (edges, textures, shapes) transfer to many vision tasks, reducing required data and training time."
+  }
+]

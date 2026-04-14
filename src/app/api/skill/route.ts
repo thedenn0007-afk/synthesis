@@ -11,7 +11,7 @@
 
 import { NextRequest, NextResponse } from 'next/server'
 import { getCurrentUser } from '@/lib/db/session'
-import { getSkillState } from '@/lib/db/queries'
+import { getSkillState, getReviewSchedule } from '@/lib/db/queries'
 import { getNodeById, getHardPrereqs } from '@/lib/graph'
 import type { Explanation, ExplanationDepth, Question, LearnerSkillState } from '@/types'
 
@@ -72,6 +72,9 @@ export async function GET(req: NextRequest) {
     return { id, label: n?.label ?? id }
   })
 
+  // SM-2 schedule (for review display)
+  const schedule = getReviewSchedule(user.id, skill_id)
+
   return NextResponse.json({
     blocked: false,
     node: {
@@ -93,6 +96,11 @@ export async function GET(req: NextRequest) {
     question,
     prereqs,
     depth,
+    schedule: schedule ? {
+      due_at:       schedule.due_at,
+      repetitions:  schedule.repetitions,
+      interval_days: schedule.interval_days,
+    } : null,
   })
 }
 

@@ -1,77 +1,164 @@
-{
-  "skill_id": "p3_ai_vs_ml_vs_dl",
-  "questions": [
-    {
-      "id": "p3_ai_vs_ml_vs_dl_q1",
-      "stem": "Which of the following correctly describes the relationship between AI, ML, and Deep Learning?",
-      "options": [
-        "They are three different, unrelated fields",
-        "Deep Learning contains Machine Learning, which contains AI",
-        "AI is the broadest field; ML is a subset of AI; Deep Learning is a subset of ML",
-        "Machine Learning and Deep Learning are the same thing"
-      ],
-      "answer": 2,
-      "explanation": "AI is the broadest field (any intelligent behaviour). ML is a subset that learns from data. Deep Learning is a subset of ML using multi-layer neural networks."
-    },
-    {
-      "id": "p3_ai_vs_ml_vs_dl_q2",
-      "stem": "A neural network with 50 layers processing medical images to detect cancer would be classified as:",
-      "options": [
-        "Symbolic AI",
-        "Classical Machine Learning",
-        "Deep Learning",
-        "Expert system"
-      ],
-      "answer": 2,
-      "explanation": "Deep Learning refers to neural networks with multiple (typically >3) hidden layers. 50 layers processing images is definitively deep learning."
-    },
-    {
-      "id": "p3_ai_vs_ml_vs_dl_q3",
-      "stem": "What is the key advantage of Deep Learning over classical ML for raw image data?",
-      "options": [
-        "Deep Learning requires less training data",
-        "Deep Learning automatically learns relevant features from raw pixels, eliminating the need for manual feature engineering",
-        "Deep Learning is always faster to train",
-        "Deep Learning works better on small datasets"
-      ],
-      "answer": 1,
-      "explanation": "Classical ML requires hand-crafted features (edge detectors, etc.). Deep Learning learns a hierarchy of features automatically from raw data — edges → shapes → objects — without manual feature design."
-    },
-    {
-      "id": "p3_ai_vs_ml_vs_dl_q4",
-      "stem": "A decision tree classifier trained on tabular customer data is best described as:",
-      "options": [
-        "Deep Learning",
-        "Classical Machine Learning",
-        "Symbolic AI",
-        "Reinforcement Learning"
-      ],
-      "answer": 1,
-      "explanation": "Decision trees are classical ML algorithms. They don't use neural networks and aren't 'deep.' They're highly effective for tabular data and still widely used in industry."
-    },
-    {
-      "id": "p3_ai_vs_ml_vs_dl_q5",
-      "stem": "When would classical ML (e.g. gradient boosting) likely outperform deep learning?",
-      "options": [
-        "Image classification with millions of labelled images",
-        "Natural language generation",
-        "Structured tabular data with <100,000 rows",
-        "Speech recognition"
-      ],
-      "answer": 2,
-      "explanation": "Classical ML (especially gradient boosting) often outperforms deep learning on small, structured tabular datasets. Deep learning excels at unstructured data (images, text, audio) and large datasets."
-    },
-    {
-      "id": "p3_ai_vs_ml_vs_dl_q6",
-      "stem": "The perceptron algorithm invented in the 1950s was significant because it was:",
-      "options": [
-        "The first working AI robot",
-        "The first algorithm to solve chess",
-        "A fundamental building block that later evolved into modern neural networks",
-        "The first algorithm to process natural language"
-      ],
-      "answer": 2,
-      "explanation": "The perceptron was an early artificial neuron that computed a weighted sum of inputs and applied a threshold. It became the building block of neural networks, eventually scaled into today's deep learning architectures."
-    }
-  ]
-}
+[
+  {
+    "id": "p3_ai_vs_ml_vs_dl_q1",
+    "skill_id": "p3_ai_vs_ml_vs_dl",
+    "format": "mcq",
+    "difficulty_tier": "same",
+    "stem": "Which of the following correctly describes the relationship between AI, ML, and Deep Learning?",
+    "options": [
+      {
+        "id": "a",
+        "text": "They are three different, unrelated fields"
+      },
+      {
+        "id": "b",
+        "text": "Deep Learning contains Machine Learning, which contains AI"
+      },
+      {
+        "id": "c",
+        "text": "AI is the broadest field; ML is a subset of AI; Deep Learning is a subset of ML"
+      },
+      {
+        "id": "d",
+        "text": "Machine Learning and Deep Learning are the same thing"
+      }
+    ],
+    "correct_option_id": "c",
+    "explanation_after": "AI is the broadest field (any intelligent behaviour). ML is a subset that learns from data. Deep Learning is a subset of ML using multi-layer neural networks."
+  },
+  {
+    "id": "p3_ai_vs_ml_vs_dl_q2",
+    "skill_id": "p3_ai_vs_ml_vs_dl",
+    "format": "mcq",
+    "difficulty_tier": "same",
+    "stem": "A neural network with 50 layers processing medical images to detect cancer would be classified as:",
+    "options": [
+      {
+        "id": "a",
+        "text": "Symbolic AI"
+      },
+      {
+        "id": "b",
+        "text": "Classical Machine Learning"
+      },
+      {
+        "id": "c",
+        "text": "Deep Learning"
+      },
+      {
+        "id": "d",
+        "text": "Expert system"
+      }
+    ],
+    "correct_option_id": "c",
+    "explanation_after": "Deep Learning refers to neural networks with multiple (typically >3) hidden layers. 50 layers processing images is definitively deep learning."
+  },
+  {
+    "id": "p3_ai_vs_ml_vs_dl_q3",
+    "skill_id": "p3_ai_vs_ml_vs_dl",
+    "format": "mcq",
+    "difficulty_tier": "same",
+    "stem": "What is the key advantage of Deep Learning over classical ML for raw image data?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Deep Learning requires less training data"
+      },
+      {
+        "id": "b",
+        "text": "Deep Learning automatically learns relevant features from raw pixels, eliminating the need for manual feature engineering"
+      },
+      {
+        "id": "c",
+        "text": "Deep Learning is always faster to train"
+      },
+      {
+        "id": "d",
+        "text": "Deep Learning works better on small datasets"
+      }
+    ],
+    "correct_option_id": "b",
+    "explanation_after": "Classical ML requires hand-crafted features (edge detectors, etc.). Deep Learning learns a hierarchy of features automatically from raw data — edges → shapes → objects — without manual feature design."
+  },
+  {
+    "id": "p3_ai_vs_ml_vs_dl_q4",
+    "skill_id": "p3_ai_vs_ml_vs_dl",
+    "format": "mcq",
+    "difficulty_tier": "same",
+    "stem": "A decision tree classifier trained on tabular customer data is best described as:",
+    "options": [
+      {
+        "id": "a",
+        "text": "Deep Learning"
+      },
+      {
+        "id": "b",
+        "text": "Classical Machine Learning"
+      },
+      {
+        "id": "c",
+        "text": "Symbolic AI"
+      },
+      {
+        "id": "d",
+        "text": "Reinforcement Learning"
+      }
+    ],
+    "correct_option_id": "b",
+    "explanation_after": "Decision trees are classical ML algorithms. They don't use neural networks and aren't 'deep.' They're highly effective for tabular data and still widely used in industry."
+  },
+  {
+    "id": "p3_ai_vs_ml_vs_dl_q5",
+    "skill_id": "p3_ai_vs_ml_vs_dl",
+    "format": "mcq",
+    "difficulty_tier": "same",
+    "stem": "When would classical ML (e.g. gradient boosting) likely outperform deep learning?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Image classification with millions of labelled images"
+      },
+      {
+        "id": "b",
+        "text": "Natural language generation"
+      },
+      {
+        "id": "c",
+        "text": "Structured tabular data with <100,000 rows"
+      },
+      {
+        "id": "d",
+        "text": "Speech recognition"
+      }
+    ],
+    "correct_option_id": "c",
+    "explanation_after": "Classical ML (especially gradient boosting) often outperforms deep learning on small, structured tabular datasets. Deep learning excels at unstructured data (images, text, audio) and large datasets."
+  },
+  {
+    "id": "p3_ai_vs_ml_vs_dl_q6",
+    "skill_id": "p3_ai_vs_ml_vs_dl",
+    "format": "mcq",
+    "difficulty_tier": "same",
+    "stem": "The perceptron algorithm invented in the 1950s was significant because it was:",
+    "options": [
+      {
+        "id": "a",
+        "text": "The first working AI robot"
+      },
+      {
+        "id": "b",
+        "text": "The first algorithm to solve chess"
+      },
+      {
+        "id": "c",
+        "text": "A fundamental building block that later evolved into modern neural networks"
+      },
+      {
+        "id": "d",
+        "text": "The first algorithm to process natural language"
+      }
+    ],
+    "correct_option_id": "c",
+    "explanation_after": "The perceptron was an early artificial neuron that computed a weighted sum of inputs and applied a threshold. It became the building block of neural networks, eventually scaled into today's deep learning architectures."
+  }
+]

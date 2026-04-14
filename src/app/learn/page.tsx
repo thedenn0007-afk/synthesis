@@ -1,7 +1,7 @@
 'use client'
-import { useState, useEffect, useCallback } from 'react'
-import { useRouter } from 'next/navigation'
-import type { SessionTask, Explanation, ExplanationDepth, SessionPhase, TaskReason } from '@/types'
+import { useState, useEffect, useCallback, Suspense } from 'react'
+import { useRouter, useSearchParams } from 'next/navigation'
+import type { SessionTask, Explanation, ExplanationDepth, SessionPhase, TaskReason, SessionMode } from '@/types'
 import { QuestionCard }     from '@/components/learning/QuestionCard'
 import { FeedbackBanner }   from '@/components/learning/FeedbackBanner'
 import { ExplanationPanel } from '@/components/learning/ExplanationPanel'
@@ -175,8 +175,10 @@ function LearnPanel({ task, explanation, depth, onReady }: LearnPanelProps) {
 
 // ─── Page ─────────────────────────────────────────────────────────────────────
 
-export default function LearnPage() {
-  const router = useRouter()
+function LearnPageInner() {
+  const router      = useRouter()
+  const searchParams = useSearchParams()
+  const sessionMode  = (searchParams.get('mode') ?? 'learn') as SessionMode
   const { track } = useAnalytics()
 
   const [sessionId,      setSessionId]      = useState<string | null>(null)
@@ -243,7 +245,7 @@ export default function LearnPage() {
     const r = await fetch('/api/session', {
       method: 'POST', headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        action: 'next', session_id: sid,
+        action: 'next', session_id: sid, mode: sessionMode,
         seen_skills: seenSkills, seen_question_ids: seenQuestions,
       }),
     })
@@ -324,33 +326,69 @@ export default function LearnPage() {
   if (phase === 'summary') {
     const accuracy = sessionStats.total > 0
       ? Math.round(sessionStats.correct / sessionStats.total * 100) : 0
+    const earlyExit = sessionStats.total < 3
+    const isReviewMode = sessionMode === 'review'
+
+    function restartSession() {
+      setSessionStats({ correct: 0, total: 0 })
+      setSeenSkills([]); setSeenQuestions([])
+      fetch('/api/session', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'start' }),
+      }).then(r => r.json()).then(d => {
+        if (d.session_id) { setSessionId(d.session_id); loadNext(d.session_id) }
+      })
+    }
+
     return (
       <div className="min-h-screen bg-c-bg">
         <Navbar />
         <div className="max-w-lg mx-auto px-8 py-20 text-center animate-slide-up">
           <p className="font-mono text-[11px] text-c-faint uppercase tracking-[0.14em] mb-4">
-            Session complete
+            {earlyExit
+              ? 'Session ended early'
+              : isReviewMode
+              ? 'All reviews cleared ✓'
+              : 'Session complete'}
           </p>
-          <h1 className="font-serif italic text-[44px] text-c-text mb-2">{accuracy}%</h1>
-          <p className="text-[14px] text-c-muted mb-8">
-            {sessionStats.correct} of {sessionStats.total} correct
-          </p>
+          {earlyExit ? (
+            <p className="text-[14px] text-[#fbbf24] mb-8 px-4">
+              No more questions available right now — the engine exhausted its current pool.
+              Complete more skills or come back after reviews reset.
+            </p>
+          ) : (
+            <>
+              <h1 className="font-serif italic text-[44px] text-c-text mb-2">{accuracy}%</h1>
+              <p className="text-[14px] text-c-muted mb-8">
+                {sessionStats.correct} of {sessionStats.total} correct
+              </p>
+            </>
+          )}
           <div className="flex gap-3 justify-center">
-            <button
-              onClick={() => {
-                setSessionStats({ correct: 0, total: 0 })
-                setSeenSkills([]); setSeenQuestions([])
-                fetch('/api/session', {
-                  method: 'POST', headers: { 'Content-Type': 'application/json' },
-                  body: JSON.stringify({ action: 'start' }),
-                }).then(r => r.json()).then(d => {
-                  if (d.session_id) { setSessionId(d.session_id); loadNext(d.session_id) }
-                })
-              }}
-              className="px-6 py-3 rounded-xl bg-c-purple hover:bg-[var(--purple-hover)] text-white text-[14px] font-medium transition-all"
-            >
-              Keep studying →
-            </button>
+            {!isReviewMode && (
+              <button
+                onClick={restartSession}
+                className="px-6 py-3 rounded-xl bg-c-purple hover:bg-[var(--purple-hover)] text-white text-[14px] font-medium transition-all"
+              >
+                Keep studying →
+              </button>
+            )}
+            {isReviewMode && !earlyExit && (
+              <button
+                onClick={restartSession}
+                className="px-6 py-3 rounded-xl border border-[#fbbf24]/40 text-[#fbbf24] hover:bg-[#fbbf24]/10 text-[14px] font-medium transition-all"
+              >
+                Keep reviewing →
+              </button>
+            )}
+            {isReviewMode && (
+              <button
+                onClick={() => router.push('/learn')}
+                className="px-6 py-3 rounded-xl bg-c-purple hover:bg-[var(--purple-hover)] text-white text-[14px] font-medium transition-all"
+              >
+                Study new content →
+              </button>
+            )}
             <button
               onClick={() => router.push('/dashboard')}
               className="px-6 py-3 rounded-xl border border-[var(--border)] text-c-muted hover:text-c-text text-[14px] transition-all"
@@ -375,6 +413,12 @@ export default function LearnPage() {
 
         {/* ── Skill context bar ──────────────────────────────────────────── */}
         <div className="mb-5 animate-slide-up">
+          {sessionMode === 'review' && (
+            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-mono border mb-3"
+              style={{ color: '#fbbf24', borderColor: '#fbbf2435', background: '#fbbf2412' }}>
+              ↻ Review session
+            </span>
+          )}
           <div className="flex items-center flex-wrap gap-2 mb-2">
             <span className="font-mono text-[11px] text-c-muted uppercase tracking-[0.12em]">
               {task.skill_label}
@@ -387,6 +431,22 @@ export default function LearnPage() {
               <ReasonPill reason={task.reason} pKnow={task.p_know} />
             )}
           </div>
+
+          {/* 4A: Review urgency line */}
+          {task.reason === 'review_due' && task.days_overdue !== undefined && (
+            <p className="text-[11px] font-mono text-[#fbbf24]/80 mb-1">
+              {task.days_overdue === 0
+                ? `Due today · Rep #${task.review_repetition}`
+                : `${task.days_overdue}d overdue · Rep #${task.review_repetition}`}
+            </p>
+          )}
+
+          {/* 4B: Weak area priority line */}
+          {task.reason === 'weak_area' && (
+            <p className="text-[11px] font-mono text-c-faint mb-1">
+              {Math.round(task.p_know * 100)}% mastered · lowest in queue
+            </p>
+          )}
 
           {motivation !== 'neutral' && <MotivationBanner state={motivation} />}
 
@@ -510,5 +570,13 @@ export default function LearnPage() {
         )}
       </div>
     </div>
+  )
+}
+
+export default function LearnPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-c-bg" />}>
+      <LearnPageInner />
+    </Suspense>
   )
 }

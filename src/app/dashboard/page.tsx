@@ -111,9 +111,21 @@ export default async function Dashboard() {
   const allEdges  = getAllEdges()
 
   const stateMap   = new Map(allStates.map(s => [s.skill_id, s]))
-  const dueReviews = schedules.filter(s => new Date(s.due_at) <= new Date()).length
-  const totalMastered = allStates.filter(s => s.mastery_state === 'mastered').length
-  const totalLearning = allStates.filter(s => ['learning','fragile'].includes(s.mastery_state)).length
+  const now        = new Date()
+  const dueSchedules = schedules.filter(s => new Date(s.due_at) <= now && s.repetitions > 0)
+  const dueReviews = dueSchedules.length
+
+  // Top-5 most overdue skills for the widget
+  const top5DueSkills = dueSchedules
+    .sort((a, b) => new Date(a.due_at).getTime() - new Date(b.due_at).getTime())
+    .slice(0, 5)
+    .map(s => {
+      const node = allNodes.find(n => n.id === s.skill_id)
+      const daysOverdue = Math.floor((now.getTime() - new Date(s.due_at).getTime()) / 86400000)
+      return { id: s.skill_id, label: node?.label ?? s.skill_id, daysOverdue: Math.max(0, daysOverdue) }
+    })
+  const totalMastered  = allStates.filter(s => s.mastery_state === 'mastered').length
+  const totalLearning  = allStates.filter(s => ['learning','fragile'].includes(s.mastery_state)).length
 
   const phaseGroups = allNodes.reduce<Record<string, SkillNode[]>>((acc, node) => {
     if (!acc[node.phase]) acc[node.phase] = []
@@ -159,12 +171,22 @@ export default async function Dashboard() {
               · 🔥 {profile.streak_days} day streak
             </p>
           </div>
-          <Link
-            href="/learn"
-            className="px-5 py-2.5 rounded-xl bg-c-purple hover:bg-[var(--purple-hover)] text-white text-[13px] font-medium transition-all hover:scale-[1.02] shadow-sm"
-          >
-            Study now →
-          </Link>
+          <div className="flex items-center gap-2">
+            {dueReviews > 0 && (
+              <Link
+                href="/learn?mode=review"
+                className="px-5 py-2.5 rounded-xl border border-[#fbbf24]/40 text-[#fbbf24] hover:bg-[#fbbf24]/10 text-[13px] font-medium transition-all"
+              >
+                Review {dueReviews} due →
+              </Link>
+            )}
+            <Link
+              href="/learn"
+              className="px-5 py-2.5 rounded-xl bg-c-purple hover:bg-[var(--purple-hover)] text-white text-[13px] font-medium transition-all hover:scale-[1.02] shadow-sm"
+            >
+              Study now →
+            </Link>
+          </div>
         </div>
 
         {/* ── Stats row ───────────────────────────────────────────────────── */}
@@ -182,6 +204,41 @@ export default async function Dashboard() {
             </div>
           ))}
         </div>
+
+        {/* ── Due Reviews Widget ──────────────────────────────────────────── */}
+        {dueReviews > 0 && (
+          <div className="rounded-2xl border border-[#fbbf24]/30 bg-c-bg2 overflow-hidden mb-6 animate-slide-up">
+            <div className="px-6 pt-4 pb-3 flex items-center justify-between">
+              <p className="text-[13px] font-semibold text-c-text">
+                {dueReviews} review{dueReviews !== 1 ? 's' : ''} due
+              </p>
+              <Link
+                href="/learn?mode=review"
+                className="text-[12px] font-mono text-[#fbbf24] hover:underline transition-colors"
+              >
+                Review all →
+              </Link>
+            </div>
+            <div className="divide-y divide-[var(--border)]">
+              {top5DueSkills.map(skill => (
+                <div key={skill.id} className="px-6 py-2.5 flex items-center justify-between">
+                  <span className="text-[13px] text-c-text truncate mr-4">{skill.label}</span>
+                  <div className="flex items-center gap-4 flex-shrink-0">
+                    <span className="text-[11px] font-mono text-[#fbbf24]">
+                      {skill.daysOverdue === 0 ? 'due today' : `${skill.daysOverdue}d overdue`}
+                    </span>
+                    <Link
+                      href={`/learn/skill/${skill.id}`}
+                      className="px-2.5 py-0.5 rounded text-[10px] font-mono text-[#fbbf24] bg-[#fbbf24]/10 hover:bg-[#fbbf24]/20 border border-[#fbbf24]/20 transition-all"
+                    >
+                      Study →
+                    </Link>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
 
         {/* ── Active Phase Journey ────────────────────────────────────────── */}
         <div className="rounded-2xl border border-[var(--border)] bg-c-bg2 overflow-hidden mb-6 animate-slide-up">

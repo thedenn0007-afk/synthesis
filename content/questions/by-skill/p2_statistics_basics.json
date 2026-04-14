@@ -1,77 +1,164 @@
-{
-  "skill_id": "p2_statistics_basics",
-  "questions": [
-    {
-      "id": "p2_statistics_basics_q1",
-      "stem": "A dataset of house prices has a mean of £500,000 and a median of £280,000. What does this tell you?",
-      "options": [
-        "The data is normally distributed",
-        "Most houses cost around £500,000",
-        "The data is right-skewed — a few very expensive houses are pulling the mean up",
-        "The dataset has errors"
-      ],
-      "answer": 2,
-      "explanation": "When mean >> median, a few very high values are pulling the mean up (right skew). The median (£280,000) better represents the 'typical' house price here."
-    },
-    {
-      "id": "p2_statistics_basics_q2",
-      "stem": "What does standard deviation measure?",
-      "options": [
-        "The middle value of a dataset",
-        "The most frequent value in a dataset",
-        "The average distance of values from the mean — how spread out the data is",
-        "The difference between the maximum and minimum values"
-      ],
-      "answer": 2,
-      "explanation": "Standard deviation measures spread around the mean. A high stdev means values are widely scattered; a low stdev means they cluster tightly around the mean."
-    },
-    {
-      "id": "p2_statistics_basics_q3",
-      "stem": "A correlation of 0.95 between variable X and Y means:",
-      "options": [
-        "X causes Y",
-        "Changing X by 1 unit changes Y by 0.95 units",
-        "X and Y have a very strong positive linear relationship — they tend to increase together",
-        "95% of the variation in Y is explained by X"
-      ],
-      "answer": 2,
-      "explanation": "Correlation of 0.95 means a very strong positive linear relationship. It does NOT mean causation, and the 0.95 is NOT a slope (that's regression coefficient) or R² (that would be 0.90)."
-    },
-    {
-      "id": "p2_statistics_basics_q4",
-      "stem": "A p-value of 0.03 means:",
-      "options": [
-        "There is a 3% chance the null hypothesis is true",
-        "There is a 97% probability the alternative hypothesis is correct",
-        "If the null hypothesis were true, the probability of observing this data (or more extreme) is 3%",
-        "The effect size is 0.03"
-      ],
-      "answer": 2,
-      "explanation": "A p-value is P(data | H₀ is true). p=0.03 means: IF the null hypothesis were true, there's only 3% chance of seeing data this extreme. It does NOT give the probability that H₀ is true."
-    },
-    {
-      "id": "p2_statistics_basics_q5",
-      "stem": "You have two class score distributions, both with mean=75 but stdev A=5 and stdev B=20. What does this tell you?",
-      "options": [
-        "Class A and B performed identically",
-        "Class A is more consistent — most students near 75; Class B has wide variance — many students far from 75",
-        "Class B has more students",
-        "Class A has higher outliers"
-      ],
-      "answer": 1,
-      "explanation": "Same mean, different spread. Class A (stdev=5) has tight clustering: ~68% of students score 70-80. Class B (stdev=20) has wide spread: many students scoring 55 or 95+. The mean alone is misleading."
-    },
-    {
-      "id": "p2_statistics_basics_q6",
-      "stem": "What is the main advantage of using the bootstrap method for confidence intervals?",
-      "options": [
-        "It is always more accurate than parametric methods",
-        "It requires no assumptions about the data's distribution",
-        "It requires less data",
-        "It runs faster than analytical methods"
-      ],
-      "answer": 1,
-      "explanation": "Bootstrap resampling makes no assumptions about the underlying distribution. It works for any statistic (mean, median, correlation) even when the data is not normally distributed."
-    }
-  ]
-}
+[
+  {
+    "id": "p2_statistics_basics_q1",
+    "skill_id": "p2_statistics_basics",
+    "format": "mcq",
+    "difficulty_tier": "same",
+    "stem": "A dataset of house prices has a mean of £500,000 and a median of £280,000. What does this tell you?",
+    "options": [
+      {
+        "id": "a",
+        "text": "The data is normally distributed"
+      },
+      {
+        "id": "b",
+        "text": "Most houses cost around £500,000"
+      },
+      {
+        "id": "c",
+        "text": "The data is right-skewed — a few very expensive houses are pulling the mean up"
+      },
+      {
+        "id": "d",
+        "text": "The dataset has errors"
+      }
+    ],
+    "correct_option_id": "c",
+    "explanation_after": "When mean >> median, a few very high values are pulling the mean up (right skew). The median (£280,000) better represents the 'typical' house price here."
+  },
+  {
+    "id": "p2_statistics_basics_q2",
+    "skill_id": "p2_statistics_basics",
+    "format": "mcq",
+    "difficulty_tier": "same",
+    "stem": "What does standard deviation measure?",
+    "options": [
+      {
+        "id": "a",
+        "text": "The middle value of a dataset"
+      },
+      {
+        "id": "b",
+        "text": "The most frequent value in a dataset"
+      },
+      {
+        "id": "c",
+        "text": "The average distance of values from the mean — how spread out the data is"
+      },
+      {
+        "id": "d",
+        "text": "The difference between the maximum and minimum values"
+      }
+    ],
+    "correct_option_id": "c",
+    "explanation_after": "Standard deviation measures spread around the mean. A high stdev means values are widely scattered; a low stdev means they cluster tightly around the mean."
+  },
+  {
+    "id": "p2_statistics_basics_q3",
+    "skill_id": "p2_statistics_basics",
+    "format": "mcq",
+    "difficulty_tier": "same",
+    "stem": "A correlation of 0.95 between variable X and Y means:",
+    "options": [
+      {
+        "id": "a",
+        "text": "X causes Y"
+      },
+      {
+        "id": "b",
+        "text": "Changing X by 1 unit changes Y by 0.95 units"
+      },
+      {
+        "id": "c",
+        "text": "X and Y have a very strong positive linear relationship — they tend to increase together"
+      },
+      {
+        "id": "d",
+        "text": "95% of the variation in Y is explained by X"
+      }
+    ],
+    "correct_option_id": "c",
+    "explanation_after": "Correlation of 0.95 means a very strong positive linear relationship. It does NOT mean causation, and the 0.95 is NOT a slope (that's regression coefficient) or R² (that would be 0.90)."
+  },
+  {
+    "id": "p2_statistics_basics_q4",
+    "skill_id": "p2_statistics_basics",
+    "format": "mcq",
+    "difficulty_tier": "same",
+    "stem": "A p-value of 0.03 means:",
+    "options": [
+      {
+        "id": "a",
+        "text": "There is a 3% chance the null hypothesis is true"
+      },
+      {
+        "id": "b",
+        "text": "There is a 97% probability the alternative hypothesis is correct"
+      },
+      {
+        "id": "c",
+        "text": "If the null hypothesis were true, the probability of observing this data (or more extreme) is 3%"
+      },
+      {
+        "id": "d",
+        "text": "The effect size is 0.03"
+      }
+    ],
+    "correct_option_id": "c",
+    "explanation_after": "A p-value is P(data | H₀ is true). p=0.03 means: IF the null hypothesis were true, there's only 3% chance of seeing data this extreme. It does NOT give the probability that H₀ is true."
+  },
+  {
+    "id": "p2_statistics_basics_q5",
+    "skill_id": "p2_statistics_basics",
+    "format": "mcq",
+    "difficulty_tier": "same",
+    "stem": "You have two class score distributions, both with mean=75 but stdev A=5 and stdev B=20. What does this tell you?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Class A and B performed identically"
+      },
+      {
+        "id": "b",
+        "text": "Class A is more consistent — most students near 75; Class B has wide variance — many students far from 75"
+      },
+      {
+        "id": "c",
+        "text": "Class B has more students"
+      },
+      {
+        "id": "d",
+        "text": "Class A has higher outliers"
+      }
+    ],
+    "correct_option_id": "b",
+    "explanation_after": "Same mean, different spread. Class A (stdev=5) has tight clustering: ~68% of students score 70-80. Class B (stdev=20) has wide spread: many students scoring 55 or 95+. The mean alone is misleading."
+  },
+  {
+    "id": "p2_statistics_basics_q6",
+    "skill_id": "p2_statistics_basics",
+    "format": "mcq",
+    "difficulty_tier": "same",
+    "stem": "What is the main advantage of using the bootstrap method for confidence intervals?",
+    "options": [
+      {
+        "id": "a",
+        "text": "It is always more accurate than parametric methods"
+      },
+      {
+        "id": "b",
+        "text": "It requires no assumptions about the data's distribution"
+      },
+      {
+        "id": "c",
+        "text": "It requires less data"
+      },
+      {
+        "id": "d",
+        "text": "It runs faster than analytical methods"
+      }
+    ],
+    "correct_option_id": "b",
+    "explanation_after": "Bootstrap resampling makes no assumptions about the underlying distribution. It works for any statistic (mean, median, correlation) even when the data is not normally distributed."
+  }
+]

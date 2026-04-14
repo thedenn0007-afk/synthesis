@@ -7,7 +7,7 @@ import { initSM2 } from '@/lib/sm2'
 import { getMotivationState, getAllSkillStates, getReviewSchedules,
          createSession, getSession, endSession,
          bulkUpsertSkillStates, bulkUpsertReviewSchedules } from '@/lib/db/queries'
-import type { Question } from '@/types'
+import type { Question, SessionMode } from '@/types'
 import fs from 'fs'
 import path from 'path'
 
@@ -28,7 +28,7 @@ export async function POST(req: NextRequest) {
     const user = getCurrentUser()
     if (!user) return NextResponse.json({ error: 'Unauthorised' }, { status: 401 })
 
-    const { action, session_id, seen_skills = [], seen_question_ids = [] } = await req.json()
+    const { action, session_id, seen_skills = [], seen_question_ids = [], mode } = await req.json()
 
     if (action === 'start') {
       const session = createSession(user.id)
@@ -78,6 +78,7 @@ export async function POST(req: NextRequest) {
         seenSkillsThisSession:      seen_skills,
         seenQuestionIdsThisSession: new Set(seen_question_ids),
         questionsCache,
+        mode: mode as SessionMode | undefined,
       })
 
       if (!task) return NextResponse.json({ task: null, done: true })

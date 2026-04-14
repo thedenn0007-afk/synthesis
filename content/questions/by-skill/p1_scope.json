@@ -1,67 +1,164 @@
-{
-  "skill_id": "p1_scope",
-  "questions": [
-    {
-      "id": "p1_scope_q1",
-      "stem": "What does LEGB stand for in Python's scope resolution?",
-      "options": [
-        "Local, External, Global, Built-in",
-        "Local, Enclosing, Global, Built-in",
-        "Loop, Enclosing, Global, Binary",
-        "Local, Enclosed, General, Basic"
-      ],
-      "answer": 1,
-      "explanation": "LEGB is the order Python searches for variable names: Local (current function), Enclosing (outer functions), Global (module level), Built-in (Python's builtins like print, len)."
-    },
-    {
-      "id": "p1_scope_q2",
-      "stem": "What is the output of this code?\n```python\nx = 5\ndef foo():\n    x = 10\nfoo()\nprint(x)\n```",
-      "options": ["10", "5", "None", "NameError"],
-      "answer": 1,
-      "explanation": "Assigning `x = 10` inside `foo()` creates a NEW local variable. It does not modify the global `x`. After `foo()` returns, the global `x` is still 5."
-    },
-    {
-      "id": "p1_scope_q3",
-      "stem": "What keyword allows a function to modify a global variable?",
-      "options": ["extern", "global", "nonlocal", "shared"],
-      "answer": 1,
-      "explanation": "The `global` keyword declares that a name refers to the global scope. Without it, any assignment creates a new local variable instead of modifying the global."
-    },
-    {
-      "id": "p1_scope_q4",
-      "stem": "What is a closure?",
-      "options": [
-        "A way to close a file",
-        "A function that remembers and can access variables from its enclosing scope, even after the enclosing function has returned",
-        "A class with no public methods",
-        "A function that takes no arguments"
-      ],
-      "answer": 1,
-      "explanation": "A closure is an inner function that captures variables from its outer function. Even after the outer function finishes, the inner function retains access to those captured variables."
-    },
-    {
-      "id": "p1_scope_q5",
-      "stem": "What does `nonlocal` do?",
-      "options": [
-        "Declares a variable that can't be used locally",
-        "Allows an inner function to modify a variable in the enclosing (outer) function's scope",
-        "Creates a global variable",
-        "Prevents a variable from being accessed outside a function"
-      ],
-      "answer": 1,
-      "explanation": "`nonlocal` is like `global` but for enclosing function scope. It lets an inner function modify a variable that lives in the directly enclosing outer function."
-    },
-    {
-      "id": "p1_scope_q6",
-      "stem": "Why should you generally avoid using `global` variables?",
-      "options": [
-        "They are slower to access",
-        "They use more memory",
-        "They make code harder to test and understand because any function can modify them unexpectedly",
-        "Python doesn't support global variables"
-      ],
-      "answer": 2,
-      "explanation": "Global state means any function anywhere can change a value, making it hard to reason about what a function does, and hard to test in isolation. Parameters and return values make data flow explicit."
-    }
-  ]
-}
+[
+  {
+    "id": "p1_scope_q1",
+    "skill_id": "p1_scope",
+    "format": "mcq",
+    "difficulty_tier": "same",
+    "stem": "What does LEGB stand for in Python's scope resolution?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Local, External, Global, Built-in"
+      },
+      {
+        "id": "b",
+        "text": "Local, Enclosing, Global, Built-in"
+      },
+      {
+        "id": "c",
+        "text": "Loop, Enclosing, Global, Binary"
+      },
+      {
+        "id": "d",
+        "text": "Local, Enclosed, General, Basic"
+      }
+    ],
+    "correct_option_id": "b",
+    "explanation_after": "LEGB is the order Python searches for variable names: Local (current function), Enclosing (outer functions), Global (module level), Built-in (Python's builtins like print, len)."
+  },
+  {
+    "id": "p1_scope_q2",
+    "skill_id": "p1_scope",
+    "format": "mcq",
+    "difficulty_tier": "same",
+    "stem": "What is the output of this code?\n```python\nx = 5\ndef foo():\n    x = 10\nfoo()\nprint(x)\n```",
+    "options": [
+      {
+        "id": "a",
+        "text": "10"
+      },
+      {
+        "id": "b",
+        "text": "5"
+      },
+      {
+        "id": "c",
+        "text": "None"
+      },
+      {
+        "id": "d",
+        "text": "NameError"
+      }
+    ],
+    "correct_option_id": "b",
+    "explanation_after": "Assigning `x = 10` inside `foo()` creates a NEW local variable. It does not modify the global `x`. After `foo()` returns, the global `x` is still 5."
+  },
+  {
+    "id": "p1_scope_q3",
+    "skill_id": "p1_scope",
+    "format": "mcq",
+    "difficulty_tier": "same",
+    "stem": "What keyword allows a function to modify a global variable?",
+    "options": [
+      {
+        "id": "a",
+        "text": "extern"
+      },
+      {
+        "id": "b",
+        "text": "global"
+      },
+      {
+        "id": "c",
+        "text": "nonlocal"
+      },
+      {
+        "id": "d",
+        "text": "shared"
+      }
+    ],
+    "correct_option_id": "b",
+    "explanation_after": "The `global` keyword declares that a name refers to the global scope. Without it, any assignment creates a new local variable instead of modifying the global."
+  },
+  {
+    "id": "p1_scope_q4",
+    "skill_id": "p1_scope",
+    "format": "mcq",
+    "difficulty_tier": "same",
+    "stem": "What is a closure?",
+    "options": [
+      {
+        "id": "a",
+        "text": "A way to close a file"
+      },
+      {
+        "id": "b",
+        "text": "A function that remembers and can access variables from its enclosing scope, even after the enclosing function has returned"
+      },
+      {
+        "id": "c",
+        "text": "A class with no public methods"
+      },
+      {
+        "id": "d",
+        "text": "A function that takes no arguments"
+      }
+    ],
+    "correct_option_id": "b",
+    "explanation_after": "A closure is an inner function that captures variables from its outer function. Even after the outer function finishes, the inner function retains access to those captured variables."
+  },
+  {
+    "id": "p1_scope_q5",
+    "skill_id": "p1_scope",
+    "format": "mcq",
+    "difficulty_tier": "same",
+    "stem": "What does `nonlocal` do?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Declares a variable that can't be used locally"
+      },
+      {
+        "id": "b",
+        "text": "Allows an inner function to modify a variable in the enclosing (outer) function's scope"
+      },
+      {
+        "id": "c",
+        "text": "Creates a global variable"
+      },
+      {
+        "id": "d",
+        "text": "Prevents a variable from being accessed outside a function"
+      }
+    ],
+    "correct_option_id": "b",
+    "explanation_after": "`nonlocal` is like `global` but for enclosing function scope. It lets an inner function modify a variable that lives in the directly enclosing outer function."
+  },
+  {
+    "id": "p1_scope_q6",
+    "skill_id": "p1_scope",
+    "format": "mcq",
+    "difficulty_tier": "same",
+    "stem": "Why should you generally avoid using `global` variables?",
+    "options": [
+      {
+        "id": "a",
+        "text": "They are slower to access"
+      },
+      {
+        "id": "b",
+        "text": "They use more memory"
+      },
+      {
+        "id": "c",
+        "text": "They make code harder to test and understand because any function can modify them unexpectedly"
+      },
+      {
+        "id": "d",
+        "text": "Python doesn't support global variables"
+      }
+    ],
+    "correct_option_id": "c",
+    "explanation_after": "Global state means any function anywhere can change a value, making it hard to reason about what a function does, and hard to test in isolation. Parameters and return values make data flow explicit."
+  }
+]

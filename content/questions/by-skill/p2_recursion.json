@@ -1,77 +1,164 @@
-{
-  "skill_id": "p2_recursion",
-  "questions": [
-    {
-      "id": "p2_recursion_q1",
-      "stem": "What are the two essential parts of every recursive function?",
-      "options": [
-        "A loop and a condition",
-        "A base case (stopping condition) and a recursive case (calling itself with a smaller input)",
-        "A return value and a print statement",
-        "An accumulator and a counter"
-      ],
-      "answer": 1,
-      "explanation": "Every recursive function needs: (1) a base case that returns a value without recursing, and (2) a recursive case that breaks the problem into smaller pieces and calls itself."
-    },
-    {
-      "id": "p2_recursion_q2",
-      "stem": "What error does Python raise when recursion goes too deep?",
-      "options": [
-        "OverflowError",
-        "RecursionError: maximum recursion depth exceeded",
-        "MemoryError",
-        "RuntimeError"
-      ],
-      "answer": 1,
-      "explanation": "Python limits recursion to ~1000 calls (configurable via sys.setrecursionlimit). Exceeding this raises RecursionError to prevent the call stack from consuming all available memory."
-    },
-    {
-      "id": "p2_recursion_q3",
-      "stem": "Naive recursive Fibonacci is exponentially slow. The fix is:",
-      "options": [
-        "Using a faster computer",
-        "Memoisation — caching results so each subproblem is computed only once",
-        "Increasing the recursion limit",
-        "Using smaller Fibonacci numbers"
-      ],
-      "answer": 1,
-      "explanation": "fib(n) recomputes fib(n-2) for every branch. With memoisation (@functools.cache or @lru_cache), each value is computed exactly once, reducing O(2ⁿ) to O(n)."
-    },
-    {
-      "id": "p2_recursion_q4",
-      "stem": "What does `@functools.lru_cache(maxsize=None)` do on a recursive function?",
-      "options": [
-        "Converts it to iteration",
-        "Caches return values so repeated calls with the same arguments return instantly",
-        "Limits how many times it can recurse",
-        "Increases the recursion limit"
-      ],
-      "answer": 1,
-      "explanation": "lru_cache stores (args → result) pairs. On a subsequent call with the same args, it returns the cached result instead of recomputing. For recursive functions this avoids exponential recomputation."
-    },
-    {
-      "id": "p2_recursion_q5",
-      "stem": "When is recursion MORE natural than iteration?",
-      "options": [
-        "When processing flat lists",
-        "When the problem involves tree/graph structures or nested data of unknown depth",
-        "When performance is critical",
-        "When the input is always small"
-      ],
-      "answer": 1,
-      "explanation": "Recursion maps naturally onto tree-shaped problems: file systems, HTML DOMs, JSON objects, and abstract syntax trees. The recursive structure of the code mirrors the recursive structure of the data."
-    },
-    {
-      "id": "p2_recursion_q6",
-      "stem": "What is the purpose of the accumulator pattern in recursion?",
-      "options": [
-        "To count how many times the function has been called",
-        "To carry intermediate results as a parameter, avoiding the need to multiply/add on the way back up the call stack",
-        "To prevent infinite recursion",
-        "To increase performance by skipping computation"
-      ],
-      "answer": 1,
-      "explanation": "In `fact_tail(n, acc=1)`, instead of `n * fact(n-1)` (which needs to wait for the return), we pass the accumulated result as `acc`, making the recursive call the last operation (tail call)."
-    }
-  ]
-}
+[
+  {
+    "id": "p2_recursion_q1",
+    "skill_id": "p2_recursion",
+    "format": "mcq",
+    "difficulty_tier": "same",
+    "stem": "What are the two essential parts of every recursive function?",
+    "options": [
+      {
+        "id": "a",
+        "text": "A loop and a condition"
+      },
+      {
+        "id": "b",
+        "text": "A base case (stopping condition) and a recursive case (calling itself with a smaller input)"
+      },
+      {
+        "id": "c",
+        "text": "A return value and a print statement"
+      },
+      {
+        "id": "d",
+        "text": "An accumulator and a counter"
+      }
+    ],
+    "correct_option_id": "b",
+    "explanation_after": "Every recursive function needs: (1) a base case that returns a value without recursing, and (2) a recursive case that breaks the problem into smaller pieces and calls itself."
+  },
+  {
+    "id": "p2_recursion_q2",
+    "skill_id": "p2_recursion",
+    "format": "mcq",
+    "difficulty_tier": "same",
+    "stem": "What error does Python raise when recursion goes too deep?",
+    "options": [
+      {
+        "id": "a",
+        "text": "OverflowError"
+      },
+      {
+        "id": "b",
+        "text": "RecursionError: maximum recursion depth exceeded"
+      },
+      {
+        "id": "c",
+        "text": "MemoryError"
+      },
+      {
+        "id": "d",
+        "text": "RuntimeError"
+      }
+    ],
+    "correct_option_id": "b",
+    "explanation_after": "Python limits recursion to ~1000 calls (configurable via sys.setrecursionlimit). Exceeding this raises RecursionError to prevent the call stack from consuming all available memory."
+  },
+  {
+    "id": "p2_recursion_q3",
+    "skill_id": "p2_recursion",
+    "format": "mcq",
+    "difficulty_tier": "same",
+    "stem": "Naive recursive Fibonacci is exponentially slow. The fix is:",
+    "options": [
+      {
+        "id": "a",
+        "text": "Using a faster computer"
+      },
+      {
+        "id": "b",
+        "text": "Memoisation — caching results so each subproblem is computed only once"
+      },
+      {
+        "id": "c",
+        "text": "Increasing the recursion limit"
+      },
+      {
+        "id": "d",
+        "text": "Using smaller Fibonacci numbers"
+      }
+    ],
+    "correct_option_id": "b",
+    "explanation_after": "fib(n) recomputes fib(n-2) for every branch. With memoisation (@functools.cache or @lru_cache), each value is computed exactly once, reducing O(2ⁿ) to O(n)."
+  },
+  {
+    "id": "p2_recursion_q4",
+    "skill_id": "p2_recursion",
+    "format": "mcq",
+    "difficulty_tier": "same",
+    "stem": "What does `@functools.lru_cache(maxsize=None)` do on a recursive function?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Converts it to iteration"
+      },
+      {
+        "id": "b",
+        "text": "Caches return values so repeated calls with the same arguments return instantly"
+      },
+      {
+        "id": "c",
+        "text": "Limits how many times it can recurse"
+      },
+      {
+        "id": "d",
+        "text": "Increases the recursion limit"
+      }
+    ],
+    "correct_option_id": "b",
+    "explanation_after": "lru_cache stores (args → result) pairs. On a subsequent call with the same args, it returns the cached result instead of recomputing. For recursive functions this avoids exponential recomputation."
+  },
+  {
+    "id": "p2_recursion_q5",
+    "skill_id": "p2_recursion",
+    "format": "mcq",
+    "difficulty_tier": "same",
+    "stem": "When is recursion MORE natural than iteration?",
+    "options": [
+      {
+        "id": "a",
+        "text": "When processing flat lists"
+      },
+      {
+        "id": "b",
+        "text": "When the problem involves tree/graph structures or nested data of unknown depth"
+      },
+      {
+        "id": "c",
+        "text": "When performance is critical"
+      },
+      {
+        "id": "d",
+        "text": "When the input is always small"
+      }
+    ],
+    "correct_option_id": "b",
+    "explanation_after": "Recursion maps naturally onto tree-shaped problems: file systems, HTML DOMs, JSON objects, and abstract syntax trees. The recursive structure of the code mirrors the recursive structure of the data."
+  },
+  {
+    "id": "p2_recursion_q6",
+    "skill_id": "p2_recursion",
+    "format": "mcq",
+    "difficulty_tier": "same",
+    "stem": "What is the purpose of the accumulator pattern in recursion?",
+    "options": [
+      {
+        "id": "a",
+        "text": "To count how many times the function has been called"
+      },
+      {
+        "id": "b",
+        "text": "To carry intermediate results as a parameter, avoiding the need to multiply/add on the way back up the call stack"
+      },
+      {
+        "id": "c",
+        "text": "To prevent infinite recursion"
+      },
+      {
+        "id": "d",
+        "text": "To increase performance by skipping computation"
+      }
+    ],
+    "correct_option_id": "b",
+    "explanation_after": "In `fact_tail(n, acc=1)`, instead of `n * fact(n-1)` (which needs to wait for the return), we pass the accumulated result as `acc`, making the recursive call the last operation (tail call)."
+  }
+]

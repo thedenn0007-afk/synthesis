@@ -1,77 +1,164 @@
-{
-  "skill_id": "p3_data_and_labels",
-  "questions": [
-    {
-      "id": "p3_data_and_labels_q1",
-      "stem": "A dataset where 95% of examples are class A and 5% are class B is described as:",
-      "options": [
-        "Noisy",
-        "Imbalanced",
-        "Unlabelled",
-        "Contaminated"
-      ],
-      "answer": 1,
-      "explanation": "Class imbalance occurs when one class significantly outnumbers others. This causes models to learn to predict the majority class, achieving high accuracy but failing on the minority class."
-    },
-    {
-      "id": "p3_data_and_labels_q2",
-      "stem": "Data leakage in a machine learning pipeline means:",
-      "options": [
-        "Your training data is publicly visible",
-        "Features from the test set were used during training, giving artificially high evaluation scores",
-        "The model's weights were accidentally shared",
-        "Missing values in the dataset"
-      ],
-      "answer": 1,
-      "explanation": "Data leakage is when information about the test (or future) data influences training, making evaluation scores unrealistically high. The model appears to work but fails in production."
-    },
-    {
-      "id": "p3_data_and_labels_q3",
-      "stem": "Which is an example of data annotation bias?",
-      "options": [
-        "Training on images from only one country, leading to poor global performance",
-        "Using too few training examples",
-        "Not normalising input features",
-        "Setting the learning rate too high"
-      ],
-      "answer": 0,
-      "explanation": "Annotation bias occurs when training data doesn't represent the full real-world distribution — e.g. a face recognition model trained only on images from one demographic group performs poorly on others."
-    },
-    {
-      "id": "p3_data_and_labels_q4",
-      "stem": "Why should you never use the test set for model selection or hyperparameter tuning?",
-      "options": [
-        "Test sets are too small for tuning",
-        "It makes training slower",
-        "Repeatedly evaluating on the test set leaks information and makes the test score an overestimate of true performance",
-        "Test sets don't contain labels"
-      ],
-      "answer": 2,
-      "explanation": "The test set must be used only once — for final evaluation. Using it for model selection is a form of leakage: you implicitly tune to it, and reported performance won't generalise to new data."
-    },
-    {
-      "id": "p3_data_and_labels_q5",
-      "stem": "What is label noise in a training dataset?",
-      "options": [
-        "Audio noise in speech datasets",
-        "Some training examples have incorrect labels, which can teach the model wrong patterns",
-        "Features with high variance",
-        "Missing values in the target column"
-      ],
-      "answer": 1,
-      "explanation": "Label noise means some training examples are mislabelled. This degrades model quality because the model learns from incorrect supervision. Noisy labels are common in crowd-sourced annotation datasets."
-    },
-    {
-      "id": "p3_data_and_labels_q6",
-      "stem": "The 80/10/10 split (train/validation/test) is used because:",
-      "options": [
-        "80% is always the right amount of training data",
-        "Train teaches the model, validation guides model selection and tuning, test provides unbiased final evaluation",
-        "It's required by sklearn's API",
-        "More data is always better regardless of the split"
-      ],
-      "answer": 1,
-      "explanation": "The three-way split separates concerns: train for learning, validation for iterative decisions (hyperparameters, architecture), test for honest final evaluation. Using only two splits risks contaminating the test signal."
-    }
-  ]
-}
+[
+  {
+    "id": "p3_data_and_labels_q1",
+    "skill_id": "p3_data_and_labels",
+    "format": "mcq",
+    "difficulty_tier": "same",
+    "stem": "A dataset where 95% of examples are class A and 5% are class B is described as:",
+    "options": [
+      {
+        "id": "a",
+        "text": "Noisy"
+      },
+      {
+        "id": "b",
+        "text": "Imbalanced"
+      },
+      {
+        "id": "c",
+        "text": "Unlabelled"
+      },
+      {
+        "id": "d",
+        "text": "Contaminated"
+      }
+    ],
+    "correct_option_id": "b",
+    "explanation_after": "Class imbalance occurs when one class significantly outnumbers others. This causes models to learn to predict the majority class, achieving high accuracy but failing on the minority class."
+  },
+  {
+    "id": "p3_data_and_labels_q2",
+    "skill_id": "p3_data_and_labels",
+    "format": "mcq",
+    "difficulty_tier": "same",
+    "stem": "Data leakage in a machine learning pipeline means:",
+    "options": [
+      {
+        "id": "a",
+        "text": "Your training data is publicly visible"
+      },
+      {
+        "id": "b",
+        "text": "Features from the test set were used during training, giving artificially high evaluation scores"
+      },
+      {
+        "id": "c",
+        "text": "The model's weights were accidentally shared"
+      },
+      {
+        "id": "d",
+        "text": "Missing values in the dataset"
+      }
+    ],
+    "correct_option_id": "b",
+    "explanation_after": "Data leakage is when information about the test (or future) data influences training, making evaluation scores unrealistically high. The model appears to work but fails in production."
+  },
+  {
+    "id": "p3_data_and_labels_q3",
+    "skill_id": "p3_data_and_labels",
+    "format": "mcq",
+    "difficulty_tier": "same",
+    "stem": "Which is an example of data annotation bias?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Training on images from only one country, leading to poor global performance"
+      },
+      {
+        "id": "b",
+        "text": "Using too few training examples"
+      },
+      {
+        "id": "c",
+        "text": "Not normalising input features"
+      },
+      {
+        "id": "d",
+        "text": "Setting the learning rate too high"
+      }
+    ],
+    "correct_option_id": "a",
+    "explanation_after": "Annotation bias occurs when training data doesn't represent the full real-world distribution — e.g. a face recognition model trained only on images from one demographic group performs poorly on others."
+  },
+  {
+    "id": "p3_data_and_labels_q4",
+    "skill_id": "p3_data_and_labels",
+    "format": "mcq",
+    "difficulty_tier": "same",
+    "stem": "Why should you never use the test set for model selection or hyperparameter tuning?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Test sets are too small for tuning"
+      },
+      {
+        "id": "b",
+        "text": "It makes training slower"
+      },
+      {
+        "id": "c",
+        "text": "Repeatedly evaluating on the test set leaks information and makes the test score an overestimate of true performance"
+      },
+      {
+        "id": "d",
+        "text": "Test sets don't contain labels"
+      }
+    ],
+    "correct_option_id": "c",
+    "explanation_after": "The test set must be used only once — for final evaluation. Using it for model selection is a form of leakage: you implicitly tune to it, and reported performance won't generalise to new data."
+  },
+  {
+    "id": "p3_data_and_labels_q5",
+    "skill_id": "p3_data_and_labels",
+    "format": "mcq",
+    "difficulty_tier": "same",
+    "stem": "What is label noise in a training dataset?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Audio noise in speech datasets"
+      },
+      {
+        "id": "b",
+        "text": "Some training examples have incorrect labels, which can teach the model wrong patterns"
+      },
+      {
+        "id": "c",
+        "text": "Features with high variance"
+      },
+      {
+        "id": "d",
+        "text": "Missing values in the target column"
+      }
+    ],
+    "correct_option_id": "b",
+    "explanation_after": "Label noise means some training examples are mislabelled. This degrades model quality because the model learns from incorrect supervision. Noisy labels are common in crowd-sourced annotation datasets."
+  },
+  {
+    "id": "p3_data_and_labels_q6",
+    "skill_id": "p3_data_and_labels",
+    "format": "mcq",
+    "difficulty_tier": "same",
+    "stem": "The 80/10/10 split (train/validation/test) is used because:",
+    "options": [
+      {
+        "id": "a",
+        "text": "80% is always the right amount of training data"
+      },
+      {
+        "id": "b",
+        "text": "Train teaches the model, validation guides model selection and tuning, test provides unbiased final evaluation"
+      },
+      {
+        "id": "c",
+        "text": "It's required by sklearn's API"
+      },
+      {
+        "id": "d",
+        "text": "More data is always better regardless of the split"
+      }
+    ],
+    "correct_option_id": "b",
+    "explanation_after": "The three-way split separates concerns: train for learning, validation for iterative decisions (hyperparameters, architecture), test for honest final evaluation. Using only two splits risks contaminating the test signal."
+  }
+]

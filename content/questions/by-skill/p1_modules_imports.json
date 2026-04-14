@@ -1,77 +1,164 @@
-{
-  "skill_id": "p1_modules_imports",
-  "questions": [
-    {
-      "id": "p1_modules_imports_q1",
-      "stem": "What is the difference between `import math` and `from math import sqrt`?",
-      "options": [
-        "They are identical",
-        "`import math` loads the whole module (access via math.sqrt); `from math import sqrt` brings sqrt directly into local scope",
-        "`from math import sqrt` loads less memory",
-        "`import math` only works with the standard library"
-      ],
-      "answer": 1,
-      "explanation": "Both load the same code. The difference is how you access functions: `import math` requires the `math.` prefix; `from math import sqrt` lets you call `sqrt()` directly without prefix."
-    },
-    {
-      "id": "p1_modules_imports_q2",
-      "stem": "What command installs a third-party package from PyPI?",
-      "options": [
-        "python install requests",
-        "pip install requests",
-        "import requests",
-        "load requests"
-      ],
-      "answer": 1,
-      "explanation": "`pip` is Python's package installer. `pip install requests` downloads and installs the `requests` library from PyPI. After installing, you can `import requests` in your code."
-    },
-    {
-      "id": "p1_modules_imports_q3",
-      "stem": "What does `if __name__ == '__main__':` do?",
-      "options": [
-        "Checks if the file is named __main__.py",
-        "Runs the code block only when the file is executed directly, not when imported",
-        "Makes the code run as the main process",
-        "Defines the main function"
-      ],
-      "answer": 1,
-      "explanation": "When Python runs a file directly, `__name__` equals `'__main__'`. When a file is imported, `__name__` equals the module name. This guard prevents test/demo code from running on import."
-    },
-    {
-      "id": "p1_modules_imports_q4",
-      "stem": "What is a virtual environment used for?",
-      "options": [
-        "Running Python code faster",
-        "Isolating project dependencies so different projects can use different package versions",
-        "Connecting to virtual machines",
-        "Encrypting your Python code"
-      ],
-      "answer": 1,
-      "explanation": "A virtual environment creates an isolated Python installation for a project. This prevents version conflicts: Project A can use requests 2.25 while Project B uses requests 2.31, without interference."
-    },
-    {
-      "id": "p1_modules_imports_q5",
-      "stem": "What does `__init__.py` do in a Python package?",
-      "options": [
-        "Initialises all variables in the package to zero",
-        "Marks a directory as a Python package and can define what is exposed when the package is imported",
-        "Contains only documentation for the package",
-        "Is required for Python to run any script"
-      ],
-      "answer": 1,
-      "explanation": "`__init__.py` turns a directory into a package. Code in it runs when the package is imported. It typically imports key names to expose at the package level and sets `__version__`, `__all__`, etc."
-    },
-    {
-      "id": "p1_modules_imports_q6",
-      "stem": "How do you save all installed packages in a project to a file for sharing?",
-      "options": [
-        "python save packages.txt",
-        "pip freeze > requirements.txt",
-        "pip list > requirements.txt",
-        "pip export requirements.txt"
-      ],
-      "answer": 1,
-      "explanation": "`pip freeze` outputs installed packages and their exact versions. Redirecting to `requirements.txt` saves them. Others can then run `pip install -r requirements.txt` to get the exact same environment."
-    }
-  ]
-}
+[
+  {
+    "id": "p1_modules_imports_q1",
+    "skill_id": "p1_modules_imports",
+    "format": "mcq",
+    "difficulty_tier": "same",
+    "stem": "What is the difference between `import math` and `from math import sqrt`?",
+    "options": [
+      {
+        "id": "a",
+        "text": "They are identical"
+      },
+      {
+        "id": "b",
+        "text": "`import math` loads the whole module (access via math.sqrt); `from math import sqrt` brings sqrt directly into local scope"
+      },
+      {
+        "id": "c",
+        "text": "`from math import sqrt` loads less memory"
+      },
+      {
+        "id": "d",
+        "text": "`import math` only works with the standard library"
+      }
+    ],
+    "correct_option_id": "b",
+    "explanation_after": "Both load the same code. The difference is how you access functions: `import math` requires the `math.` prefix; `from math import sqrt` lets you call `sqrt()` directly without prefix."
+  },
+  {
+    "id": "p1_modules_imports_q2",
+    "skill_id": "p1_modules_imports",
+    "format": "mcq",
+    "difficulty_tier": "same",
+    "stem": "What command installs a third-party package from PyPI?",
+    "options": [
+      {
+        "id": "a",
+        "text": "python install requests"
+      },
+      {
+        "id": "b",
+        "text": "pip install requests"
+      },
+      {
+        "id": "c",
+        "text": "import requests"
+      },
+      {
+        "id": "d",
+        "text": "load requests"
+      }
+    ],
+    "correct_option_id": "b",
+    "explanation_after": "`pip` is Python's package installer. `pip install requests` downloads and installs the `requests` library from PyPI. After installing, you can `import requests` in your code."
+  },
+  {
+    "id": "p1_modules_imports_q3",
+    "skill_id": "p1_modules_imports",
+    "format": "mcq",
+    "difficulty_tier": "same",
+    "stem": "What does `if __name__ == '__main__':` do?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Checks if the file is named __main__.py"
+      },
+      {
+        "id": "b",
+        "text": "Runs the code block only when the file is executed directly, not when imported"
+      },
+      {
+        "id": "c",
+        "text": "Makes the code run as the main process"
+      },
+      {
+        "id": "d",
+        "text": "Defines the main function"
+      }
+    ],
+    "correct_option_id": "b",
+    "explanation_after": "When Python runs a file directly, `__name__` equals `'__main__'`. When a file is imported, `__name__` equals the module name. This guard prevents test/demo code from running on import."
+  },
+  {
+    "id": "p1_modules_imports_q4",
+    "skill_id": "p1_modules_imports",
+    "format": "mcq",
+    "difficulty_tier": "same",
+    "stem": "What is a virtual environment used for?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Running Python code faster"
+      },
+      {
+        "id": "b",
+        "text": "Isolating project dependencies so different projects can use different package versions"
+      },
+      {
+        "id": "c",
+        "text": "Connecting to virtual machines"
+      },
+      {
+        "id": "d",
+        "text": "Encrypting your Python code"
+      }
+    ],
+    "correct_option_id": "b",
+    "explanation_after": "A virtual environment creates an isolated Python installation for a project. This prevents version conflicts: Project A can use requests 2.25 while Project B uses requests 2.31, without interference."
+  },
+  {
+    "id": "p1_modules_imports_q5",
+    "skill_id": "p1_modules_imports",
+    "format": "mcq",
+    "difficulty_tier": "same",
+    "stem": "What does `__init__.py` do in a Python package?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Initialises all variables in the package to zero"
+      },
+      {
+        "id": "b",
+        "text": "Marks a directory as a Python package and can define what is exposed when the package is imported"
+      },
+      {
+        "id": "c",
+        "text": "Contains only documentation for the package"
+      },
+      {
+        "id": "d",
+        "text": "Is required for Python to run any script"
+      }
+    ],
+    "correct_option_id": "b",
+    "explanation_after": "`__init__.py` turns a directory into a package. Code in it runs when the package is imported. It typically imports key names to expose at the package level and sets `__version__`, `__all__`, etc."
+  },
+  {
+    "id": "p1_modules_imports_q6",
+    "skill_id": "p1_modules_imports",
+    "format": "mcq",
+    "difficulty_tier": "same",
+    "stem": "How do you save all installed packages in a project to a file for sharing?",
+    "options": [
+      {
+        "id": "a",
+        "text": "python save packages.txt"
+      },
+      {
+        "id": "b",
+        "text": "pip freeze > requirements.txt"
+      },
+      {
+        "id": "c",
+        "text": "pip list > requirements.txt"
+      },
+      {
+        "id": "d",
+        "text": "pip export requirements.txt"
+      }
+    ],
+    "correct_option_id": "b",
+    "explanation_after": "`pip freeze` outputs installed packages and their exact versions. Redirecting to `requirements.txt` saves them. Others can then run `pip install -r requirements.txt` to get the exact same environment."
+  }
+]

@@ -1,77 +1,164 @@
-{
-  "skill_id": "p3_ai_applications",
-  "questions": [
-    {
-      "id": "p3_ai_applications_q1",
-      "stem": "Spotify's 'Discover Weekly' playlist is primarily powered by which type of AI?",
-      "options": [
-        "Computer vision",
-        "Recommendation system (collaborative filtering + content analysis)",
-        "Speech recognition",
-        "Reinforcement learning"
-      ],
-      "answer": 1,
-      "explanation": "Discover Weekly uses collaborative filtering (users who listen to similar songs as you) combined with audio analysis features. It's a recommendation system — a core ML application type."
-    },
-    {
-      "id": "p3_ai_applications_q2",
-      "stem": "What is the 'cold start' problem in recommendation systems?",
-      "options": [
-        "The system is slow to start up",
-        "New users or items have no interaction history, making it hard to generate recommendations",
-        "The recommendation model requires cold storage",
-        "Recommendations degrade in cold weather"
-      ],
-      "answer": 1,
-      "explanation": "New users have no watch/purchase history, so collaborative filtering can't find similar users. New items have no ratings. The cold start problem requires alternative strategies like asking preferences or using demographic data."
-    },
-    {
-      "id": "p3_ai_applications_q3",
-      "stem": "Retrieval-Augmented Generation (RAG) solves which key limitation of LLMs?",
-      "options": [
-        "LLMs can't generate text",
-        "LLMs have a fixed knowledge cutoff and can hallucinate when asked about specific facts",
-        "LLMs require too much compute",
-        "LLMs can only answer yes/no questions"
-      ],
-      "answer": 1,
-      "explanation": "LLMs are trained at a point in time and may confabulate facts. RAG retrieves relevant documents at query time and grounds the answer in them, allowing LLMs to answer about up-to-date or domain-specific information."
-    },
-    {
-      "id": "p3_ai_applications_q4",
-      "stem": "Object detection (e.g. YOLO) differs from image classification because:",
-      "options": [
-        "Detection is faster than classification",
-        "Detection identifies what objects are present AND where they are (bounding boxes)",
-        "Detection only works on photos, classification works on any image",
-        "Detection doesn't use neural networks"
-      ],
-      "answer": 1,
-      "explanation": "Classification assigns a single label to an image. Detection localises multiple objects with bounding boxes and classifies each one. Detection is much harder and used in applications like self-driving cars and security cameras."
-    },
-    {
-      "id": "p3_ai_applications_q5",
-      "stem": "A two-stage recommendation system uses a retrieval stage and a ranking stage because:",
-      "options": [
-        "One model isn't powerful enough",
-        "The retrieval stage quickly narrows millions of items to ~1000 candidates; the ranking stage precisely scores those candidates",
-        "Rules require two models by law",
-        "The two stages are trained on different datasets"
-      ],
-      "answer": 1,
-      "explanation": "Scoring all millions of items with an expensive model in real-time is impossible. Fast retrieval (approximate nearest neighbours) narrows the space. A heavier, more accurate ranker then picks the best from this smaller candidate set."
-    },
-    {
-      "id": "p3_ai_applications_q6",
-      "stem": "Constitutional AI (developed by Anthropic) differs from standard RLHF in that:",
-      "options": [
-        "It uses more human raters",
-        "It doesn't use any human feedback",
-        "Instead of human comparisons alone, it uses a set of principles (constitution) for the model to critique and revise its own outputs",
-        "It trains only on code"
-      ],
-      "answer": 2,
-      "explanation": "Standard RLHF requires large-scale human preference labelling. Constitutional AI uses a written constitution of principles — the model critiques its own responses against these principles, reducing reliance on human labelling at scale."
-    }
-  ]
-}
+[
+  {
+    "id": "p3_ai_applications_q1",
+    "skill_id": "p3_ai_applications",
+    "format": "mcq",
+    "difficulty_tier": "same",
+    "stem": "Spotify's 'Discover Weekly' playlist is primarily powered by which type of AI?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Computer vision"
+      },
+      {
+        "id": "b",
+        "text": "Recommendation system (collaborative filtering + content analysis)"
+      },
+      {
+        "id": "c",
+        "text": "Speech recognition"
+      },
+      {
+        "id": "d",
+        "text": "Reinforcement learning"
+      }
+    ],
+    "correct_option_id": "b",
+    "explanation_after": "Discover Weekly uses collaborative filtering (users who listen to similar songs as you) combined with audio analysis features. It's a recommendation system — a core ML application type."
+  },
+  {
+    "id": "p3_ai_applications_q2",
+    "skill_id": "p3_ai_applications",
+    "format": "mcq",
+    "difficulty_tier": "same",
+    "stem": "What is the 'cold start' problem in recommendation systems?",
+    "options": [
+      {
+        "id": "a",
+        "text": "The system is slow to start up"
+      },
+      {
+        "id": "b",
+        "text": "New users or items have no interaction history, making it hard to generate recommendations"
+      },
+      {
+        "id": "c",
+        "text": "The recommendation model requires cold storage"
+      },
+      {
+        "id": "d",
+        "text": "Recommendations degrade in cold weather"
+      }
+    ],
+    "correct_option_id": "b",
+    "explanation_after": "New users have no watch/purchase history, so collaborative filtering can't find similar users. New items have no ratings. The cold start problem requires alternative strategies like asking preferences or using demographic data."
+  },
+  {
+    "id": "p3_ai_applications_q3",
+    "skill_id": "p3_ai_applications",
+    "format": "mcq",
+    "difficulty_tier": "same",
+    "stem": "Retrieval-Augmented Generation (RAG) solves which key limitation of LLMs?",
+    "options": [
+      {
+        "id": "a",
+        "text": "LLMs can't generate text"
+      },
+      {
+        "id": "b",
+        "text": "LLMs have a fixed knowledge cutoff and can hallucinate when asked about specific facts"
+      },
+      {
+        "id": "c",
+        "text": "LLMs require too much compute"
+      },
+      {
+        "id": "d",
+        "text": "LLMs can only answer yes/no questions"
+      }
+    ],
+    "correct_option_id": "b",
+    "explanation_after": "LLMs are trained at a point in time and may confabulate facts. RAG retrieves relevant documents at query time and grounds the answer in them, allowing LLMs to answer about up-to-date or domain-specific information."
+  },
+  {
+    "id": "p3_ai_applications_q4",
+    "skill_id": "p3_ai_applications",
+    "format": "mcq",
+    "difficulty_tier": "same",
+    "stem": "Object detection (e.g. YOLO) differs from image classification because:",
+    "options": [
+      {
+        "id": "a",
+        "text": "Detection is faster than classification"
+      },
+      {
+        "id": "b",
+        "text": "Detection identifies what objects are present AND where they are (bounding boxes)"
+      },
+      {
+        "id": "c",
+        "text": "Detection only works on photos, classification works on any image"
+      },
+      {
+        "id": "d",
+        "text": "Detection doesn't use neural networks"
+      }
+    ],
+    "correct_option_id": "b",
+    "explanation_after": "Classification assigns a single label to an image. Detection localises multiple objects with bounding boxes and classifies each one. Detection is much harder and used in applications like self-driving cars and security cameras."
+  },
+  {
+    "id": "p3_ai_applications_q5",
+    "skill_id": "p3_ai_applications",
+    "format": "mcq",
+    "difficulty_tier": "same",
+    "stem": "A two-stage recommendation system uses a retrieval stage and a ranking stage because:",
+    "options": [
+      {
+        "id": "a",
+        "text": "One model isn't powerful enough"
+      },
+      {
+        "id": "b",
+        "text": "The retrieval stage quickly narrows millions of items to ~1000 candidates; the ranking stage precisely scores those candidates"
+      },
+      {
+        "id": "c",
+        "text": "Rules require two models by law"
+      },
+      {
+        "id": "d",
+        "text": "The two stages are trained on different datasets"
+      }
+    ],
+    "correct_option_id": "b",
+    "explanation_after": "Scoring all millions of items with an expensive model in real-time is impossible. Fast retrieval (approximate nearest neighbours) narrows the space. A heavier, more accurate ranker then picks the best from this smaller candidate set."
+  },
+  {
+    "id": "p3_ai_applications_q6",
+    "skill_id": "p3_ai_applications",
+    "format": "mcq",
+    "difficulty_tier": "same",
+    "stem": "Constitutional AI (developed by Anthropic) differs from standard RLHF in that:",
+    "options": [
+      {
+        "id": "a",
+        "text": "It uses more human raters"
+      },
+      {
+        "id": "b",
+        "text": "It doesn't use any human feedback"
+      },
+      {
+        "id": "c",
+        "text": "Instead of human comparisons alone, it uses a set of principles (constitution) for the model to critique and revise its own outputs"
+      },
+      {
+        "id": "d",
+        "text": "It trains only on code"
+      }
+    ],
+    "correct_option_id": "c",
+    "explanation_after": "Standard RLHF requires large-scale human preference labelling. Constitutional AI uses a written constitution of principles — the model critiques its own responses against these principles, reducing reliance on human labelling at scale."
+  }
+]

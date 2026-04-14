@@ -1,67 +1,164 @@
-{
-  "skill_id": "p2_sorting_searching",
-  "questions": [
-    {
-      "id": "p2_sorting_searching_q1",
-      "stem": "What is the time complexity of Python's sorted() function?",
-      "options": ["O(n)", "O(n log n)", "O(n²)", "O(log n)"],
-      "answer": 1,
-      "explanation": "Python uses Timsort, which is O(n log n) in the worst case and O(n) for already-sorted data. No comparison-based sort can do better than O(n log n) in the general case."
-    },
-    {
-      "id": "p2_sorting_searching_q2",
-      "stem": "Why must binary search only be used on sorted data?",
-      "options": [
-        "It runs slower on unsorted data",
-        "Binary search works by eliminating half the remaining elements each step — this only works if you can reliably determine which half contains the target",
-        "Python raises an error on unsorted input",
-        "It uses more memory with unsorted data"
-      ],
-      "answer": 1,
-      "explanation": "Binary search compares the middle element and discards half the array. This only works because in a sorted array, if target > arr[mid], it MUST be in the right half. Unsorted data breaks this guarantee."
-    },
-    {
-      "id": "p2_sorting_searching_q3",
-      "stem": "What is the difference between `list.sort()` and `sorted(list)`?",
-      "options": [
-        "sorted() is faster",
-        "list.sort() modifies the list in place and returns None; sorted() returns a new sorted list",
-        "list.sort() is stable; sorted() is not",
-        "They are identical in all ways"
-      ],
-      "answer": 1,
-      "explanation": "list.sort() is in-place (modifies original, returns None). sorted() creates and returns a NEW sorted list, leaving the original unchanged. Both are stable and use Timsort."
-    },
-    {
-      "id": "p2_sorting_searching_q4",
-      "stem": "When would you use a heap (heapq) instead of sorting the full list?",
-      "options": [
-        "When the list is very short",
-        "When you only need the smallest/largest k elements, or need to repeatedly add elements and find the minimum",
-        "When the data contains strings",
-        "Heaps are always better than sorting"
-      ],
-      "answer": 1,
-      "explanation": "Sorting takes O(n log n) to get the top-k. A heap takes O(n log k) — much faster when k << n. Heaps also support O(log n) insertion with efficient min-access, which sorting doesn't."
-    },
-    {
-      "id": "p2_sorting_searching_q5",
-      "stem": "What is the time complexity of binary search?",
-      "options": ["O(n)", "O(n log n)", "O(log n)", "O(1)"],
-      "answer": 2,
-      "explanation": "Binary search halves the search space each step. To search n elements: n → n/2 → n/4 → ... → 1. This takes log₂(n) steps = O(log n). For 1 billion items, that's ~30 comparisons."
-    },
-    {
-      "id": "p2_sorting_searching_q6",
-      "stem": "How does Python's `sorted()` accept a custom sort key?",
-      "options": [
-        "You write a comparison function returning -1, 0, or 1",
-        "Using the `key=` parameter with a function that returns the value to sort by",
-        "By passing a sorted comparison class",
-        "It only sorts in natural order"
-      ],
-      "answer": 1,
-      "explanation": "The `key=` parameter accepts any callable. `sorted(students, key=lambda s: s.grade)` sorts by the `.grade` attribute. Python calls `key(item)` once per item and sorts by those results."
-    }
-  ]
-}
+[
+  {
+    "id": "p2_sorting_searching_q1",
+    "skill_id": "p2_sorting_searching",
+    "format": "mcq",
+    "difficulty_tier": "same",
+    "stem": "What is the time complexity of Python's sorted() function?",
+    "options": [
+      {
+        "id": "a",
+        "text": "O(n)"
+      },
+      {
+        "id": "b",
+        "text": "O(n log n)"
+      },
+      {
+        "id": "c",
+        "text": "O(n²)"
+      },
+      {
+        "id": "d",
+        "text": "O(log n)"
+      }
+    ],
+    "correct_option_id": "b",
+    "explanation_after": "Python uses Timsort, which is O(n log n) in the worst case and O(n) for already-sorted data. No comparison-based sort can do better than O(n log n) in the general case."
+  },
+  {
+    "id": "p2_sorting_searching_q2",
+    "skill_id": "p2_sorting_searching",
+    "format": "mcq",
+    "difficulty_tier": "same",
+    "stem": "Why must binary search only be used on sorted data?",
+    "options": [
+      {
+        "id": "a",
+        "text": "It runs slower on unsorted data"
+      },
+      {
+        "id": "b",
+        "text": "Binary search works by eliminating half the remaining elements each step — this only works if you can reliably determine which half contains the target"
+      },
+      {
+        "id": "c",
+        "text": "Python raises an error on unsorted input"
+      },
+      {
+        "id": "d",
+        "text": "It uses more memory with unsorted data"
+      }
+    ],
+    "correct_option_id": "b",
+    "explanation_after": "Binary search compares the middle element and discards half the array. This only works because in a sorted array, if target > arr[mid], it MUST be in the right half. Unsorted data breaks this guarantee."
+  },
+  {
+    "id": "p2_sorting_searching_q3",
+    "skill_id": "p2_sorting_searching",
+    "format": "mcq",
+    "difficulty_tier": "same",
+    "stem": "What is the difference between `list.sort()` and `sorted(list)`?",
+    "options": [
+      {
+        "id": "a",
+        "text": "sorted() is faster"
+      },
+      {
+        "id": "b",
+        "text": "list.sort() modifies the list in place and returns None; sorted() returns a new sorted list"
+      },
+      {
+        "id": "c",
+        "text": "list.sort() is stable; sorted() is not"
+      },
+      {
+        "id": "d",
+        "text": "They are identical in all ways"
+      }
+    ],
+    "correct_option_id": "b",
+    "explanation_after": "list.sort() is in-place (modifies original, returns None). sorted() creates and returns a NEW sorted list, leaving the original unchanged. Both are stable and use Timsort."
+  },
+  {
+    "id": "p2_sorting_searching_q4",
+    "skill_id": "p2_sorting_searching",
+    "format": "mcq",
+    "difficulty_tier": "same",
+    "stem": "When would you use a heap (heapq) instead of sorting the full list?",
+    "options": [
+      {
+        "id": "a",
+        "text": "When the list is very short"
+      },
+      {
+        "id": "b",
+        "text": "When you only need the smallest/largest k elements, or need to repeatedly add elements and find the minimum"
+      },
+      {
+        "id": "c",
+        "text": "When the data contains strings"
+      },
+      {
+        "id": "d",
+        "text": "Heaps are always better than sorting"
+      }
+    ],
+    "correct_option_id": "b",
+    "explanation_after": "Sorting takes O(n log n) to get the top-k. A heap takes O(n log k) — much faster when k << n. Heaps also support O(log n) insertion with efficient min-access, which sorting doesn't."
+  },
+  {
+    "id": "p2_sorting_searching_q5",
+    "skill_id": "p2_sorting_searching",
+    "format": "mcq",
+    "difficulty_tier": "same",
+    "stem": "What is the time complexity of binary search?",
+    "options": [
+      {
+        "id": "a",
+        "text": "O(n)"
+      },
+      {
+        "id": "b",
+        "text": "O(n log n)"
+      },
+      {
+        "id": "c",
+        "text": "O(log n)"
+      },
+      {
+        "id": "d",
+        "text": "O(1)"
+      }
+    ],
+    "correct_option_id": "c",
+    "explanation_after": "Binary search halves the search space each step. To search n elements: n → n/2 → n/4 → ... → 1. This takes log₂(n) steps = O(log n). For 1 billion items, that's ~30 comparisons."
+  },
+  {
+    "id": "p2_sorting_searching_q6",
+    "skill_id": "p2_sorting_searching",
+    "format": "mcq",
+    "difficulty_tier": "same",
+    "stem": "How does Python's `sorted()` accept a custom sort key?",
+    "options": [
+      {
+        "id": "a",
+        "text": "You write a comparison function returning -1, 0, or 1"
+      },
+      {
+        "id": "b",
+        "text": "Using the `key=` parameter with a function that returns the value to sort by"
+      },
+      {
+        "id": "c",
+        "text": "By passing a sorted comparison class"
+      },
+      {
+        "id": "d",
+        "text": "It only sorts in natural order"
+      }
+    ],
+    "correct_option_id": "b",
+    "explanation_after": "The `key=` parameter accepts any callable. `sorted(students, key=lambda s: s.grade)` sorts by the `.grade` attribute. Python calls `key(item)` once per item and sorts by those results."
+  }
+]

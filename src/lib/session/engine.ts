@@ -1,13 +1,15 @@
 import type {
   LearnerSkillState, ReviewSchedule, MotivationState,
-  Question, SessionTask, DifficultyTier, TaskReason,
+  Question, SessionTask, DifficultyTier, TaskReason, SessionMode,
 } from '@/types'
 import { getNodeById } from '@/lib/graph'
 
 interface Candidate {
-  skill_id: string
-  priority: number
-  reason:   TaskReason
+  skill_id:         string
+  priority:         number
+  reason:           TaskReason
+  days_overdue?:    number
+  review_repetition?: number
 }
 
 interface SelectTaskParams {
@@ -17,12 +19,13 @@ interface SelectTaskParams {
   seenSkillsThisSession:     string[]
   seenQuestionIdsThisSession: Set<string>
   questionsCache:            Map<string, Question[]>
+  mode?:                     SessionMode
 }
 
 export function selectNextTask(p: SelectTaskParams): SessionTask | null {
   const {
     skillStates, reviewSchedules, motivationState,
-    seenSkillsThisSession, seenQuestionIdsThisSession, questionsCache,
+    seenSkillsThisSession, seenQuestionIdsThisSession, questionsCache, mode,
   } = p
 
   const now = new Date()
@@ -32,9 +35,32 @@ export function selectNextTask(p: SelectTaskParams): SessionTask | null {
   for (const [skillId, schedule] of Array.from(reviewSchedules)) {
     const state = skillStates.get(skillId)
     if (!state || state.mastery_state === 'blocked') continue
-    if (new Date(schedule.due_at) <= now) {
-      candidates.push({ skill_id: skillId, priority: 100, reason: 'review_due' })
+    if (!getNodeById(skillId)) continue                  // 1D: skip orphaned DB entries
+    if (new Date(schedule.due_at) <= now && schedule.repetitions > 0) {  // 2B: never-seen skills aren't due
+      const daysOverdue = Math.floor((now.getTime() - new Date(schedule.due_at).getTime()) / 86400000)
+      candidates.push({
+        skill_id: skillId,
+        priority: 100,
+        reason:   'review_due',
+        days_overdue:      Math.max(0, daysOverdue),
+        review_repetition: schedule.repetitions,
+      })
     }
+  }
+
+  // ── Review-only mode: short-circuit, serve only review candidates ───────
+  if (mode === 'review') {
+    if (candidates.length === 0) return null
+    candidates.sort((a, b) => (b.days_overdue ?? 0) - (a.days_overdue ?? 0))
+    const best  = candidates[0]
+    const state = skillStates.get(best.skill_id)
+    if (!state) return null
+    const tier: DifficultyTier = state.consecutive_wrong >= 2 ? 'review' : 'same'
+    const q = pickQuestion(best.skill_id, tier, seenQuestionIdsThisSession, questionsCache)
+    if (!q) return null
+    return buildTask(best.skill_id, q, tier, best.reason, skillStates, {
+      days_overdue: best.days_overdue, review_repetition: best.review_repetition,
+    })
   }
 
   // ── Priority 2: frustrated → easy confidence win ────────────────────────
@@ -59,14 +85,18 @@ export function selectNextTask(p: SelectTaskParams): SessionTask | null {
   )
 
   // ── Priority 4: lowest p_know learnable ─────────────────────────────────
-  const learnable = Array.from(skillStates.values())
+  // 1B: only skills with questions in cache; 1C: over-rep fallback to full pool
+  const learnableBase = Array.from(skillStates.values())
     .filter(s => ['ready', 'learning', 'fragile'].includes(s.mastery_state))
-    .filter(s => !overRep.has(s.skill_id))
+    .filter(s => questionsCache.has(s.skill_id))         // 1B: must have questions
     .sort((a, b) => a.p_know - b.p_know)
-    .slice(0, 5)
+
+  const learnableFiltered = learnableBase.filter(s => !overRep.has(s.skill_id))
+  // 1C: if over-rep exclusion empties the pool, fall back to full base
+  const learnable = (learnableFiltered.length > 0 ? learnableFiltered : learnableBase).slice(0, 5)
 
   for (const s of learnable) {
-    // If it showed up recently but isn't over-represented, call it varied practice
+    if (!getNodeById(s.skill_id)) continue               // 1D: skip orphaned DB entries
     const isInterleaved = recentWindow.includes(s.skill_id)
     candidates.push({
       skill_id: s.skill_id,
@@ -90,7 +120,9 @@ export function selectNextTask(p: SelectTaskParams): SessionTask | null {
 
   const q = pickQuestion(best.skill_id, tier, seenQuestionIdsThisSession, questionsCache)
   if (!q) return null
-  return buildTask(best.skill_id, q, tier, best.reason, skillStates)
+  return buildTask(best.skill_id, q, tier, best.reason, skillStates, {
+    days_overdue: best.days_overdue, review_repetition: best.review_repetition,
+  })
 }
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
@@ -101,20 +133,23 @@ function buildTask(
   tier: DifficultyTier,
   reason: TaskReason,
   states: Map<string, LearnerSkillState>,
+  meta?: { days_overdue?: number; review_repetition?: number },
 ): SessionTask | null {
   const node  = getNodeById(skill_id)
   const state = states.get(skill_id)
   if (!node) return null
   return {
     skill_id,
-    skill_label:    node.label,
-    skill_intuition: node.intuition,
-    skill_analogy:  node.analogy,
+    skill_label:       node.label,
+    skill_intuition:   node.intuition,
+    skill_analogy:     node.analogy,
     question,
-    difficulty_tier: tier,
-    source:  'learning',
+    difficulty_tier:   tier,
+    source:            'learning',
     reason,
-    p_know:  state?.p_know ?? 0,
+    p_know:            state?.p_know ?? 0,
+    ...(meta?.days_overdue    !== undefined && { days_overdue:      meta.days_overdue }),
+    ...(meta?.review_repetition !== undefined && { review_repetition: meta.review_repetition }),
   }
 }
 

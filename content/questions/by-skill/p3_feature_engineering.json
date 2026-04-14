@@ -1,77 +1,164 @@
-{
-  "skill_id": "p3_feature_engineering",
-  "questions": [
-    {
-      "id": "p3_feature_engineering_q1",
-      "stem": "Why should you normalise/scale features before training a k-nearest neighbours model?",
-      "options": [
-        "KNN requires all features to be binary",
-        "Without scaling, features with larger numerical ranges dominate the distance calculation unfairly",
-        "Scaling reduces training time for KNN",
-        "KNN cannot handle missing values without scaling"
-      ],
-      "answer": 1,
-      "explanation": "KNN measures distance between points. If one feature ranges 0–100,000 (income) and another 0–10 (years experience), income will dominate the distance. Scaling puts all features on equal footing."
-    },
-    {
-      "id": "p3_feature_engineering_q2",
-      "stem": "You fit a StandardScaler on your training data. When preprocessing the test data, you should:",
-      "options": [
-        "Fit a new StandardScaler on the test data",
-        "Transform the test data using the scaler already fitted on training data",
-        "Not scale the test data",
-        "Scale the test data with min-max normalisation instead"
-      ],
-      "answer": 1,
-      "explanation": "The scaler must be fit only on training data (to prevent leakage), then applied to both train and test using the same mean/std. Fitting on test data would leak test distribution information into preprocessing."
-    },
-    {
-      "id": "p3_feature_engineering_q3",
-      "stem": "One-hot encoding 'country' with 200 unique values creates:",
-      "options": [
-        "1 new column",
-        "2 new columns",
-        "200 new binary columns, one per country",
-        "A single numeric column mapping countries to numbers"
-      ],
-      "answer": 2,
-      "explanation": "One-hot encoding creates one binary column per unique category. For 200 countries, this creates 200 columns, each 0 or 1. This can be problematic for high-cardinality features."
-    },
-    {
-      "id": "p3_feature_engineering_q4",
-      "stem": "A sklearn Pipeline wrapping preprocessing and a classifier ensures:",
-      "options": [
-        "Faster training",
-        "That the preprocessor is fit only on training data in each CV fold, preventing data leakage",
-        "That the classifier uses more features",
-        "That data augmentation is applied automatically"
-      ],
-      "answer": 1,
-      "explanation": "Without a Pipeline, if you fit the scaler on all data before cross-validation, test fold information leaks into preprocessing. A Pipeline fits and transforms within each CV fold correctly."
-    },
-    {
-      "id": "p3_feature_engineering_q5",
-      "stem": "Feature importance from a Random Forest tells you:",
-      "options": [
-        "The causal effect of each feature on the target",
-        "Which features the tree used most to reduce impurity across all splits",
-        "The correlation coefficient between each feature and the target",
-        "Which features to remove before training"
-      ],
-      "answer": 1,
-      "explanation": "Tree-based feature importance measures how much each feature reduces impurity (Gini/entropy) across all splits. It indicates predictive usefulness but not causality — correlated features can share importance."
-    },
-    {
-      "id": "p3_feature_engineering_q6",
-      "stem": "What is 'training-serving skew' in ML feature engineering?",
-      "options": [
-        "When the training set and test set have different class distributions",
-        "When features are computed differently in the training pipeline versus the production serving pipeline",
-        "When the model is too complex for the training data",
-        "When numerical features are not normalised"
-      ],
-      "answer": 1,
-      "explanation": "Training-serving skew occurs when features are computed with different logic in training versus production. For example, a '7-day average' computed with different window boundaries in training vs serving will make the model behave unexpectedly in production."
-    }
-  ]
-}
+[
+  {
+    "id": "p3_feature_engineering_q1",
+    "skill_id": "p3_feature_engineering",
+    "format": "mcq",
+    "difficulty_tier": "same",
+    "stem": "Why should you normalise/scale features before training a k-nearest neighbours model?",
+    "options": [
+      {
+        "id": "a",
+        "text": "KNN requires all features to be binary"
+      },
+      {
+        "id": "b",
+        "text": "Without scaling, features with larger numerical ranges dominate the distance calculation unfairly"
+      },
+      {
+        "id": "c",
+        "text": "Scaling reduces training time for KNN"
+      },
+      {
+        "id": "d",
+        "text": "KNN cannot handle missing values without scaling"
+      }
+    ],
+    "correct_option_id": "b",
+    "explanation_after": "KNN measures distance between points. If one feature ranges 0–100,000 (income) and another 0–10 (years experience), income will dominate the distance. Scaling puts all features on equal footing."
+  },
+  {
+    "id": "p3_feature_engineering_q2",
+    "skill_id": "p3_feature_engineering",
+    "format": "mcq",
+    "difficulty_tier": "same",
+    "stem": "You fit a StandardScaler on your training data. When preprocessing the test data, you should:",
+    "options": [
+      {
+        "id": "a",
+        "text": "Fit a new StandardScaler on the test data"
+      },
+      {
+        "id": "b",
+        "text": "Transform the test data using the scaler already fitted on training data"
+      },
+      {
+        "id": "c",
+        "text": "Not scale the test data"
+      },
+      {
+        "id": "d",
+        "text": "Scale the test data with min-max normalisation instead"
+      }
+    ],
+    "correct_option_id": "b",
+    "explanation_after": "The scaler must be fit only on training data (to prevent leakage), then applied to both train and test using the same mean/std. Fitting on test data would leak test distribution information into preprocessing."
+  },
+  {
+    "id": "p3_feature_engineering_q3",
+    "skill_id": "p3_feature_engineering",
+    "format": "mcq",
+    "difficulty_tier": "same",
+    "stem": "One-hot encoding 'country' with 200 unique values creates:",
+    "options": [
+      {
+        "id": "a",
+        "text": "1 new column"
+      },
+      {
+        "id": "b",
+        "text": "2 new columns"
+      },
+      {
+        "id": "c",
+        "text": "200 new binary columns, one per country"
+      },
+      {
+        "id": "d",
+        "text": "A single numeric column mapping countries to numbers"
+      }
+    ],
+    "correct_option_id": "c",
+    "explanation_after": "One-hot encoding creates one binary column per unique category. For 200 countries, this creates 200 columns, each 0 or 1. This can be problematic for high-cardinality features."
+  },
+  {
+    "id": "p3_feature_engineering_q4",
+    "skill_id": "p3_feature_engineering",
+    "format": "mcq",
+    "difficulty_tier": "same",
+    "stem": "A sklearn Pipeline wrapping preprocessing and a classifier ensures:",
+    "options": [
+      {
+        "id": "a",
+        "text": "Faster training"
+      },
+      {
+        "id": "b",
+        "text": "That the preprocessor is fit only on training data in each CV fold, preventing data leakage"
+      },
+      {
+        "id": "c",
+        "text": "That the classifier uses more features"
+      },
+      {
+        "id": "d",
+        "text": "That data augmentation is applied automatically"
+      }
+    ],
+    "correct_option_id": "b",
+    "explanation_after": "Without a Pipeline, if you fit the scaler on all data before cross-validation, test fold information leaks into preprocessing. A Pipeline fits and transforms within each CV fold correctly."
+  },
+  {
+    "id": "p3_feature_engineering_q5",
+    "skill_id": "p3_feature_engineering",
+    "format": "mcq",
+    "difficulty_tier": "same",
+    "stem": "Feature importance from a Random Forest tells you:",
+    "options": [
+      {
+        "id": "a",
+        "text": "The causal effect of each feature on the target"
+      },
+      {
+        "id": "b",
+        "text": "Which features the tree used most to reduce impurity across all splits"
+      },
+      {
+        "id": "c",
+        "text": "The correlation coefficient between each feature and the target"
+      },
+      {
+        "id": "d",
+        "text": "Which features to remove before training"
+      }
+    ],
+    "correct_option_id": "b",
+    "explanation_after": "Tree-based feature importance measures how much each feature reduces impurity (Gini/entropy) across all splits. It indicates predictive usefulness but not causality — correlated features can share importance."
+  },
+  {
+    "id": "p3_feature_engineering_q6",
+    "skill_id": "p3_feature_engineering",
+    "format": "mcq",
+    "difficulty_tier": "same",
+    "stem": "What is 'training-serving skew' in ML feature engineering?",
+    "options": [
+      {
+        "id": "a",
+        "text": "When the training set and test set have different class distributions"
+      },
+      {
+        "id": "b",
+        "text": "When features are computed differently in the training pipeline versus the production serving pipeline"
+      },
+      {
+        "id": "c",
+        "text": "When the model is too complex for the training data"
+      },
+      {
+        "id": "d",
+        "text": "When numerical features are not normalised"
+      }
+    ],
+    "correct_option_id": "b",
+    "explanation_after": "Training-serving skew occurs when features are computed with different logic in training versus production. For example, a '7-day average' computed with different window boundaries in training vs serving will make the model behave unexpectedly in production."
+  }
+]

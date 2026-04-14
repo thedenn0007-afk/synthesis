@@ -1,62 +1,164 @@
-{
-  "skill_id": "p1_strings",
-  "questions": [
-    {
-      "id": "p1_strings_q1",
-      "stem": "What does `'hello'[1:4]` return?",
-      "options": ["'hel'", "'ell'", "'ello'", "'hell'"],
-      "answer": 1,
-      "explanation": "String slicing `[1:4]` returns characters from index 1 up to (not including) index 4. Characters at indices 1, 2, 3 are 'e', 'l', 'l' → 'ell'."
-    },
-    {
-      "id": "p1_strings_q2",
-      "stem": "What does `'Hello World'.lower().split()` return?",
-      "options": [
-        "'hello world'",
-        "['hello', 'world']",
-        "['Hello', 'World']",
-        "('hello', 'world')"
-      ],
-      "answer": 1,
-      "explanation": "`.lower()` converts to 'hello world', then `.split()` (with no argument) splits on whitespace and returns a list: `['hello', 'world']`."
-    },
-    {
-      "id": "p1_strings_q3",
-      "stem": "Which of the following creates a string with a person's name and age formatted correctly?",
-      "options": [
-        "name + ' is ' + age + ' years old'",
-        "f'{name} is {age} years old'",
-        "'{name} is {age} years old'",
-        "'%s is %d years old' % name, age"
-      ],
-      "answer": 1,
-      "explanation": "f-strings (formatted string literals) embed variables directly with `{}`. Option A fails if age is an int (can't concatenate str+int). Option C is a regular string, not formatted. Option D has syntax issues."
-    },
-    {
-      "id": "p1_strings_q4",
-      "stem": "Strings in Python are:",
-      "options": [
-        "Mutable — you can change individual characters",
-        "Immutable — once created, the content cannot be changed",
-        "Mutable only if they contain ASCII characters",
-        "Immutable only for strings longer than 10 characters"
-      ],
-      "answer": 1,
-      "explanation": "Python strings are always immutable. `s[0] = 'H'` raises a TypeError. To 'change' a string, you must create a new one: `s = 'H' + s[1:]`."
-    },
-    {
-      "id": "p1_strings_q5",
-      "stem": "What does `'  hello  '.strip()` return?",
-      "options": ["'  hello  '", "'hello'", "'hello  '", "'  hello'"],
-      "answer": 1,
-      "explanation": "`.strip()` removes leading and trailing whitespace. It removes spaces from both ends, returning 'hello'."
-    },
-    {
-      "id": "p1_strings_q6",
-      "stem": "What is the result of `',' .join(['a', 'b', 'c'])`?",
-      "options": ["['a,', 'b,', 'c,']", "'a,b,c'", "'a, b, c'", "Error"],
-      "answer": 1,
-      "explanation": "`.join(list)` concatenates the list elements with the string as separator. `','` is the separator; elements `['a', 'b', 'c']` are joined to give `'a,b,c'`."
-    }
-  ]
-}
+[
+  {
+    "id": "p1_strings_q1",
+    "skill_id": "p1_strings",
+    "format": "mcq",
+    "difficulty_tier": "same",
+    "stem": "What does `'hello'[1:4]` return?",
+    "options": [
+      {
+        "id": "a",
+        "text": "'hel'"
+      },
+      {
+        "id": "b",
+        "text": "'ell'"
+      },
+      {
+        "id": "c",
+        "text": "'ello'"
+      },
+      {
+        "id": "d",
+        "text": "'hell'"
+      }
+    ],
+    "correct_option_id": "b",
+    "explanation_after": "String slicing `[1:4]` returns characters from index 1 up to (not including) index 4. Characters at indices 1, 2, 3 are 'e', 'l', 'l' → 'ell'."
+  },
+  {
+    "id": "p1_strings_q2",
+    "skill_id": "p1_strings",
+    "format": "mcq",
+    "difficulty_tier": "same",
+    "stem": "What does `'Hello World'.lower().split()` return?",
+    "options": [
+      {
+        "id": "a",
+        "text": "'hello world'"
+      },
+      {
+        "id": "b",
+        "text": "['hello', 'world']"
+      },
+      {
+        "id": "c",
+        "text": "['Hello', 'World']"
+      },
+      {
+        "id": "d",
+        "text": "('hello', 'world')"
+      }
+    ],
+    "correct_option_id": "b",
+    "explanation_after": "`.lower()` converts to 'hello world', then `.split()` (with no argument) splits on whitespace and returns a list: `['hello', 'world']`."
+  },
+  {
+    "id": "p1_strings_q3",
+    "skill_id": "p1_strings",
+    "format": "mcq",
+    "difficulty_tier": "same",
+    "stem": "Which of the following creates a string with a person's name and age formatted correctly?",
+    "options": [
+      {
+        "id": "a",
+        "text": "name + ' is ' + age + ' years old'"
+      },
+      {
+        "id": "b",
+        "text": "f'{name} is {age} years old'"
+      },
+      {
+        "id": "c",
+        "text": "'{name} is {age} years old'"
+      },
+      {
+        "id": "d",
+        "text": "'%s is %d years old' % name, age"
+      }
+    ],
+    "correct_option_id": "b",
+    "explanation_after": "f-strings (formatted string literals) embed variables directly with `{}`. Option A fails if age is an int (can't concatenate str+int). Option C is a regular string, not formatted. Option D has syntax issues."
+  },
+  {
+    "id": "p1_strings_q4",
+    "skill_id": "p1_strings",
+    "format": "mcq",
+    "difficulty_tier": "same",
+    "stem": "Strings in Python are:",
+    "options": [
+      {
+        "id": "a",
+        "text": "Mutable — you can change individual characters"
+      },
+      {
+        "id": "b",
+        "text": "Immutable — once created, the content cannot be changed"
+      },
+      {
+        "id": "c",
+        "text": "Mutable only if they contain ASCII characters"
+      },
+      {
+        "id": "d",
+        "text": "Immutable only for strings longer than 10 characters"
+      }
+    ],
+    "correct_option_id": "b",
+    "explanation_after": "Python strings are always immutable. `s[0] = 'H'` raises a TypeError. To 'change' a string, you must create a new one: `s = 'H' + s[1:]`."
+  },
+  {
+    "id": "p1_strings_q5",
+    "skill_id": "p1_strings",
+    "format": "mcq",
+    "difficulty_tier": "same",
+    "stem": "What does `'  hello  '.strip()` return?",
+    "options": [
+      {
+        "id": "a",
+        "text": "'  hello  '"
+      },
+      {
+        "id": "b",
+        "text": "'hello'"
+      },
+      {
+        "id": "c",
+        "text": "'hello  '"
+      },
+      {
+        "id": "d",
+        "text": "'  hello'"
+      }
+    ],
+    "correct_option_id": "b",
+    "explanation_after": "`.strip()` removes leading and trailing whitespace. It removes spaces from both ends, returning 'hello'."
+  },
+  {
+    "id": "p1_strings_q6",
+    "skill_id": "p1_strings",
+    "format": "mcq",
+    "difficulty_tier": "same",
+    "stem": "What is the result of `',' .join(['a', 'b', 'c'])`?",
+    "options": [
+      {
+        "id": "a",
+        "text": "['a,', 'b,', 'c,']"
+      },
+      {
+        "id": "b",
+        "text": "'a,b,c'"
+      },
+      {
+        "id": "c",
+        "text": "'a, b, c'"
+      },
+      {
+        "id": "d",
+        "text": "Error"
+      }
+    ],
+    "correct_option_id": "b",
+    "explanation_after": "`.join(list)` concatenates the list elements with the string as separator. `','` is the separator; elements `['a', 'b', 'c']` are joined to give `'a,b,c'`."
+  }
+]

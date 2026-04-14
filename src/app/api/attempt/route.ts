@@ -7,8 +7,9 @@ import { computeUnblocked } from '@/lib/graph'
 import {
   getSkillState, upsertSkillState, getReviewSchedule, upsertReviewSchedule,
   getMotivationState, upsertMotivationState, insertAttempt,
-  incrementSessionCounts, getSession, getAllSkillStates,
+  incrementSessionCounts, getSession, getAllSkillStates, schedulePhaseReview,
 } from '@/lib/db/queries'
+import { getAllNodes } from '@/lib/graph'
 import type { Question, DifficultyTier, QuestionFormat } from '@/types'
 
 const MIN_LATENCY = 100
@@ -93,6 +94,19 @@ export async function POST(req: NextRequest) {
     for (const [sid, s] of Array.from(stateMap)) {
       if (s.mastery_state === 'blocked' && unblocked.has(sid)) {
         upsertSkillState({ ...s, mastery_state: 'ready' })
+      }
+    }
+
+    // ── Phase completion: schedule immediate review for all mastered phase skills
+    const skillNode  = getAllNodes().find(n => n.id === skill_id)
+    if (skillNode) {
+      const phaseNodes = getAllNodes().filter(n => n.phase === skillNode.phase && !n.deprecated)
+      const phaseMastered = phaseNodes.every(n => {
+        const s = stateMap.get(n.id)
+        return s?.mastery_state === 'mastered'
+      })
+      if (phaseMastered) {
+        schedulePhaseReview(user.id, phaseNodes.map(n => n.id))
       }
     }
   }

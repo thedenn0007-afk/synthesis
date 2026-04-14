@@ -144,6 +144,19 @@ export function upsertReviewSchedule(schedule: ReviewSchedule) {
   `).run(schedule)
 }
 
+export function schedulePhaseReview(learnerId: string, skillIds: string[]) {
+  const db = getDb()
+  const stmt = db.prepare(`
+    UPDATE review_schedules
+    SET due_at = datetime('now')
+    WHERE learner_id = ? AND skill_id = ?
+  `)
+  const update = db.transaction((ids: string[]) => {
+    for (const id of ids) stmt.run(learnerId, id)
+  })
+  update(skillIds)
+}
+
 export function bulkUpsertReviewSchedules(schedules: ReviewSchedule[]) {
   const db = getDb()
   const stmt = db.prepare(`
