@@ -1,0 +1,77 @@
+{
+  "skill_id": "p3_what_is_ai",
+  "questions": [
+    {
+      "id": "p3_what_is_ai_q1",
+      "stem": "Which of the following best describes Artificial Intelligence?",
+      "options": [
+        "A robot that physically performs tasks",
+        "A computer system that can perform tasks typically requiring human intelligence",
+        "Any software that runs automatically without user input",
+        "A database that stores and retrieves information quickly"
+      ],
+      "answer": 1,
+      "explanation": "AI refers to computer systems designed to perform tasks that normally require human intelligence, such as recognising patterns, understanding language, making decisions, and solving problems."
+    },
+    {
+      "id": "p3_what_is_ai_q2",
+      "stem": "What is the key difference between a rule-based system and a machine learning system?",
+      "options": [
+        "Rule-based systems are slower than ML systems",
+        "ML systems require more memory than rule-based systems",
+        "Rule-based systems use explicit if-then logic written by humans; ML systems learn patterns from data",
+        "Rule-based systems can only handle text while ML handles numbers"
+      ],
+      "answer": 2,
+      "explanation": "Rule-based systems encode human expertise as explicit rules. ML systems discover rules automatically by finding patterns in training data — no manual rule-writing required."
+    },
+    {
+      "id": "p3_what_is_ai_q3",
+      "stem": "A spam filter that learns from millions of labelled emails is an example of:",
+      "options": [
+        "Rule-based AI",
+        "Machine learning",
+        "Symbolic AI",
+        "Expert system"
+      ],
+      "answer": 1,
+      "explanation": "Learning from labelled examples (emails marked spam/not-spam) to generalise to new emails is machine learning — a subfield of AI."
+    },
+    {
+      "id": "p3_what_is_ai_q4",
+      "stem": "Which statement about current AI is accurate?",
+      "options": [
+        "AI systems understand the meaning of text the same way humans do",
+        "AI systems can solve any problem as long as they have enough compute",
+        "AI systems are good at narrow tasks but struggle to generalise far outside their training data",
+        "AI systems are conscious and aware of their own reasoning"
+      ],
+      "answer": 2,
+      "explanation": "Current AI excels at specific tasks it has been trained on but fails to generalise far outside the training distribution. AI systems are not conscious and don't truly 'understand' in the human sense."
+    },
+    {
+      "id": "p3_what_is_ai_q5",
+      "stem": "The Turing Test was proposed to evaluate:",
+      "options": [
+        "Whether a computer is faster than a human",
+        "Whether a computer's behaviour is indistinguishable from a human's in conversation",
+        "Whether an AI can beat humans at chess",
+        "Whether a robot can physically move like a human"
+      ],
+      "answer": 1,
+      "explanation": "Turing proposed that a machine demonstrates intelligence if its text responses are indistinguishable from a human's in a blind conversation test — though this definition is considered incomplete today."
+    },
+    {
+      "id": "p3_what_is_ai_q6",
+      "stem": "Which of the following is NOT currently a strength of AI?",
+      "options": [
+        "Classifying images into thousands of categories",
+        "Generating human-like text",
+        "Understanding physical cause and effect in novel situations",
+        "Detecting subtle patterns in large datasets"
+      ],
+      "answer": 2,
+      "explanation": "Physical causal reasoning in novel situations remains a significant weakness of current AI. AI systems excel at pattern matching but struggle with physical world reasoning and truly novel scenarios."
+    }
+  ]
+}

@@ -1,0 +1,77 @@
+{
+  "skill_id": "p3_model_evaluation",
+  "questions": [
+    {
+      "id": "p3_model_evaluation_q1",
+      "stem": "A cancer detection model has 99% accuracy on a dataset where 99% of patients are healthy. This model is likely:",
+      "options": [
+        "Excellent — 99% accuracy is near-perfect",
+        "Useless — it probably predicts 'healthy' for everyone and misses all cancer cases",
+        "Overfitting to the training data",
+        "Underfitting — it needs more training"
+      ],
+      "answer": 1,
+      "explanation": "On a dataset that's 99% healthy, a model that always predicts 'healthy' gets 99% accuracy without detecting a single cancer. Accuracy is misleading on imbalanced datasets — use precision/recall instead."
+    },
+    {
+      "id": "p3_model_evaluation_q2",
+      "stem": "Recall (sensitivity) is defined as:",
+      "options": [
+        "True Positives / (True Positives + False Positives)",
+        "True Positives / (True Positives + False Negatives)",
+        "True Negatives / (True Negatives + False Positives)",
+        "Correct predictions / Total predictions"
+      ],
+      "answer": 1,
+      "explanation": "Recall = TP / (TP + FN). It measures 'of all actual positives, how many did I correctly identify?' High recall means few positives are missed."
+    },
+    {
+      "id": "p3_model_evaluation_q3",
+      "stem": "For a medical diagnosis model, why is recall (sensitivity) usually more important than precision?",
+      "options": [
+        "Because medical models are trained on large datasets",
+        "Because missing a positive case (false negative) is more dangerous than a false alarm",
+        "Because precision is harder to compute",
+        "Because medical datasets are always balanced"
+      ],
+      "answer": 1,
+      "explanation": "A false negative (telling a sick patient they're healthy) can be life-threatening. A false positive (unnecessary follow-up test) is inconvenient but manageable. High recall ensures sick patients aren't missed."
+    },
+    {
+      "id": "p3_model_evaluation_q4",
+      "stem": "What does a ROC AUC of 0.5 mean?",
+      "options": [
+        "The model is 50% accurate",
+        "The model performs no better than random guessing",
+        "The model has 50% recall",
+        "Half the predictions are correct"
+      ],
+      "answer": 1,
+      "explanation": "AUC = 0.5 means the model performs equivalently to random guessing. AUC = 1.0 is perfect. AUC < 0.5 means the model is worse than random (often indicating inverted labels)."
+    },
+    {
+      "id": "p3_model_evaluation_q5",
+      "stem": "5-fold cross-validation provides more reliable evaluation than a single train/test split because:",
+      "options": [
+        "It uses more total data",
+        "Each example appears in the test fold exactly once, giving a less variance-dependent estimate",
+        "It's faster to compute",
+        "It removes the need for a test set"
+      ],
+      "answer": 1,
+      "explanation": "With 5-fold CV, every example is tested exactly once across 5 different train/test splits. The average metric is more stable than a single split, which might be unusually easy or hard by chance."
+    },
+    {
+      "id": "p3_model_evaluation_q6",
+      "stem": "F1 score is used instead of accuracy when:",
+      "options": [
+        "You want a single metric that balances precision and recall, especially for imbalanced classes",
+        "Accuracy computation is too slow",
+        "You have more than two classes",
+        "Your model is a neural network"
+      ],
+      "answer": 0,
+      "explanation": "F1 is the harmonic mean of precision and recall. It's preferred when classes are imbalanced or when both false positives and false negatives matter — where accuracy can be misleading."
+    }
+  ]
+}

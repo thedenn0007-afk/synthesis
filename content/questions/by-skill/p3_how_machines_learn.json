@@ -1,0 +1,77 @@
+{
+  "skill_id": "p3_how_machines_learn",
+  "questions": [
+    {
+      "id": "p3_how_machines_learn_q1",
+      "stem": "In gradient descent, the gradient tells the model:",
+      "options": [
+        "The exact parameters to use for minimum loss",
+        "The direction in parameter space where the loss decreases most steeply",
+        "How many training examples to use per step",
+        "The optimal learning rate"
+      ],
+      "answer": 1,
+      "explanation": "The gradient points in the direction of steepest *ascent* in the loss landscape. By moving in the *negative* gradient direction, we step toward lower loss — hence 'gradient descent'."
+    },
+    {
+      "id": "p3_how_machines_learn_q2",
+      "stem": "What is the role of the loss function in machine learning?",
+      "options": [
+        "To randomise the initial weights of the model",
+        "To measure how wrong the model's predictions are — the signal the model learns from",
+        "To control how many layers the neural network has",
+        "To split the data into train and test sets"
+      ],
+      "answer": 1,
+      "explanation": "The loss function quantifies the error between predictions and ground truth. Training minimises this function by adjusting weights. Without a loss function, there is no learning signal."
+    },
+    {
+      "id": "p3_how_machines_learn_q3",
+      "stem": "If the learning rate is set too high, what typically happens?",
+      "options": [
+        "Training is too slow",
+        "The model perfectly memorises the training data",
+        "The model's parameters oscillate or diverge, and training fails to converge",
+        "The model always underfits"
+      ],
+      "answer": 2,
+      "explanation": "A high learning rate causes the optimizer to overshoot the minimum, bouncing around or diverging. Loss may increase erratically instead of decreasing steadily."
+    },
+    {
+      "id": "p3_how_machines_learn_q4",
+      "stem": "Backpropagation is the algorithm that:",
+      "options": [
+        "Generates new training data",
+        "Initialises neural network weights randomly",
+        "Computes the gradient of the loss with respect to each weight using the chain rule",
+        "Selects which features to include in the model"
+      ],
+      "answer": 2,
+      "explanation": "Backpropagation applies the chain rule to efficiently compute gradients through each layer of the network, from the output loss backward to every weight. These gradients are then used by the optimizer."
+    },
+    {
+      "id": "p3_how_machines_learn_q5",
+      "stem": "What is the purpose of an epoch in training?",
+      "options": [
+        "A single weight update step",
+        "One complete pass through the entire training dataset",
+        "The number of neurons in one layer",
+        "The point at which training stops"
+      ],
+      "answer": 1,
+      "explanation": "An epoch is one complete pass through the training data. Models are typically trained for multiple epochs, seeing each example many times as weights are gradually refined."
+    },
+    {
+      "id": "p3_how_machines_learn_q6",
+      "stem": "Why does mini-batch gradient descent often outperform both batch and stochastic gradient descent?",
+      "options": [
+        "It uses less memory than any other method",
+        "It always finds the global minimum",
+        "It balances computational efficiency with a useful regularising effect from gradient noise",
+        "It requires no learning rate"
+      ],
+      "answer": 2,
+      "explanation": "Mini-batch GD is computationally efficient (uses GPU parallelism) and the noise from each mini-batch helps escape shallow local minima. Pure batch GD is slow; pure SGD (1 sample) is too noisy."
+    }
+  ]
+}

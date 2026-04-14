@@ -1,0 +1,77 @@
+{
+  "skill_id": "p1_debugging",
+  "questions": [
+    {
+      "id": "p1_debugging_q1",
+      "stem": "You see `NameError: name 'x' is not defined`. What does this mean?",
+      "options": [
+        "x is a reserved keyword",
+        "You tried to use a variable that hasn't been assigned yet, or has a typo in the name",
+        "x has the wrong data type",
+        "x is defined in a different file"
+      ],
+      "answer": 1,
+      "explanation": "NameError means Python can't find a variable with that name in any scope. Common causes: typo in the variable name, or using the variable before assigning it."
+    },
+    {
+      "id": "p1_debugging_q2",
+      "stem": "What is the first thing you should do when you see an error message?",
+      "options": [
+        "Delete the code and start over",
+        "Read the traceback from bottom to top — the last line tells you the error type and description",
+        "Search Google immediately",
+        "Add more code to work around the error"
+      ],
+      "answer": 1,
+      "explanation": "The last line of a traceback is the most important: it names the error type and explains what went wrong. The lines above it show the call chain leading to the error. Read before searching."
+    },
+    {
+      "id": "p1_debugging_q3",
+      "stem": "What is wrong with this debugging approach: `except Exception: print('error occurred')`?",
+      "options": [
+        "Nothing, this is best practice",
+        "print() should be logger.error() instead",
+        "Catching all exceptions hides bugs — you won't know what went wrong or where",
+        "It runs too slowly"
+      ],
+      "answer": 2,
+      "explanation": "Catching `Exception` silently swallows every error including programming mistakes, preventing you from seeing what actually went wrong. Always catch specific exceptions you know how to handle."
+    },
+    {
+      "id": "p1_debugging_q4",
+      "stem": "Why should you change only ONE thing at a time when debugging?",
+      "options": [
+        "It's required by Python's syntax",
+        "Changing multiple things simultaneously makes it impossible to know which change fixed (or broke) things",
+        "Multiple changes take longer to run",
+        "The debugger can only track one change"
+      ],
+      "answer": 1,
+      "explanation": "Scientific debugging requires isolating variables. If you change 3 things and the bug disappears, you don't know which change helped. If it gets worse, you don't know which change caused it."
+    },
+    {
+      "id": "p1_debugging_q5",
+      "stem": "What does `breakpoint()` do in Python 3.7+?",
+      "options": [
+        "Stops the program permanently",
+        "Pauses execution and opens an interactive debugger where you can inspect variables",
+        "Marks a point where errors should be caught",
+        "Prints a stack trace"
+      ],
+      "answer": 1,
+      "explanation": "`breakpoint()` pauses execution at that line and opens the pdb debugger. You can then inspect variables, step through code, and continue execution. Much more powerful than print() debugging."
+    },
+    {
+      "id": "p1_debugging_q6",
+      "stem": "What is the difference between `logging.debug()` and `logging.error()`?",
+      "options": [
+        "debug() is faster than error()",
+        "They have different severity levels — debug is lowest (normally hidden in production), error indicates a failure",
+        "error() crashes the program, debug() does not",
+        "They are identical"
+      ],
+      "answer": 1,
+      "explanation": "Log levels control visibility. In production, logging is usually set to WARNING or ERROR level, so DEBUG messages are invisible. This lets you leave detailed debug logging in code without it appearing in production."
+    }
+  ]
+}

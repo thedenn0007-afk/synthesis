@@ -1,0 +1,77 @@
+{
+  "skill_id": "p3_history_of_ai",
+  "questions": [
+    {
+      "id": "p3_history_of_ai_q1",
+      "stem": "The 1956 Dartmouth Conference is significant in AI history because:",
+      "options": [
+        "It produced the first working neural network",
+        "It was the first time the term 'Artificial Intelligence' was formally used",
+        "It demonstrated the first chess-playing computer",
+        "It created the internet"
+      ],
+      "answer": 1,
+      "explanation": "The 1956 Dartmouth Summer Research Project, organised by John McCarthy and others, formally coined the term 'Artificial Intelligence' and launched AI as a research field."
+    },
+    {
+      "id": "p3_history_of_ai_q2",
+      "stem": "What was the primary reason for the AI Winters (1970s and 1980s)?",
+      "options": [
+        "Computers were too expensive to build",
+        "Scientists lost interest in AI",
+        "Initial optimism far exceeded actual progress; computers lacked the data and compute needed",
+        "Governments banned AI research"
+      ],
+      "answer": 2,
+      "explanation": "AI Winters occurred when funding dried up because early AI systems failed to deliver on ambitious promises. The real barriers were insufficient compute, data, and algorithms — not recognised at the time."
+    },
+    {
+      "id": "p3_history_of_ai_q3",
+      "stem": "AlexNet's victory in the 2012 ImageNet competition is considered a watershed moment because:",
+      "options": [
+        "It was the first computer to beat a human at chess",
+        "A deep neural network dramatically outperformed all non-deep methods, proving the power of deep learning at scale",
+        "It created the first self-driving car",
+        "It was the first algorithm to understand natural language"
+      ],
+      "answer": 1,
+      "explanation": "AlexNet won ImageNet 2012 by a massive margin using a GPU-trained deep CNN, demonstrating that deep learning + large datasets + GPUs could dramatically surpass classical computer vision. This triggered the modern deep learning era."
+    },
+    {
+      "id": "p3_history_of_ai_q4",
+      "stem": "The 2017 paper 'Attention Is All You Need' introduced:",
+      "options": [
+        "Convolutional Neural Networks",
+        "Reinforcement Learning from Human Feedback",
+        "The Transformer architecture that underpins modern LLMs",
+        "Generative Adversarial Networks"
+      ],
+      "answer": 2,
+      "explanation": "'Attention Is All You Need' (Vaswani et al., 2017) introduced the Transformer, which replaced RNNs for sequence tasks. All modern LLMs (GPT, BERT, Claude, Gemini) are based on this architecture."
+    },
+    {
+      "id": "p3_history_of_ai_q5",
+      "stem": "What enabled the deep learning revolution starting around 2012?",
+      "options": [
+        "A new programming language designed for AI",
+        "Convergence of big datasets, GPU compute, and improved training algorithms",
+        "A breakthrough in understanding of the human brain",
+        "The invention of cloud computing"
+      ],
+      "answer": 1,
+      "explanation": "The deep learning revolution was enabled by three converging factors: massive labelled datasets (ImageNet), affordable GPU compute for parallel training, and improved algorithms like ReLU activations and dropout."
+    },
+    {
+      "id": "p3_history_of_ai_q6",
+      "stem": "DeepMind's AlphaGo defeating world champion Lee Sedol in 2016 was significant because:",
+      "options": [
+        "Go was considered too complex for computers due to an astronomically large search space",
+        "It was the first time a computer played a board game",
+        "Go requires physical manipulation of pieces",
+        "Lee Sedol was not the strongest player"
+      ],
+      "answer": 0,
+      "explanation": "Go's search space is ~10^170 — larger than atoms in the universe — making brute-force search impossible. AlphaGo used deep RL and Monte Carlo tree search, showing AI could master domains previously thought beyond reach."
+    }
+  ]
+}
