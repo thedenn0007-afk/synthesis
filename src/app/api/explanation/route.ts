@@ -25,7 +25,7 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ explanation, depth })
   } catch {
     // Try fallback depths
-    for (const fallback of ['beginner', 'mid', 'advanced'] as ExplanationDepth[]) {
+    for (const fallback of ['beginner', 'mid', 'advanced', 'expert'] as ExplanationDepth[]) {
       try {
         const explanation: Explanation = require(`@/../content/explanations/${skill_id}/${fallback}.json`)
         return NextResponse.json({ explanation, depth: fallback })
@@ -38,6 +38,7 @@ export async function GET(req: NextRequest) {
 function chooseDepth(state: LearnerSkillState | null, forceDepth: ExplanationDepth | null): ExplanationDepth {
   if (forceDepth) return forceDepth
   if (!state) return 'beginner'
+  if (state.p_know >= 0.90) return 'expert'
   if (state.p_know >= 0.75) return 'advanced'
   if (state.p_know >= 0.45) return 'mid'
   return 'beginner'

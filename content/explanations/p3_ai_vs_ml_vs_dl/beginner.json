@@ -1,0 +1,28 @@
+{
+  "skill_id": "p3_ai_vs_ml_vs_dl",
+  "depth": "beginner",
+  "title": "AI vs ML vs Deep Learning — Untangled",
+  "key_insight": "AI is the big idea. ML is one way to achieve it. Deep Learning is one type of ML that's currently winning.",
+  "body": "## Three Circles, Each Inside the Last\n\nThink of three circles, like Russian nesting dolls:\n\n```\n┌─────────────────────────────────┐\n│  AI  (any machine doing smart tasks)       │\n│  ┌────────────────────────────┐  │\n│  │  ML  (learning from data)  │  │\n│  │  ┌─────────────────────┐   │  │\n│  │  │  Deep Learning      │   │  │\n│  │  │  (neural networks)  │   │  │\n│  │  └─────────────────────┘   │  │\n│  └────────────────────────────┘  │\n└─────────────────────────────────┘\n```\n\n### AI — The Big Umbrella\n\nAny technique that makes a computer do something that seems 'intelligent'. This includes:\n- Rule-based systems (if/else trees)\n- Search algorithms (chess engines in the 1990s)\n- Machine Learning\n- And much more\n\n### Machine Learning — Learning from Data\n\nA specific approach to AI where the system learns from examples instead of following rules you write.\n\nInstead of:\n> Programmer writes rules → Computer follows them\n\nYou get:\n> Computer sees examples → Computer figures out the rules\n\n### Deep Learning — Neural Networks Specifically\n\nA type of Machine Learning that uses artificial neural networks — layers of interconnected nodes inspired very loosely by the brain.\n\nDeep Learning is why AI has been so impressive since 2012:\n- It powered image recognition breakthroughs\n- It's what runs ChatGPT and Claude\n- It's what makes voice assistants work\n\n### The Simple Version\n\n| | What it is | Example |\n|---|---|---|\n| AI | Any smart software | Chess bot, spam filter, GPT |\n| ML | Learns from data | Spam filter learning from email examples |\n| Deep Learning | ML using neural networks | GPT-4, Stable Diffusion, AlphaFold |",
+  "common_mistakes": [
+    "Using 'AI' and 'machine learning' as synonyms — ML is one approach to AI, not the whole field",
+    "Thinking deep learning is always the best tool — classical ML often wins on small, structured datasets",
+    "Assuming 'deep' = better — depth means more layers, not necessarily more accuracy"
+  ],
+  "mini_exercise": "For each of these, say which it is (AI, ML, or Deep Learning — pick the most specific): (1) A chess program from 1997 using minimax search. (2) A spam filter that trained on labelled emails. (3) GPT-4 generating text. (4) A thermostat that learns your preferred temperature.",
+  "real_world_usage": "When Tesla says their self-driving uses 'AI', they mean Deep Learning specifically — convolutional neural networks processing camera feeds. When a bank's fraud system uses 'ML', it might mean a simpler model like a gradient boosted tree, not a neural network at all. Precise language matters in job interviews and project design.",
+  "explain_back_prompt": "Draw the three nested circles from memory and explain what makes each one different. Give a real example of something that is ML but NOT deep learning.",
+  "build_task": {
+    "title": "Categorise 10 AI products correctly",
+    "context": "Precision about what type of AI you're dealing with shapes how you build and debug it.",
+    "steps": [
+      "List 10 AI-powered products or features you know of",
+      "For each, decide: is it rule-based AI, ML, or Deep Learning?",
+      "Research 2 of them to verify — look for 'how it works' blog posts or technical papers",
+      "Find one example that surprised you",
+      "Write one sentence explaining why the distinction matters for each"
+    ],
+    "expected_output": "A categorised list of 10 products with your reasoning and any corrections from research.",
+    "hint": "Recommendation systems at Netflix and Spotify use Deep Learning. Excel's 'flash fill' uses a simpler rule-learning approach. Spam filters can be either."
+  }
+}

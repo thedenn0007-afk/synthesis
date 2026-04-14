@@ -1,0 +1,77 @@
+{
+  "skill_id": "p2_lists_arrays",
+  "questions": [
+    {
+      "id": "p2_lists_arrays_q1",
+      "stem": "What does the following NumPy broadcasting produce?\n\na = np.array([[1], [2], [3]])  # shape (3, 1)\nb = np.array([10, 20, 30])      # shape (3,)\nresult = a + b",
+      "options": [
+        "An error — shapes (3,1) and (3,) are incompatible",
+        "A (3,3) matrix: [[11,21,31],[12,22,32],[13,23,33]] — a is broadcast across columns, b across rows",
+        "A (3,) array: [11, 22, 33]",
+        "A (3,1) array: [[1],[2],[3]] unchanged"
+      ],
+      "answer": 1,
+      "explanation": "Broadcasting rules: align shapes right-to-left. a is (3,1), b is (3,) → treated as (1,3). Broadcast: (3,1) + (1,3) → (3,3). Every row of a is added to every element of b. This is how position encodings work: add a (seq_len, 1) position vector to (1, d_model) frequency vectors to get (seq_len, d_model) position encodings."
+    },
+    {
+      "id": "p2_lists_arrays_q2",
+      "stem": "What is the difference between tensor.view() and tensor.reshape() in PyTorch?",
+      "options": [
+        "view() works on CPU; reshape() works on GPU",
+        "view() returns a zero-copy view and REQUIRES contiguous memory (raises an error if not); reshape() returns a view if possible, otherwise silently copies — reshape() is safer but may hide unexpected copies",
+        "They are identical — view is the old name, reshape is the new name",
+        "view() changes the dtype; reshape() only changes the shape"
+      ],
+      "answer": 1,
+      "explanation": "view() is a zero-copy operation: it changes the interpretation of the same memory. It fails if the tensor is non-contiguous (after operations like .T or .permute()). reshape() tries to return a view but falls back to a copy if needed — safer but might silently allocate memory in a hot path. Best practice: call .contiguous() before .view() if you've done transposes, or just use .reshape()."
+    },
+    {
+      "id": "p2_lists_arrays_q3",
+      "stem": "What does torch.einsum('bsd,do->bso', x, W) compute?",
+      "options": [
+        "Element-wise multiplication of all four tensors",
+        "A batched matrix multiply: for each batch b and sequence position s, multiply the d-dimensional vector by matrix W (d×o) to produce an o-dimensional output — equivalent to x @ W",
+        "The outer product of x and W summed over all dimensions",
+        "A dot product that returns a scalar"
+      ],
+      "answer": 1,
+      "explanation": "Einsum notation: 'bsd,do->bso' means sum over repeated index 'd'. For each (b,s) position, compute the dot product of x[b,s,:] (length d) with each column of W (shape d×o), producing output[b,s,:] (length o). This is exactly a linear projection applied to every position in a batch of sequences — the core operation of transformer attention projections."
+    },
+    {
+      "id": "p2_lists_arrays_q4",
+      "stem": "What is fancy indexing in NumPy, and how does it differ from slicing?",
+      "options": [
+        "Fancy indexing uses floats as indices; slicing uses integers",
+        "Fancy indexing uses integer arrays or boolean arrays as indices and ALWAYS returns a copy; slicing (a[1:5]) returns a view (zero-copy). Fancy indexing enables non-contiguous selection",
+        "Fancy indexing is faster than slicing for all operations",
+        "Slicing only works on 1D arrays; fancy indexing works on any dimension"
+      ],
+      "answer": 1,
+      "explanation": "Slice a[1:4] returns a view — same memory. Fancy index a[[0,2,4]] returns a COPY. Boolean index a[a > 0] also returns a copy. Copies are important to remember: modifying result of fancy indexing doesn't modify the original. In ML: model.state_dict()['transformer.h.0.attn.weight'] uses string fancy-like indexing; embedding lookups E[token_ids] are fancy indexing into the embedding table."
+    },
+    {
+      "id": "p2_lists_arrays_q5",
+      "stem": "What does tensor.unsqueeze(1) do, and when is it useful?",
+      "options": [
+        "Removes a dimension of size 1 from the tensor",
+        "Inserts a new size-1 dimension at position 1 — e.g. shape (32, 128) becomes (32, 1, 128) — useful for broadcasting against tensors of different rank",
+        "Repeats the tensor along dimension 1",
+        "Squeezes all dimensions, returning a 1D tensor"
+      ],
+      "answer": 1,
+      "explanation": "unsqueeze(dim) inserts a size-1 axis: (32, 128).unsqueeze(1) → (32, 1, 128). This is used to align shapes for broadcasting: if you have an attention mask of shape (batch, seq) and attention scores of shape (batch, heads, seq, seq), you need to unsqueeze(1) to get (batch, 1, seq) so it broadcasts across the heads dimension. .squeeze() removes size-1 dimensions."
+    },
+    {
+      "id": "p2_lists_arrays_q6",
+      "stem": "Why should you prefer np.concatenate over repeated Python list.append() when building a large array?",
+      "options": [
+        "np.concatenate is syntactically cleaner — no functional difference",
+        "Repeated list.append() builds a Python list, requiring a final np.array() conversion that copies all data; np.concatenate works on NumPy arrays directly. Even better: pre-allocate with np.zeros() and fill in-place to avoid all intermediate allocations",
+        "np.concatenate is only faster for arrays larger than 10,000 elements",
+        "list.append() cannot be used with numpy arrays at all"
+      ],
+      "answer": 1,
+      "explanation": "Building a large array by appending to a Python list then converting: [list.append(row) for row in ...], then np.array(result). This creates a Python list of numpy row objects, then copies everything into a new array — 2 allocations. Best: pre-allocate result = np.empty((n_rows, n_cols)); result[i] = row_i. Second best: collect results then np.vstack(parts) once. Never: result = np.append(result, row) in a loop — each call copies the whole array (O(n²) total)."
+    }
+  ]
+}

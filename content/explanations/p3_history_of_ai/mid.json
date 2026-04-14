@@ -1,0 +1,28 @@
+{
+  "skill_id": "p3_history_of_ai",
+  "depth": "mid",
+  "title": "AI History — Technical Turning Points",
+  "key_insight": "Each AI breakthrough solved a specific technical bottleneck. The current era was unlocked by three simultaneous advances: GPUs, big data, and backpropagation at scale.",
+  "body": "## Why the Current Wave is Different\n\nPrevious AI waves failed because of three bottlenecks:\n1. Not enough compute\n2. Not enough data\n3. Training algorithms that didn't scale\n\nAll three were solved around 2010–2015.\n\n## The Key Technical Breakthroughs\n\n### 1943 — McCulloch-Pitts Neuron\nFirst mathematical model of a neuron. Inspired by biology. Very simple: weighted inputs + threshold.\n\n### 1958 — Perceptron (Frank Rosenblatt)\nFirst learning algorithm: adjust weights based on errors. The computer learned from examples — a revolutionary concept.\n\n### 1969 — Minsky & Papert Kill the Perceptron\nShowed a perceptron can't learn XOR (a simple function). Funding collapsed. First AI winter.\n\n### 1986 — Backpropagation (Rumelhart, Hinton, Williams)\nAn algorithm to train multi-layer networks. Solved the problem that killed the perceptron. But computers were still too slow to use it effectively.\n\n### 2006 — Deep Belief Networks (Hinton)\nHinton showed how to train deep networks effectively using pretraining. Reignited interest in neural networks.\n\n### 2012 — AlexNet + ImageNet\n```\nImageNet: 1 million labelled images, 1000 categories\nAlexNet: 8-layer CNN trained on 2 GPUs\nResult: 15.3% error rate vs 26.2% (prior best)\nImpact: 10.9 percentage point gap proved deep learning's dominance\n```\n\n### 2017 — Attention Is All You Need\nThe Transformer architecture. Self-attention replaces RNNs. Processes sequences in parallel → much faster to train. Became the backbone of every modern language model.\n\n### 2020 — GPT-3 (175B parameters)\nIn-context learning: the model can learn tasks from examples in its prompt, without any weight updates. Changed what 'using AI' means.\n\n## The Scaling Law Insight\n\nKaplan et al. (OpenAI, 2020) showed:\n\n```\nModel performance improves predictably with:\n  - Model size (parameters)\n  - Dataset size (tokens)\n  - Compute (FLOPs)\n\nThis is called the 'neural scaling laws'\n→ If you can afford more compute + data, you will get a better model\n```",
+  "common_mistakes": [
+    "Thinking backpropagation was invented in 2012 — it was invented in 1986, but lacked compute to be useful",
+    "Attributing ImageNet success only to the algorithm — the GPU training of Alex Krizhevsky was equally important",
+    "Thinking attention was invented with Transformers — additive attention (Bahdanau) predated Transformers by 3 years"
+  ],
+  "mini_exercise": "The Transformer paper is titled 'Attention Is All You Need'. What did it replace, and why was the replacement important for training speed? (Hint: look up 'RNN parallelisation problem')",
+  "real_world_usage": "NVIDIA's stock went from $20 in 2015 to $900+ in 2024, almost entirely driven by GPU demand for AI training. The compute constraint that caused AI winters is now so monetised it's worth hundreds of billions of dollars. Understanding that compute = AI progress is now essential business knowledge.",
+  "explain_back_prompt": "Explain why backpropagation didn't lead to practical AI in 1986 but did in 2012. What changed? List at least two factors.",
+  "build_task": {
+    "title": "Read the original AlexNet paper abstract",
+    "context": "Reading primary sources is how engineers stay close to ground truth.",
+    "steps": [
+      "Search: 'AlexNet ImageNet classification deep convolutional neural networks Krizhevsky'",
+      "Find the 2012 NIPS paper",
+      "Read just the abstract and introduction (2-3 pages)",
+      "Write down: what architecture did they use? What result did they achieve?",
+      "Find one thing in the paper that surprised you"
+    ],
+    "expected_output": "A summary of AlexNet's architecture, results, and one surprising finding.",
+    "hint": "AlexNet used ReLU activation, dropout regularisation, and data augmentation — all of which became standard practice for reasons they explain."
+  }
+}

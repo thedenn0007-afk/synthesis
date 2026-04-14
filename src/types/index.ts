@@ -3,7 +3,7 @@ export type DifficultyTier = 'prerequisite' | 'review' | 'same' | 'harder'
 export type QuestionFormat = 'mcq' | 'fill' | 'explain' | 'code' | 'order'
 export type MotivationStateValue = 'bored' | 'neutral' | 'frustrated' | 'winning'
 export type ErrorType = 'careless' | 'conceptual' | 'partial' | null
-export type ExplanationDepth = 'beginner' | 'mid' | 'advanced'
+export type ExplanationDepth = 'beginner' | 'mid' | 'advanced' | 'expert'
 
 export type Phase =
   | 'phase_1_computer_basics'
@@ -18,7 +18,7 @@ export type Phase =
 export interface SkillNode {
   id: string; label: string; phase: Phase; difficulty_base: number
   question_ids: string[]
-  explanation_ids: { beginner: string; mid: string; advanced: string }
+  explanation_ids: { beginner: string; mid: string; advanced: string; expert?: string }
   tags: string[]; deprecated?: boolean
   intuition: string; analogy: string; why_it_matters: string
 }

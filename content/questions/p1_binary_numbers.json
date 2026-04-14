@@ -1,0 +1,77 @@
+{
+  "skill_id": "p1_binary_numbers",
+  "questions": [
+    {
+      "id": "p1_binary_numbers_q1",
+      "stem": "What is the binary representation of the decimal number 13?",
+      "options": [
+        "1010",
+        "1101",
+        "1100",
+        "1110"
+      ],
+      "answer": 1,
+      "explanation": "13 in binary: 8 + 4 + 1 = 1101. Work right to left: 13 ÷ 2 = 6 R1, 6 ÷ 2 = 3 R0, 3 ÷ 2 = 1 R1, 1 ÷ 2 = 0 R1. Reading remainders bottom-up: 1101. Verify: 1×8 + 1×4 + 0×2 + 1×1 = 13 ✓"
+    },
+    {
+      "id": "p1_binary_numbers_q2",
+      "stem": "Why do computers use binary (base 2) instead of decimal (base 10)?",
+      "options": [
+        "Binary is faster to calculate in human brains",
+        "Binary requires fewer transistors to represent numbers",
+        "Electronic circuits reliably represent two states (high/low voltage) — binary maps directly to these two physical states",
+        "Binary was chosen arbitrarily by early computer scientists"
+      ],
+      "answer": 2,
+      "explanation": "Transistors act as switches: on (high voltage, ~1) or off (low voltage, ~0). Two states are easy to distinguish reliably even with noise and manufacturing variation. Representing 10 distinct voltage levels for decimal would require much more precision and would be error-prone. Binary's 0/1 maps perfectly to the natural 'switch' behaviour of transistors."
+    },
+    {
+      "id": "p1_binary_numbers_q3",
+      "stem": "A float16 value uses 16 bits: 1 sign + 5 exponent + 10 mantissa. Why does float32 train neural networks more stably than float16?",
+      "options": [
+        "float32 is supported by more programming languages",
+        "float32's 8-bit exponent gives a much larger range (±3.4×10³⁸ vs ±65504), preventing gradient overflow during training",
+        "float16 cannot represent negative numbers",
+        "float32 uses less memory than float16"
+      ],
+      "answer": 1,
+      "explanation": "float16's 5-bit exponent limits its range to ±65504. During training, large activations or gradients (common in deep networks) easily exceed this, producing 'inf'. float32's 8-bit exponent gives range ±3.4×10³⁸ — essentially never overflows for typical training. bfloat16 solves this by keeping float32's 8-bit exponent while reducing mantissa precision."
+    },
+    {
+      "id": "p1_binary_numbers_q4",
+      "stem": "What does the bitwise AND operation do, and when is it useful in practice?",
+      "options": [
+        "Adds two binary numbers together",
+        "Returns 1 for each bit position where BOTH inputs are 1; used for masking — extracting specific bits from a value",
+        "Returns 1 for each bit position where EITHER input is 1",
+        "Flips all bits from 0 to 1 and vice versa"
+      ],
+      "answer": 1,
+      "explanation": "Bitwise AND (& in Python) outputs 1 only where both inputs are 1: 1010 & 1100 = 1000. This is used for masking: to check if the 3rd bit is set, use value & 0b100. In ML, it's used in quantised model formats to extract nibbles (4-bit values) from packed bytes: lower = byte & 0x0F, upper = (byte >> 4) & 0x0F."
+    },
+    {
+      "id": "p1_binary_numbers_q5",
+      "stem": "INT8 quantisation stores model weights as 8-bit integers instead of float32. What is the primary benefit?",
+      "options": [
+        "INT8 is more accurate than float32 for most operations",
+        "4× memory reduction (1 byte vs 4 bytes per weight) and 2-4× throughput increase on hardware with native INT8 support",
+        "INT8 eliminates the need for a GPU entirely",
+        "Quantised models train faster than float32 models"
+      ],
+      "answer": 1,
+      "explanation": "float32 uses 4 bytes per weight; INT8 uses 1 byte — a 4× memory reduction. Modern hardware (NVIDIA Tensor Cores, Intel VNNI) has native INT8 multiply-accumulate units that deliver 2-4× higher throughput than float32. For a 7B model: float32 = 28 GB, INT8 = 7 GB. The trade-off is small accuracy loss (~0.5-1%) from the discrete representation."
+    },
+    {
+      "id": "p1_binary_numbers_q6",
+      "stem": "The hexadecimal (base-16) number 0xFF equals what decimal value?",
+      "options": [
+        "15",
+        "16",
+        "255",
+        "256"
+      ],
+      "answer": 2,
+      "explanation": "0xFF = F×16 + F×1 = 15×16 + 15 = 240 + 15 = 255. In hex, digits 0-9 are 0-9 and A-F represent 10-15. 0xFF is the maximum value for a uint8 (8-bit unsigned integer). In ML, pixel values range from 0x00 (black) to 0xFF (max brightness) — exactly the uint8 range."
+    }
+  ]
+}

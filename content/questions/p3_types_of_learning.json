@@ -1,0 +1,77 @@
+{
+  "skill_id": "p3_types_of_learning",
+  "questions": [
+    {
+      "id": "p3_types_of_learning_q1",
+      "stem": "A model trained on emails labelled 'spam' or 'not spam' is an example of:",
+      "options": [
+        "Unsupervised learning",
+        "Reinforcement learning",
+        "Supervised learning",
+        "Self-supervised learning"
+      ],
+      "answer": 2,
+      "explanation": "Supervised learning trains on labelled examples (input → target). The spam/not-spam labels provide the supervision signal."
+    },
+    {
+      "id": "p3_types_of_learning_q2",
+      "stem": "K-Means clustering is an example of which type of learning?",
+      "options": [
+        "Supervised learning",
+        "Unsupervised learning",
+        "Reinforcement learning",
+        "Semi-supervised learning"
+      ],
+      "answer": 1,
+      "explanation": "K-Means groups data into clusters without any labels — it discovers structure in unlabelled data, which is the definition of unsupervised learning."
+    },
+    {
+      "id": "p3_types_of_learning_q3",
+      "stem": "In reinforcement learning, what does the agent learn from?",
+      "options": [
+        "Labelled input-output pairs provided by humans",
+        "Reward signals received after taking actions in an environment",
+        "Unlabelled data clusters",
+        "Pre-trained model weights"
+      ],
+      "answer": 1,
+      "explanation": "RL agents receive rewards (positive for good actions, negative for bad) and learn to maximise cumulative reward through trial and error. No labelled training data is required."
+    },
+    {
+      "id": "p3_types_of_learning_q4",
+      "stem": "GPT's pre-training (predicting the next word in text) is an example of:",
+      "options": [
+        "Supervised learning with human-annotated data",
+        "Self-supervised learning — the labels come from the data itself",
+        "Reinforcement learning",
+        "Unsupervised clustering"
+      ],
+      "answer": 1,
+      "explanation": "Self-supervised learning generates labels from the data itself (next token to predict). No human labelling is required. This allows training on enormous amounts of unlabelled internet text."
+    },
+    {
+      "id": "p3_types_of_learning_q5",
+      "stem": "Which learning paradigm is most appropriate for a robotics arm that must learn to grasp objects?",
+      "options": [
+        "Supervised learning — just show it thousands of labelled grasps",
+        "Unsupervised learning — let it cluster similar objects",
+        "Reinforcement learning — reward successful grasps, penalise drops",
+        "Transfer learning from a pre-trained image classifier"
+      ],
+      "answer": 2,
+      "explanation": "Robot manipulation involves sequential decisions where feedback (successful grasp or not) is only available after the action. RL's trial-and-error with delayed rewards maps naturally to this problem."
+    },
+    {
+      "id": "p3_types_of_learning_q6",
+      "stem": "Semi-supervised learning is useful when:",
+      "options": [
+        "You have no data at all",
+        "All your data is labelled",
+        "You have a small labelled dataset and a large unlabelled dataset",
+        "You want to combine two different models"
+      ],
+      "answer": 2,
+      "explanation": "Semi-supervised learning uses a few labelled examples (expensive to obtain) combined with many unlabelled examples (cheap) to train better than supervised learning with labels alone."
+    }
+  ]
+}

@@ -1,0 +1,28 @@
+{
+  "skill_id": "p3_ai_vs_ml_vs_dl",
+  "depth": "mid",
+  "title": "AI vs ML vs Deep Learning — Technical Distinctions",
+  "key_insight": "The difference between ML and Deep Learning is how features are obtained: ML uses human-crafted features, Deep Learning learns them from raw data automatically.",
+  "body": "## The Feature Problem\n\nIn classical ML, **you** decide what features to feed the model:\n\n```python\n# Classical ML for spam detection\n# You engineer features manually:\nfeatures = {\n    'contains_win_prize':    1 if 'win a prize' in email else 0,\n    'num_exclamation_marks': email.count('!'),\n    'sender_domain':         extract_domain(email.sender),\n    'email_length':          len(email.body),\n}\nmodel = LogisticRegression()\nmodel.fit(features, labels)\n```\n\nIn Deep Learning, the network **discovers** features automatically:\n\n```python\n# Deep Learning for spam detection\n# Raw text goes in — model figures out relevant features\nmodel = TransformerModel(vocab_size=50000, layers=12)\nmodel.fit(raw_email_text, labels)\n# No manual feature engineering needed\n```\n\n## The ML Toolkit (non-deep)\n\n| Algorithm | Best for |\n|---|---|\n| Linear Regression | Predicting continuous values |\n| Logistic Regression | Binary classification |\n| Decision Trees | Interpretable decisions |\n| Random Forest | Tabular data, often beats neural nets |\n| Gradient Boosting (XGBoost) | Competitions, structured data |\n| SVM | Small datasets, clear margins |\n\n## When to Use Deep Learning vs Classical ML\n\n```\nDeep Learning wins when:\n  - Data is unstructured (images, text, audio)\n  - You have millions+ examples\n  - You have GPU compute\n  - Raw features are too complex to engineer manually\n\nClassical ML wins when:\n  - Data is tabular/structured (spreadsheet-style)\n  - Dataset is small (<100k rows)\n  - Interpretability is required (medical, legal)\n  - Compute is limited\n```\n\n## The Current Landscape\n\nDeep Learning now dominates:\n- NLP → Transformers (BERT, GPT)\n- Vision → CNNs, Vision Transformers\n- Audio → Wave-based architectures\n- Protein folding → AlphaFold\n- Code generation → Codex/GitHub Copilot",
+  "common_mistakes": [
+    "Using deep learning for a 1,000-row spreadsheet problem — classical ML will win and be faster/interpretable",
+    "Forgetting that feature engineering still matters in deep learning — it's just lower-level (data augmentation, tokenisation)",
+    "Treating 'neural network' and 'deep learning' as identical — a 1-layer network is technically not 'deep'"
+  ],
+  "mini_exercise": "You have a dataset of 5,000 rows with 20 structured columns (age, income, location...) predicting loan default. Which would you try first: gradient boosting or a deep neural network? Why?",
+  "real_world_usage": "Kaggle competitions reveal the truth: on structured tabular data, XGBoost/LightGBM wins the majority of competitions. On image and text tasks, deep learning wins every time. The Kaggle leaderboard is the most honest performance benchmark in ML.",
+  "explain_back_prompt": "Explain the concept of 'feature engineering' — why classical ML requires it, why deep learning reduces the need for it, and what a 'feature' actually is in the context of spam detection.",
+  "build_task": {
+    "title": "Compare a classical and deep learning approach",
+    "context": "Seeing the same problem solved both ways crystallises the difference.",
+    "steps": [
+      "Find scikit-learn's iris dataset: from sklearn.datasets import load_iris",
+      "Train a Random Forest classifier: from sklearn.ensemble import RandomForestClassifier",
+      "Check accuracy on test set",
+      "Now write a tiny neural network in PyTorch (2 layers, 64 hidden units)",
+      "Train it on the same data — compare accuracy, training time, and code complexity"
+    ],
+    "expected_output": "Two models, same dataset, accuracy comparison, observation about which was simpler to implement.",
+    "starter_code": "from sklearn.datasets import load_iris\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.ensemble import RandomForestClassifier\nfrom sklearn.metrics import accuracy_score\n\nX, y = load_iris(return_X_y=True)\nX_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)\n\n# Classical ML\nrf = RandomForestClassifier()\nrf.fit(X_train, y_train)\nprint('RF accuracy:', accuracy_score(y_test, rf.predict(X_test)))\n\n# Your task: add a neural network here"
+  }
+}

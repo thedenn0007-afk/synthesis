@@ -1,0 +1,27 @@
+{
+  "skill_id": "p1_scope",
+  "depth": "beginner",
+  "title": "Scope — Where Variables Live",
+  "key_insight": "Scope determines which parts of your code can see a variable. Variables created inside a function are private to that function — they don't leak out. This is how functions stay self-contained.",
+  "body": "## Local vs Global Scope\n\n```python\n# GLOBAL scope: defined outside any function\nmessage = 'Hello from global'\n\ndef greet():\n    # LOCAL scope: defined inside the function\n    local_msg = 'Hello from local'\n    print(local_msg)   # works — local_msg is in scope\n    print(message)     # works — can READ global variables from inside\n\ngreet()\nprint(message)    # works — global variable\nprint(local_msg)  # NameError! local_msg only exists inside greet()\n```\n\n## Functions Get Their Own Namespace\n\n```python\nx = 10  # global x\n\ndef modify():\n    x = 99  # creates a NEW local variable named x — doesn't touch global x!\n    print('Inside function:', x)  # 99\n\nmodify()\nprint('Outside function:', x)  # 10 — unchanged!\n```\n\nThis is good design: functions don't accidentally break variables in the rest of your program.\n\n## When You Need to Modify a Global\n\n```python\ncounter = 0  # global counter\n\ndef increment():\n    global counter  # explicitly say 'I want the global one'\n    counter += 1\n\nincrement()\nincrement()\nprint(counter)  # 2\n```\n\n**Advice**: using `global` is usually a sign that you should restructure your code. Pass values as parameters and return results instead.\n\n## The LEGB Rule — How Python Finds Variables\n\n```\nPython searches for variables in this order:\n\nL — Local:    the current function\nE — Enclosing: outer function (if this is a nested function)\nG — Global:   the module level\nB — Built-in: Python's built-in names (print, len, range...)\n```\n\n```python\nname = 'Global Alice'\n\ndef outer():\n    name = 'Enclosing Bob'\n    \n    def inner():\n        # name = 'Local Carol'  # if uncommented, this would be found first\n        print(name)  # Found in Enclosing scope: 'Enclosing Bob'\n    \n    inner()\n\nouter()\n```",
+  "common_mistakes": [
+    "Thinking that assigning inside a function changes the global — it creates a new local variable with the same name",
+    "Using `global` when parameters and return values would be cleaner — global state makes code harder to test and understand",
+    "Shadowing built-ins: `list = [1,2,3]` now breaks `list()` everywhere in that scope"
+  ],
+  "mini_exercise": "Predict the output of this code WITHOUT running it:\n```python\nx = 5\ndef foo():\n    x = 10\n    print(x)\nfoo()\nprint(x)\n```\nThen predict this version:\n```python\nx = 5\ndef bar():\n    global x\n    x = 10\nbar()\nprint(x)\n```",
+  "real_world_usage": "Every programming language has scope rules. Python's LEGB rule is why you can use the same variable name in different functions without conflicts. Web frameworks like Flask use scope to isolate request data — each request gets its own local context so two users' data never mixes.",
+  "explain_back_prompt": "What is the difference between local and global scope? What is the LEGB rule? Why is using `global` inside a function generally considered bad practice?",
+  "build_task": {
+    "title": "Rewrite global-dependent code to use parameters and return values",
+    "context": "Practice removing global state and making functions self-contained.",
+    "steps": [
+      "Start with the 'bad' code below that uses global variables",
+      "Rewrite each function to take parameters instead of reading globals",
+      "Rewrite to return results instead of modifying globals",
+      "Test both versions give the same result"
+    ],
+    "expected_output": "Both versions print 'Final score: 30', but the refactored version has no global keyword.",
+    "starter_code": "# BAD: global state\nscore = 0\n\ndef add_points(points):\n    global score\n    score += points\n\ndef double_score():\n    global score\n    score *= 2\n\nadd_points(5)\nadd_points(10)\ndouble_score()\nprint('Final score:', score)  # 30\n\n# GOOD: refactor without globals\n# TODO: rewrite add_points and double_score to use parameters and return values"
+  }
+}

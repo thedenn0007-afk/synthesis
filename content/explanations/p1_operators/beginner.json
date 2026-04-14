@@ -1,0 +1,27 @@
+{
+  "skill_id": "p1_operators",
+  "depth": "beginner",
+  "title": "Operators — The Symbols That Do the Work",
+  "key_insight": "Operators are symbols that perform operations on values. Python uses them for maths, comparisons, and logic — the building blocks of every calculation and decision in your code.",
+  "body": "## Arithmetic Operators\n\n```python\n# The basic maths operators\nprint(10 + 3)   # 13  — addition\nprint(10 - 3)   # 7   — subtraction\nprint(10 * 3)   # 30  — multiplication\nprint(10 / 3)   # 3.333... — division (always gives a float)\nprint(10 // 3)  # 3   — floor division (rounds down to integer)\nprint(10 % 3)   # 1   — modulo (remainder after division)\nprint(10 ** 3)  # 1000 — exponentiation (10 to the power 3)\n```\n\n## Comparison Operators\n\nComparison operators ask a question — the answer is always True or False:\n\n```python\nage = 20\n\nprint(age == 20)   # True  — is equal to?\nprint(age != 18)   # True  — is NOT equal to?\nprint(age > 18)    # True  — is greater than?\nprint(age < 18)    # False — is less than?\nprint(age >= 20)   # True  — is greater than or equal to?\nprint(age <= 20)   # True  — is less than or equal to?\n```\n\nCommon mistake: `=` means *assign*, `==` means *compare*.\n\n```python\nage = 20      # Assignment: store 20 in age\nage == 20     # Comparison: is age equal to 20? → True\n```\n\n## Logical Operators\n\nCombine multiple True/False conditions:\n\n```python\nis_adult = True\nhas_ticket = True\n\nprint(is_adult and has_ticket)   # True  — both must be True\nprint(is_adult or has_ticket)    # True  — at least one must be True\nprint(not is_adult)              # False — flips True to False\n\n# Practical example:\ncan_enter = is_adult and has_ticket\nprint(can_enter)  # True\n```\n\n## Order of Operations\n\nPython follows PEMDAS/BODMAS:\n\n```python\n# Without parentheses:\nresult = 2 + 3 * 4   # 14, not 20 (multiplication first)\n\n# With parentheses:\nresult = (2 + 3) * 4  # 20 (parentheses first)\n```\n\nWhen in doubt, use parentheses — they make code clearer.",
+  "common_mistakes": [
+    "Using = instead of == for comparison — = assigns a value, == checks equality",
+    "Integer division surprise: 10 / 3 gives 3.333... in Python 3, not 3. Use // for integer division",
+    "Operator precedence: * and / are evaluated before + and - unless parentheses are used"
+  ],
+  "mini_exercise": "Predict the output of each line before running: `print(7 % 2)` / `print(2 ** 8)` / `print(10 // 3)` / `print(5 == 5.0)` / `print(True and False)`. Why is 5 == 5.0 the result it is?",
+  "real_world_usage": "Every price calculation, age check, voting eligibility test, discount application, and loop condition in software uses arithmetic, comparison, and logical operators. Instagram's 'show content to users over 18' filter is literally `user.age >= 18`.",
+  "explain_back_prompt": "Explain the difference between = and ==. What does % (modulo) do? What is the difference between `and` and `or`?",
+  "build_task": {
+    "title": "Build a simple eligibility checker",
+    "context": "Combining operators to make real decisions.",
+    "steps": [
+      "Ask for age and whether user has a membership (True/False)",
+      "Calculate a discounted price: full price is £50, 20% discount if member",
+      "Print whether the user can enter a 'members-only over-18 event'",
+      "Print the price they pay"
+    ],
+    "expected_output": "Age and membership input → 'You can enter. Your price: £40' or appropriate denial message.",
+    "starter_code": "full_price = 50\nmember_discount = 0.20\n\nage = int(input('Enter your age: '))\nis_member = input('Are you a member? (yes/no): ').lower() == 'yes'\n\n# TODO: calculate discounted price\n# TODO: check eligibility with comparison and logical operators\n# TODO: print results"
+  }
+}

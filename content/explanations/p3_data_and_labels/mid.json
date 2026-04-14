@@ -1,0 +1,30 @@
+{
+  "skill_id": "p3_data_and_labels",
+  "depth": "mid",
+  "title": "Data & Labels — Splits, Bias, and Data Engineering",
+  "key_insight": "The train/validation/test split is the single most important data decision. Everything else — model choice, hyperparameters — is secondary to having a trustworthy test set.",
+  "body": "## The Three-Way Split\n\n```python\nfrom sklearn.model_selection import train_test_split\nimport numpy as np\n\nX = np.random.randn(10000, 20)  # 10,000 examples\ny = np.random.randint(0, 2, 10000)\n\n# First split: 80% train+val, 20% test\nX_trainval, X_test, y_trainval, y_test = train_test_split(\n    X, y, test_size=0.2, random_state=42\n)\n\n# Second split: 75% train, 25% val (= 60/20/20 overall)\nX_train, X_val, y_train, y_val = train_test_split(\n    X_trainval, y_trainval, test_size=0.25, random_state=42\n)\n\nprint(f'Train: {len(X_train)}, Val: {len(X_val)}, Test: {len(X_test)}')\n# Train: 6000, Val: 2000, Test: 2000\n```\n\n**What each split is for:**\n- **Train**: model sees this data and updates weights\n- **Validation**: you tune hyperparameters based on this — but model doesn't train on it\n- **Test**: you see this ONCE at the very end — the final honest evaluation\n\n**The golden rule**: if you make any decision (model choice, threshold, hyperparameter) based on test set performance, your test set is contaminated.\n\n## Class Imbalance\n\n```python\nfrom sklearn.utils import class_weight\nimport numpy as np\n\n# Imbalanced dataset: 1000 positive (fraud), 99000 negative (not fraud)\nlabels = np.array([0] * 99000 + [1] * 1000)\n\n# Naive accuracy of 'always predict 0': 99.0%\n# But this model catches 0 fraud cases! Useless.\n\n# Solutions:\n# 1. Class weights — give rare class more importance\nweights = class_weight.compute_class_weight(\n    'balanced', classes=np.unique(labels), y=labels\n)\n# weights: [0.51 for class 0, 50.5 for class 1]\n# Training: loss for fraud examples is 99x higher\n\n# 2. Oversampling (SMOTE) — synthesise new minority examples\nfrom imblearn.over_sampling import SMOTE\nX_resampled, y_resampled = SMOTE().fit_resample(X, labels)\n\n# 3. Better metrics — use precision/recall/F1 instead of accuracy\n```\n\n## Data Leakage: The Silent Killer\n\n```python\n# WRONG: compute normalisation stats on ALL data, then split\nscaler.fit(X_all)                    # uses test data statistics!\nX_scaled = scaler.transform(X_all)\nX_train, X_test = train_test_split(X_scaled)  # contaminated\n\n# RIGHT: fit on train only, apply to all\nX_train, X_test, y_train, y_test = train_test_split(X, y)\nscaler.fit(X_train)                  # only sees training data\nX_train_scaled = scaler.transform(X_train)\nX_test_scaled  = scaler.transform(X_test)  # uses train statistics\n```\n\nLeakage makes your model look better than it is — then fail in production.",
+  "common_mistakes": [
+    "Fitting the scaler/encoder on all data before splitting — this leaks test statistics into training",
+    "Using the test set to tune hyperparameters — your test set is no longer an honest evaluation",
+    "Ignoring class imbalance — accuracy becomes a misleading metric"
+  ],
+  "mini_exercise": "In the breast cancer dataset, what is the class ratio? (np.bincount). If you always predicted 'malignant', what accuracy would you get? Why is accuracy the wrong metric here?",
+  "real_world_usage": "A famous Kaggle competition (Heritage Health Prize, 2012) required predicting hospital readmissions. Multiple top teams discovered that the 'winning' models had accidentally leaked features from the test set through date-based information. The lesson became a textbook case: leakage is the most common source of overly optimistic ML results.",
+  "explain_back_prompt": "What is data leakage? Give one example of how it can happen with a scaler. What is class imbalance and why does it make accuracy a misleading metric? What metric should you use instead for fraud detection?",
+  "build_task": {
+    "title": "Build a proper train/val/test pipeline",
+    "context": "Doing the split correctly once builds the habit for every future project.",
+    "steps": [
+      "Load the breast cancer dataset",
+      "Create a 60/20/20 train/val/test split",
+      "Fit a StandardScaler on X_train only",
+      "Transform X_train, X_val, X_test using that scaler",
+      "Train LogisticRegression on X_train",
+      "Evaluate on X_val (for tuning), then X_test (final honest eval)",
+      "Print accuracy AND F1 score for both splits"
+    ],
+    "expected_output": "Accuracy and F1 on validation set, then same on test set. They should be similar (if not, there might be leakage or overfitting).",
+    "starter_code": "from sklearn.datasets import load_breast_cancer\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.preprocessing import StandardScaler\nfrom sklearn.linear_model import LogisticRegression\nfrom sklearn.metrics import accuracy_score, f1_score\n\nX, y = load_breast_cancer(return_X_y=True)\n\n# TODO: Create 60/20/20 split\n# TODO: Fit scaler on train only\n# TODO: Train model\n# TODO: Evaluate on val and test"
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "skill_id": "p1_lists_intro",
+  "depth": "beginner",
+  "title": "Lists — Storing Collections of Things",
+  "key_insight": "A list stores multiple values in a single variable, in order. You can access, add, remove, and loop over items. Lists are the most used data structure in Python.",
+  "body": "## Creating Lists\n\n```python\nfruits = ['apple', 'banana', 'cherry']\nnumbers = [10, 20, 30, 40, 50]\nmixed  = [1, 'hello', True, 3.14]  # lists can mix types\nempty  = []                          # empty list\n```\n\n## Accessing Items — Indexing\n\n```python\nfruits = ['apple', 'banana', 'cherry']\n# Index:    0        1         2\n# Negative: -3       -2        -1\n\nprint(fruits[0])   # 'apple'\nprint(fruits[2])   # 'cherry'\nprint(fruits[-1])  # 'cherry' (last item)\nprint(fruits[1:3]) # ['banana', 'cherry'] (slicing)\n```\n\n## Modifying Lists\n\n```python\nfruits = ['apple', 'banana', 'cherry']\n\n# Add items\nfruits.append('date')       # add to end: ['apple', 'banana', 'cherry', 'date']\nfruits.insert(1, 'avocado') # insert at position 1\n\n# Remove items\nfruits.remove('banana')     # removes first occurrence of 'banana'\npopped = fruits.pop()       # removes and returns last item\npopped = fruits.pop(0)      # removes and returns item at index 0\ndel fruits[0]               # delete item at index 0\n\n# Change items\nfruits[0] = 'apricot'  # replace\n```\n\n## Useful List Methods\n\n```python\nnumbers = [3, 1, 4, 1, 5, 9, 2, 6]\n\nprint(len(numbers))         # 8 — length\nprint(numbers.count(1))     # 2 — how many times 1 appears\nprint(numbers.index(5))     # 4 — index of first 5\nprint(sum(numbers))         # 31\nprint(min(numbers))         # 1\nprint(max(numbers))         # 9\n\nnumbers.sort()              # sorts in place: [1,1,2,3,4,5,6,9]\nnumbers.reverse()           # reverses in place\nsorted_copy = sorted(numbers)  # returns new sorted list, original unchanged\n```\n\n## Looping Over Lists\n\n```python\nfruits = ['apple', 'banana', 'cherry']\n\n# Basic for loop\nfor fruit in fruits:\n    print(fruit)\n\n# With index\nfor i, fruit in enumerate(fruits):\n    print(f'{i}: {fruit}')\n# 0: apple\n# 1: banana\n# 2: cherry\n```",
+  "common_mistakes": [
+    "IndexError: accessing index >= len(list) — always check bounds or use try/except",
+    "Confusing append() (adds one item) with extend() (adds all items from another list): `[1,2].append([3,4])` → `[1,2,[3,4]]`; `[1,2].extend([3,4])` → `[1,2,3,4]`",
+    "Sorting a list in place vs sorted() — sort() modifies the original list; sorted() creates a new one"
+  ],
+  "mini_exercise": "Create a list of 5 friends' names. Then: (1) add a 6th friend, (2) remove the 3rd friend, (3) sort the list alphabetically, (4) print each name with its position using enumerate().",
+  "real_world_usage": "Every shopping cart, playlist, inbox, and social media feed is a list. Python's list is used to represent everything from database query results to neural network layer configurations. In machine learning, lists store training samples, batch indices, and hyperparameter values to try.",
+  "explain_back_prompt": "What is a list in Python? How does indexing work, including negative indices? What is the difference between append() and extend()?",
+  "build_task": {
+    "title": "Build a simple task manager",
+    "context": "Lists are perfect for managing ordered collections like tasks.",
+    "steps": [
+      "Start with an empty list called `tasks`",
+      "In a loop, show a menu: add task, remove task, view all, quit",
+      "Add tasks with append(), remove with remove() (by name) or pop() (by index)",
+      "Show all tasks with enumerate()",
+      "Handle the case where the user tries to remove a task that doesn't exist"
+    ],
+    "expected_output": "Interactive task manager that persists tasks during the session.",
+    "starter_code": "tasks = []\n\nwhile True:\n    print('\\n1. Add task  2. Remove task  3. View all  4. Quit')\n    choice = input('Choose: ').strip()\n    \n    if choice == '4':\n        break\n    elif choice == '1':\n        task = input('Task name: ').strip()\n        # TODO: add to tasks\n    elif choice == '2':\n        # TODO: remove from tasks\n        pass\n    elif choice == '3':\n        # TODO: display all tasks with enumerate()\n        pass"
+  }
+}

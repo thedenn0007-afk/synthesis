@@ -1,7 +1,7 @@
 'use client'
 import { useState, useEffect, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
-import type { SessionTask, Explanation, SessionPhase, TaskReason } from '@/types'
+import type { SessionTask, Explanation, ExplanationDepth, SessionPhase, TaskReason } from '@/types'
 import { QuestionCard }     from '@/components/learning/QuestionCard'
 import { FeedbackBanner }   from '@/components/learning/FeedbackBanner'
 import { ExplanationPanel } from '@/components/learning/ExplanationPanel'
@@ -103,18 +103,34 @@ function ModeBar({
 // ─── Pre-question Learn Panel (inline, compact) ───────────────────────────────
 
 interface LearnPanelProps {
-  task:       SessionTask
+  task:        SessionTask
   explanation: Explanation | null
-  onReady:    () => void
+  depth?:      ExplanationDepth
+  onReady:     () => void
 }
 
-function LearnPanel({ task, explanation, onReady }: LearnPanelProps) {
+const DEPTH_COLORS: Record<ExplanationDepth, string> = {
+  beginner: 'var(--green)',
+  mid:      'var(--yellow)',
+  advanced: 'var(--orange, #f97316)',
+  expert:   'var(--purple)',
+}
+
+function LearnPanel({ task, explanation, depth, onReady }: LearnPanelProps) {
   return (
     <div className="animate-slide-up">
       {explanation ? (
         <div className="rounded-2xl bg-c-bg2 border border-[var(--border)] overflow-hidden mb-4">
           <div className="px-5 pt-5 pb-4">
-            <p className="font-mono text-[10px] text-c-purple uppercase tracking-[0.16em] mb-1">New concept</p>
+            <div className="flex items-center justify-between mb-1">
+              <p className="font-mono text-[10px] text-c-purple uppercase tracking-[0.16em]">New concept</p>
+              {depth && (
+                <span className="text-[10px] font-mono font-semibold uppercase tracking-[0.1em] px-1.5 py-0.5 rounded"
+                  style={{ color: DEPTH_COLORS[depth], background: DEPTH_COLORS[depth] + '18' }}>
+                  {depth}
+                </span>
+              )}
+            </div>
             <h3 className="text-[16px] font-semibold text-c-text mb-3">{explanation.title}</h3>
 
             {explanation.key_insight && (
@@ -170,7 +186,9 @@ export default function LearnPage() {
   const [fillAnswer,     setFillAnswer]     = useState('')
   const [feedback,       setFeedback]       = useState<{ correct: boolean; explanation_after?: string } | null>(null)
   const [explanation,    setExplanation]    = useState<Explanation | null>(null)
+  const [explanationDepth, setExplanationDepth] = useState<ExplanationDepth>('beginner')
   const [preExplanation, setPreExplanation] = useState<Explanation | null>(null)  // shown BEFORE question
+  const [preDepth,       setPreDepth]       = useState<ExplanationDepth>('beginner')
   const [motivation,     setMotivation]     = useState<string>('neutral')
   const [seenSkills,     setSeenSkills]     = useState<string[]>([])
   const [seenQuestions,  setSeenQuestions]  = useState<string[]>([])
@@ -247,6 +265,7 @@ export default function LearnPage() {
         const ed = await er.json()
         if (ed.explanation) {
           setPreExplanation(ed.explanation)
+          setPreDepth(ed.depth ?? 'beginner')
           setShowLearnFirst(true)
           setPhase('question')  // stays on 'question' but showLearnFirst=true means render LearnPanel
           return
@@ -290,7 +309,7 @@ export default function LearnPage() {
       try {
         const er = await fetch(`/api/explanation?skill_id=${task.skill_id}&attempt_id=${d.attempt_id}`)
         const ed = await er.json()
-        if (ed.explanation) setExplanation(ed.explanation)
+        if (ed.explanation) { setExplanation(ed.explanation); setExplanationDepth(ed.depth ?? 'beginner') }
       } catch { /* explanation not required */ }
     }
   }
@@ -390,6 +409,7 @@ export default function LearnPage() {
             <LearnPanel
               task={task}
               explanation={preExplanation}
+              depth={preDepth}
               onReady={() => setShowLearnFirst(false)}
             />
           </>
@@ -421,6 +441,7 @@ export default function LearnPage() {
               <div className="mb-4 animate-slide-up">
                 <ExplanationPanel
                   explanation={explanation}
+                  depth={explanationDepth}
                   onExplainBack={(text) => {
                     fetch('/api/attempt', {
                       method: 'POST', headers: { 'Content-Type': 'application/json' },

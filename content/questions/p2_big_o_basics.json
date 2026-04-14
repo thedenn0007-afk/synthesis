@@ -1,0 +1,77 @@
+{
+  "skill_id": "p2_big_o_basics",
+  "questions": [
+    {
+      "id": "p2_big_o_basics_q1",
+      "stem": "What does O(n²) mean for an algorithm, and why is it problematic at scale?",
+      "options": [
+        "The algorithm uses n² bytes of memory",
+        "The algorithm's runtime grows proportional to n-squared: if n doubles, time quadruples — 10× more data → 100× longer",
+        "The algorithm makes n squared calls to external APIs",
+        "The algorithm requires a two-dimensional input"
+      ],
+      "answer": 1,
+      "explanation": "O(n²) means two nested iterations over n items. At n=1,000: 1M operations; at n=10,000: 100M operations; at n=100,000: 10B operations — likely too slow. Standard attention is O(n²) in sequence length: for a 4096-token context, that's 4096² = 16M attention computations per head. This is why long-context LLMs are expensive and why Flash Attention (which is still O(n²) but with much smaller constants) matters."
+    },
+    {
+      "id": "p2_big_o_basics_q2",
+      "stem": "What is the Big O complexity of Python's in operator for a list versus a set?",
+      "options": [
+        "Both are O(1) — Python optimises both",
+        "Both are O(n) — Python checks every element for both",
+        "List: O(n) — scans elements one by one; Set: O(1) average — uses a hash table lookup",
+        "List: O(log n) due to binary search; Set: O(1)"
+      ],
+      "answer": 2,
+      "explanation": "x in my_list: Python scans from start until it finds x — O(n) worst case. x in my_set: Python computes hash(x), looks in the hash table — O(1) average. For 1M elements: list lookup ≈ 500K comparisons average; set lookup ≈ 1-2 hash computations. In ML: checking if a token is in a vocabulary set is O(1); searching a sorted list is O(log n) with bisect. Always use sets/dicts for membership tests."
+    },
+    {
+      "id": "p2_big_o_basics_q3",
+      "stem": "What is the time complexity of np.sort() on an array of n elements, and why can't we do better in general?",
+      "options": [
+        "O(n) — NumPy uses a specialised linear-time algorithm",
+        "O(n log n) — the information-theoretic lower bound for comparison-based sorting requires at least n log n comparisons",
+        "O(n²) — NumPy uses bubble sort internally",
+        "O(1) — NumPy sorts using GPU parallelism"
+      ],
+      "answer": 1,
+      "explanation": "Comparison-based sorting cannot be faster than O(n log n) — this is proven by information theory: there are n! possible orderings, and each comparison eliminates half of them, so log₂(n!) ≈ n log n comparisons are needed. NumPy uses introsort (quicksort + heapsort hybrid) for general arrays — O(n log n) average and worst case. Special cases: counting sort, radix sort can be O(n) for bounded integers — see p2_sorting_searching expert."
+    },
+    {
+      "id": "p2_big_o_basics_q4",
+      "stem": "What does 'O(1) amortised' mean for Python list.append()?",
+      "options": [
+        "Every single append() call completes in exactly 1 operation",
+        "Most appends are O(1), but occasionally O(n) for resizing; averaged over many appends, the AVERAGE cost per operation is O(1) constant time",
+        "The first append is slow, all subsequent ones are instant",
+        "amortised is a synonym for 'approximately' — it means roughly O(1)"
+      ],
+      "answer": 1,
+      "explanation": "Python lists double in capacity when full (resizing copies all elements — O(n)). But resizes happen at n=4, 8, 16, 32, ... so after n appends, total work = n + n/2 + n/4 + ... = 2n. Average per append = 2n/n = O(1). The O(n) cost of resizing is 'amortised' across all the cheap appends that preceded it. This is why you can safely append in a loop without worrying about performance — despite occasional expensive resizes."
+    },
+    {
+      "id": "p2_big_o_basics_q5",
+      "stem": "A function has O(2ⁿ) complexity. How much longer does it take when n increases from 20 to 30?",
+      "options": [
+        "50% longer (30/20 = 1.5×)",
+        "1024× longer (2¹⁰ = 1024 — each increment of n doubles the runtime)",
+        "30× longer (proportional to n)",
+        "900× longer (30² = 900)"
+      ],
+      "answer": 1,
+      "explanation": "O(2ⁿ) is exponential: 2²⁰ = ~1M operations; 2³⁰ = ~1B operations. The ratio: 2³⁰/2²⁰ = 2¹⁰ = 1024. Going from n=20 to n=30 makes the algorithm 1024× slower. At n=50: 2⁵⁰ ≈ 10¹⁵ operations — requiring millions of years. Most NP-complete problems have no better algorithm than O(2ⁿ). This is why approximation algorithms and heuristics are necessary for NP-hard problems in practice."
+    },
+    {
+      "id": "p2_big_o_basics_q6",
+      "stem": "The standard attention mechanism in Transformers has O(n²) complexity in sequence length n. What practical problem does this cause?",
+      "options": [
+        "It makes tokenisation slow for long documents",
+        "Memory grows as n² — a 4096-token context needs 4096²×2 bytes per layer per head ≈ 32 MB per head; for 32 heads × 32 layers: ~32 GB just for attention matrices",
+        "It prevents the model from understanding long-range dependencies",
+        "It makes gradient computation impossible for sequences > 512 tokens"
+      ],
+      "answer": 1,
+      "explanation": "Attention computes a (seq × seq) score matrix. At seq=4096 in float16: 4096² × 2 bytes = 32 MB per layer per head. With 32 layers × 32 heads: 32 GB just for attention matrices — before parameters, activations, or gradients. Flash Attention solves this by computing attention in tiles that fit in fast SM shared memory, never materialising the full matrix. This reduces memory from O(n²) to O(n) while keeping O(n²) FLOPs."
+    }
+  ]
+}

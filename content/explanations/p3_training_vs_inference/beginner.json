@@ -1,0 +1,29 @@
+{
+  "skill_id": "p3_training_vs_inference",
+  "depth": "beginner",
+  "title": "Training vs Inference — Learning vs Using",
+  "key_insight": "Training is when the model learns — weights change. Inference is when the trained model is used — weights are frozen. Two completely different modes, different costs, different hardware needs.",
+  "body": "## The Student Analogy\n\n**Training** is like studying for an exam:\n- You read the textbook (training data)\n- You do practice problems (training examples)\n- Your brain changes — neurons form new connections (weights update)\n- It takes days or weeks\n- It's exhausting (high compute)\n\n**Inference** is like taking the exam:\n- You sit down and answer questions\n- Your brain is the same as before — nothing changes\n- Each question takes a few seconds\n- You apply what you learned, but you don't learn anything new\n\n### In an AI System\n\n**Training phase:**\n- Happens once (or occasionally)\n- Runs on powerful GPU clusters for hours, days, or weeks\n- Costs thousands to millions of dollars\n- Output: a trained model (a large file of numbers)\n\n**Inference phase:**\n- Happens millions of times per day\n- Runs on servers (can be smaller than training servers)\n- Costs fractions of a cent per request\n- Output: a response to a specific input\n\n### What Happens to Weights?\n\nThink of weights as the model's knowledge:\n\n- **During training**: weights are like wet clay — being shaped\n- **After training**: weights are like fired ceramic — fixed\n- **During inference**: the fired ceramic is used to answer questions — it doesn't change\n\n### Why This Matters\n\nWhen you use ChatGPT, you are NOT teaching it anything. Your conversation does not change the model's weights. The model you talk to today is the same model that millions of others talk to — because inference doesn't change anything.\n\n(Fine-tuning is when you take a trained model and train it more on new data — but that's a separate training run, not inference.)",
+  "common_mistakes": [
+    "Thinking that chatting with an LLM teaches it — inference doesn't update weights",
+    "Confusing fine-tuning with inference — fine-tuning is another training run, not a 'smart inference'",
+    "Assuming inference is cheap — at GPT-4 scale, inference costs billions of dollars per year globally"
+  ],
+  "mini_exercise": "For each of these, say if it's training or inference: (1) Google translates your sentence from Spanish to English. (2) Meta runs backpropagation on 10 million posts to improve their recommender. (3) Siri converts your voice to text in 2 seconds. (4) A team at Anthropic runs RLHF for 2 weeks to improve Claude.",
+  "real_world_usage": "OpenAI reportedly spends ~$700,000 per day running inference on ChatGPT (as of 2023). This is inference cost, not training cost. Training GPT-4 cost an estimated $100M+. The economics of training vs inference are very different — training is a one-time capital expense, inference is the ongoing operational cost.",
+  "explain_back_prompt": "Explain training and inference to someone who has never studied AI. Use the student/exam analogy. What happens to the model's weights in each phase? Why can't talking to ChatGPT teach it new things?",
+  "build_task": {
+    "title": "Train then infer — two separate phases",
+    "context": "Experiencing the phase separation in code makes it concrete.",
+    "steps": [
+      "Train a simple model: from sklearn.linear_model import LinearRegression",
+      "Create training data and fit the model",
+      "Print model.coef_ — these are the trained weights",
+      "Now use model.predict() on new data you didn't train on",
+      "Notice: predict() does NOT change model.coef_ — check it after",
+      "This is inference — model.coef_ stays the same"
+    ],
+    "expected_output": "Weights printed before and after inference — they are identical. Predictions on new data.",
+    "starter_code": "from sklearn.linear_model import LinearRegression\nimport numpy as np\n\n# Training phase\nX_train = np.array([[1],[2],[3],[4],[5]])\ny_train = np.array([2, 4, 6, 8, 10])\n\nmodel = LinearRegression()\nmodel.fit(X_train, y_train)  # TRAINING: weights are set\n\nprint('Weights after training:', model.coef_)\n\n# Inference phase\nX_new = np.array([[6],[7],[8]])\npredictions = model.predict(X_new)  # INFERENCE: weights unchanged\nprint('Predictions:', predictions)\nprint('Weights after inference:', model.coef_)  # same as before"
+  }
+}

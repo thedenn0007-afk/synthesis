@@ -1,0 +1,77 @@
+{
+  "skill_id": "p1_conditionals",
+  "questions": [
+    {
+      "id": "p1_conditionals_q1",
+      "stem": "What does the following Python code print?\n\nx = 10\nif x > 5:\n    print('big')\nelif x > 15:\n    print('very big')\nelse:\n    print('small')",
+      "options": [
+        "big\nvery big",
+        "big",
+        "very big",
+        "small"
+      ],
+      "answer": 1,
+      "explanation": "Python evaluates elif chains top to bottom and stops at the first True condition. x = 10 satisfies x > 5 (True), so 'big' is printed and the rest of the chain is skipped. Even though x is NOT > 15, the elif is never even evaluated — it's unreachable once the first branch is taken. The elif order matters: always put more specific conditions first."
+    },
+    {
+      "id": "p1_conditionals_q2",
+      "stem": "What are Python's falsy values — values that evaluate to False in a boolean context?",
+      "options": [
+        "Only the literal False and 0",
+        "False, None, 0, 0.0, '' (empty string), [] (empty list), {} (empty dict), () (empty tuple)",
+        "Any negative number and any empty container",
+        "Only None and False"
+      ],
+      "answer": 1,
+      "explanation": "Python's falsy values: False, None, 0, 0.0, '' (empty string), [] (empty list), {} (empty dict/set), () (empty tuple), b'' (empty bytes). Everything else is truthy. This enables Pythonic checks: if my_list: (truthy if non-empty), if model: (truthy if model is not None). In ML: if torch.cuda.is_available(): is a common conditional — cuda.is_available() returns True or False."
+    },
+    {
+      "id": "p1_conditionals_q3",
+      "stem": "What is short-circuit evaluation in Python, and why is it useful?",
+      "options": [
+        "Python stops evaluating conditions once the result is determined — 'if A and B': if A is False, B is never evaluated; 'if A or B': if A is True, B is never evaluated",
+        "Python executes both branches of an if-else simultaneously for speed",
+        "Python caches the result of conditions to avoid evaluating them twice",
+        "Python converts all conditions to integers before evaluating (0 = False, 1 = True)"
+      ],
+      "answer": 0,
+      "explanation": "Short-circuit evaluation: in 'A and B', if A is False, the result is False regardless of B — Python never evaluates B. In 'A or B', if A is True, the result is True — B is skipped. Practical use: if model is not None and model.is_trained: (safe — won't crash if model is None). In ML: if loss is not None and loss.isfinite(): (protects against NaN checks)."
+    },
+    {
+      "id": "p1_conditionals_q4",
+      "stem": "How do you implement a ReLU activation function as a vectorised conditional in NumPy (without a Python loop)?",
+      "options": [
+        "Use a for loop checking each element with if x > 0",
+        "np.where(x > 0, x, 0) or np.maximum(x, 0) — both apply the conditional to the entire array at once via C-level SIMD operations",
+        "x.relu() — NumPy has a built-in relu method",
+        "np.clip(x, 1e-10, None) — clips all negatives to near zero"
+      ],
+      "answer": 1,
+      "explanation": "np.where(condition, value_if_true, value_if_false) applies the conditional element-wise using C SIMD code — no Python loop. np.maximum(x, 0) is equivalent and slightly faster. Both are ~50-100× faster than a Python for loop for large arrays. In PyTorch: torch.relu(x) or F.relu(x) — same idea. Never write: [xi if xi > 0 else 0 for xi in x.numpy()] — that's 50× slower and unnecessary."
+    },
+    {
+      "id": "p1_conditionals_q5",
+      "stem": "What is an attention mask in a Transformer, and why is it a conditional operation?",
+      "options": [
+        "A regularisation technique that randomly disables attention heads",
+        "A binary mask (0 or 1) that controls which tokens each position can attend to — positions where mask=0 get -inf before softmax, producing 0 attention weight (effectively 'not allowed')",
+        "A learned parameter that weights each attention head differently",
+        "A dropout layer applied to the attention weights"
+      ],
+      "answer": 1,
+      "explanation": "In a causal (autoregressive) transformer, each token can only attend to previous tokens — not future ones. The attention mask is a lower-triangular matrix of 1s and 0s. Before softmax, positions with mask=0 receive -inf: softmax(-inf) = 0. This is a vectorised conditional: 'if position j is before or equal to position i, allow attention; otherwise block it'. The key: -inf gives exactly 0 after softmax, not approximately 0."
+    },
+    {
+      "id": "p1_conditionals_q6",
+      "stem": "What does Python's walrus operator (:=) do, and give a practical example?",
+      "options": [
+        "It creates a deep copy of an object, like the walrus creates a clone",
+        "It assigns a value AND uses it in the same expression — 'while chunk := f.read(8192): process(chunk)' reads and checks in one line",
+        "It is an equality check, equivalent to ==",
+        "It declares a constant that cannot be reassigned"
+      ],
+      "answer": 1,
+      "explanation": "The walrus operator (:=) assigns in-expression: while (line := file.readline()): process(line). Without it, you'd need: line = file.readline(); while line: process(line); line = file.readline(). In ML: while (batch := next_batch(loader)) is not None: train(batch). Also useful: if (n := len(data)) > 1000: use_large_model(n). Introduced in Python 3.8; avoid overuse as it can reduce readability."
+    }
+  ]
+}

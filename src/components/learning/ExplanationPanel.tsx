@@ -1,17 +1,62 @@
 'use client'
 import { useState } from 'react'
-import type { Explanation } from '@/types'
+import type { Explanation, ExplanationDepth } from '@/types'
 import { mdToHtml } from '@/components/ui/mdToHtml'
 
 type Sub = 'body' | 'real_world' | 'build_task' | 'explain_back'
 
+const DEPTH_LEVELS: { id: ExplanationDepth; label: string; color: string }[] = [
+  { id: 'beginner', label: 'Beginner', color: 'var(--green)'  },
+  { id: 'mid',      label: 'Mid',      color: 'var(--yellow)' },
+  { id: 'advanced', label: 'Advanced', color: 'var(--orange, #f97316)' },
+  { id: 'expert',   label: 'Expert',   color: 'var(--purple)'  },
+]
+
+function DepthTrack({ depth }: { depth: ExplanationDepth }) {
+  const activeIdx = DEPTH_LEVELS.findIndex(d => d.id === depth)
+  const active = DEPTH_LEVELS[activeIdx]
+  return (
+    <div className="flex items-center gap-2 mb-3">
+      <span className="text-[10px] font-mono text-c-faint uppercase tracking-[0.14em]">Depth</span>
+      <div className="flex items-center gap-1">
+        {DEPTH_LEVELS.map((lvl, idx) => {
+          const isPast   = idx < activeIdx
+          const isActive = idx === activeIdx
+          return (
+            <div key={lvl.id} className="flex items-center gap-1">
+              {idx > 0 && <div className={`h-px w-3 ${isPast || isActive ? '' : 'opacity-20'}`}
+                style={{ background: isPast ? active.color : isActive ? active.color : 'var(--border)' }} />}
+              <div
+                className="w-2 h-2 rounded-full transition-all"
+                style={{
+                  background: isPast || isActive ? active.color : 'transparent',
+                  border: `1.5px solid ${isPast || isActive ? active.color : 'var(--border)'}`,
+                  opacity: isPast ? 0.5 : 1,
+                }}
+                title={lvl.label}
+              />
+            </div>
+          )
+        })}
+      </div>
+      <span
+        className="text-[10px] font-mono font-semibold uppercase tracking-[0.1em] px-1.5 py-0.5 rounded"
+        style={{ color: active.color, background: active.color + '18' }}
+      >
+        {active.label}
+      </span>
+    </div>
+  )
+}
+
 interface Props {
   explanation:     Explanation
+  depth?:          ExplanationDepth
   onExplainBack?:  (text: string) => void
   onBuildTaskDone?: () => void
 }
 
-export function ExplanationPanel({ explanation: e, onExplainBack, onBuildTaskDone }: Props) {
+export function ExplanationPanel({ explanation: e, depth, onExplainBack, onBuildTaskDone }: Props) {
   const [sub,         setSub]        = useState<Sub>('body')
   const [explainText, setExplainText] = useState('')
   const [buildDone,   setBuildDone]  = useState(false)
@@ -28,7 +73,10 @@ export function ExplanationPanel({ explanation: e, onExplainBack, onBuildTaskDon
 
       {/* ── Header ───────────────────────────────────────────────── */}
       <div className="px-5 pt-5 pb-0">
-        <p className="text-[11px] font-mono text-c-faint uppercase tracking-[0.14em] mb-1">Explanation</p>
+        <div className="flex items-center justify-between mb-1">
+          <p className="text-[11px] font-mono text-c-faint uppercase tracking-[0.14em]">Explanation</p>
+          {depth && <DepthTrack depth={depth} />}
+        </div>
         <h3 className="text-[16px] font-semibold text-c-text mb-3">{e.title}</h3>
 
         {e.key_insight && (

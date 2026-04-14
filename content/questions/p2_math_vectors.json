@@ -1,0 +1,77 @@
+{
+  "skill_id": "p2_math_vectors",
+  "questions": [
+    {
+      "id": "p2_math_vectors_q1",
+      "stem": "What is an embedding vector, and why are they used in ML instead of raw category labels?",
+      "options": [
+        "A compressed image format for storing visual data",
+        "A dense numeric vector representing a category in a continuous space — captures semantic relationships (similar items have similar vectors) and enables gradient-based learning (integers can't be differentiated)",
+        "A one-hot encoding with all zeros except one position",
+        "A special type of weight matrix used only in transformer models"
+      ],
+      "answer": 1,
+      "explanation": "The word 'cat' has no numeric relationship to 'dog' if encoded as integers (2, 7). As embeddings, their vectors can be close in space if they're semantically similar. Benefits: (1) dense representation (vs sparse one-hot), (2) similarity relationships captured, (3) differentiable (gradient descent can adjust embeddings). Every modern NLP system starts with an embedding layer: nn.Embedding(vocab_size, d_model)."
+    },
+    {
+      "id": "p2_math_vectors_q2",
+      "stem": "What does the dot product of two vectors measure, and how is it used in attention?",
+      "options": [
+        "The length of the combined vector when placed end-to-end",
+        "The projection of one vector onto another — a measure of similarity; in attention, the dot product of query and key vectors scores how much attention to pay (higher dot product = higher attention)",
+        "The cross-product, which gives a perpendicular vector",
+        "The element-wise multiplication, which always returns a vector"
+      ],
+      "answer": 1,
+      "explanation": "Dot product a·b = Σᵢ aᵢbᵢ = ||a||||b||cos(θ). If a and b are unit vectors (normalised), the dot product equals cos(θ) — pure similarity measure (-1 to 1). In self-attention: score(query, key) = query · key / √d. High score → similar query and key → much attention. Cosine similarity (for embeddings) normalises by magnitude; pure dot product is used in attention because magnitude also carries information (confidence)."
+    },
+    {
+      "id": "p2_math_vectors_q3",
+      "stem": "What does L2 normalisation (dividing a vector by its norm) do, and when should you apply it?",
+      "options": [
+        "Scales all values to the range [0, 1]",
+        "Projects the vector onto the unit sphere (||v|| = 1), making the dot product equivalent to cosine similarity — apply before nearest-neighbour search or when comparing magnitudes shouldn't matter",
+        "Removes all negative values from the vector",
+        "Standardises the vector to have mean=0 and std=1"
+      ],
+      "answer": 1,
+      "explanation": "L2 norm: ||v|| = √(Σvᵢ²). Normalised: v̂ = v / ||v||. After normalisation, ||v̂|| = 1. Dot product between two L2-normalised vectors = cosine similarity = cos(θ). Apply when: (1) comparing semantic similarity of embeddings (cosine sim is length-invariant), (2) before FAISS indexing for cosine search, (3) after embedding layers in retrieval models (DPR, ColBERT). faiss.normalize_L2(vectors) does this in-place."
+    },
+    {
+      "id": "p2_math_vectors_q4",
+      "stem": "What is the shape of the output of the following PyTorch code?\n\nQ = torch.randn(32, 8, 128, 64)\nK = torch.randn(32, 8, 128, 64)\nscores = torch.matmul(Q, K.transpose(-2, -1))",
+      "options": [
+        "(32, 8, 64, 64)",
+        "(32, 8, 128, 128) — the attention score matrix for each head and batch item",
+        "(32, 128, 128)",
+        "(32, 8, 128, 64)"
+      ],
+      "answer": 1,
+      "explanation": "Q is (batch=32, heads=8, seq=128, dim=64). K.transpose(-2, -1) swaps last two dims: (32, 8, 64, 128). matmul: (32, 8, 128, 64) × (32, 8, 64, 128) = (32, 8, 128, 128). This is the (seq × seq) attention score matrix for each of 8 heads in each of 32 batch items. Each score[b, h, i, j] says 'how much should position i attend to position j in head h of batch item b'."
+    },
+    {
+      "id": "p2_math_vectors_q5",
+      "stem": "What does 'king - man + woman ≈ queen' demonstrate about word embeddings?",
+      "options": [
+        "That embeddings contain gender bias that should be removed",
+        "That linear vector arithmetic captures semantic relationships — the direction from 'man' to 'woman' (gender direction) can be added to 'king' to get the female equivalent",
+        "That all word vectors form a regular geometric pattern",
+        "That embeddings are just dictionaries mapping words to numbers"
+      ],
+      "answer": 1,
+      "explanation": "If embedding(king) - embedding(man) + embedding(woman) ≈ embedding(queen), it means the 'royalty' concept and 'gender' concept are encoded as separate linear directions in the embedding space. The gender offset (woman - man) can be applied to other words: actor - man + woman ≈ actress. This is what makes embeddings powerful: the space has geometric structure reflecting semantic relationships. First demonstrated in word2vec (Mikolov et al., 2013)."
+    },
+    {
+      "id": "p2_math_vectors_q6",
+      "stem": "What is cosine similarity and how does it differ from Euclidean distance for comparing text embeddings?",
+      "options": [
+        "They always give the same ranking — choose based on preference",
+        "Cosine similarity measures the ANGLE between vectors (0 to 1 after normalisation) — unaffected by magnitude; Euclidean distance measures absolute distance in space — affected by both angle and magnitude. Cosine is preferred for text embeddings where magnitude encodes frequency/confidence, not semantic meaning",
+        "Euclidean distance is always better for high-dimensional embeddings",
+        "Cosine similarity only works for 2D vectors; Euclidean works for any dimension"
+      ],
+      "answer": 1,
+      "explanation": "Two documents with identical meaning but different lengths will have embeddings pointing in the same direction but with different magnitudes. Cosine similarity (dot product of normalised vectors) correctly identifies them as identical. Euclidean distance would say they're different due to magnitude difference. For semantic search: use cosine similarity. For clustering where density matters: Euclidean can be useful. Most modern embedding models (OpenAI, Cohere) are trained with cosine similarity."
+    }
+  ]
+}

@@ -1,0 +1,77 @@
+{
+  "skill_id": "p3_ai_dev_cycle",
+  "questions": [
+    {
+      "id": "p3_ai_dev_cycle_q1",
+      "stem": "What is the correct order of the ML development cycle?",
+      "options": [
+        "Train model → collect data → define problem → deploy",
+        "Define problem → collect data → train model → evaluate → deploy → monitor",
+        "Deploy → evaluate → train → collect data",
+        "Evaluate → train → define problem → deploy"
+      ],
+      "answer": 1,
+      "explanation": "The ML cycle always starts with problem definition, then data, then model building, evaluation, deployment, and ongoing monitoring. Skipping steps (especially problem definition) leads to building the wrong thing."
+    },
+    {
+      "id": "p3_ai_dev_cycle_q2",
+      "stem": "A DummyClassifier in scikit-learn is used to:",
+      "options": [
+        "Simulate user behaviour",
+        "Establish a baseline that simple heuristics can achieve, against which real models must be compared",
+        "Replace a model in production when it fails",
+        "Generate dummy training data"
+      ],
+      "answer": 1,
+      "explanation": "A DummyClassifier implements trivial strategies (always predict majority class, random prediction). If your real model can't beat it, something is fundamentally wrong with your data or approach."
+    },
+    {
+      "id": "p3_ai_dev_cycle_q3",
+      "stem": "Experiment tracking (e.g. with MLflow) is important because:",
+      "options": [
+        "It makes models train faster",
+        "It records hyperparameters, metrics, and artifacts so experiments are reproducible and comparable",
+        "It automatically tunes hyperparameters",
+        "It reduces overfitting"
+      ],
+      "answer": 1,
+      "explanation": "Without tracking, you lose the ability to reproduce a good run or understand what changed between experiments. Experiment tracking is table stakes for professional ML development."
+    },
+    {
+      "id": "p3_ai_dev_cycle_q4",
+      "stem": "Data drift in a deployed model means:",
+      "options": [
+        "The model's weights are gradually changing",
+        "The distribution of input data in production differs from the training distribution",
+        "Training data has become corrupted",
+        "The model is running slower over time"
+      ],
+      "answer": 1,
+      "explanation": "Data drift occurs when the real-world input distribution shifts from what was seen at training time. This causes model performance to degrade silently. Monitoring detects it; retraining fixes it."
+    },
+    {
+      "id": "p3_ai_dev_cycle_q5",
+      "stem": "What is the purpose of a model registry?",
+      "options": [
+        "To store training data",
+        "To track, version, and manage model artifacts through staging, production, and archival stages",
+        "To automatically retrain models on new data",
+        "To monitor inference latency"
+      ],
+      "answer": 1,
+      "explanation": "A model registry provides version control for trained models — who trained it, when, on what data, with what performance. It manages promotion from staging to production and enables rollbacks."
+    },
+    {
+      "id": "p3_ai_dev_cycle_q6",
+      "stem": "Shadow deployment means:",
+      "options": [
+        "Deploying a model secretly without users knowing",
+        "Running a new model in parallel with the current production model, comparing outputs without affecting users",
+        "Training a model on shadowed (hidden) data",
+        "Deploying at night when traffic is low"
+      ],
+      "answer": 1,
+      "explanation": "Shadow deployment runs the new model alongside the production model. Real traffic goes to production; the new model's predictions are logged and compared. Only after validating performance is the new model promoted to production."
+    }
+  ]
+}

@@ -1,0 +1,27 @@
+{
+  "skill_id": "p2_statistics_basics",
+  "depth": "beginner",
+  "title": "Statistics Basics — Describing Data with Numbers",
+  "key_insight": "Before building any model, you must understand your data. A handful of numbers — mean, median, standard deviation — tell you the most important things about a dataset's centre and spread.",
+  "body": "## Measures of Centre\n\n```python\nscores = [72, 85, 90, 68, 95, 88, 72, 79, 95, 61]\n\n# Mean: average value\nmean = sum(scores) / len(scores)\nprint(f'Mean: {mean}')  # 80.5\n\n# Or use statistics module:\nimport statistics\nprint(statistics.mean(scores))    # 80.5\nprint(statistics.median(scores))  # 82.0 — middle value (less affected by outliers)\nprint(statistics.mode(scores))    # 72 — most frequent value\n```\n\n**Mean vs Median — when they differ:**\n- `[1, 2, 3, 4, 1000]` → mean = 202, median = 3\n- One extreme outlier pulls the mean far from most values\n- **Use median for skewed data** (income, house prices, response times)\n- **Use mean for symmetric data**\n\n## Measures of Spread\n\n```python\nscores = [72, 85, 90, 68, 95, 88, 72, 79, 95, 61]\n\n# Range: difference between max and min\nprint(max(scores) - min(scores))  # 34\n\n# Standard deviation: average distance from the mean\nprint(statistics.stdev(scores))   # 10.9 — most values within ~11 points of mean\n\n# Variance: standard deviation squared\nprint(statistics.variance(scores)) # 119.2\n```\n\n## Why Standard Deviation Matters\n\n```\nClass A scores: [79, 80, 81, 80, 80]  → mean=80, stdev=0.7  (consistent)\nClass B scores: [50, 60, 80, 90, 100] → mean=76, stdev=18.7 (spread out)\n```\n\nSame mean ≠ same performance! Standard deviation captures the story the mean misses.\n\n## Quick Visualisation\n\n```python\nimport matplotlib.pyplot as plt\n\nscores = [72, 85, 90, 68, 95, 88, 72, 79, 95, 61]\n\nplt.figure(figsize=(10, 4))\n\nplt.subplot(1, 2, 1)\nplt.hist(scores, bins=6, edgecolor='black')\nplt.title('Distribution of Scores')\nplt.xlabel('Score')\nplt.ylabel('Count')\n\nplt.subplot(1, 2, 2)\nplt.boxplot(scores)\nplt.title('Box Plot')\nplt.ylabel('Score')\n\nplt.tight_layout()\nplt.show()\n# Box plot shows: min, Q1, median, Q3, max — and outliers\n```",
+  "common_mistakes": [
+    "Using mean on skewed data — report median for house prices, income, response times",
+    "Ignoring the spread — two datasets can have the same mean but very different distributions",
+    "`statistics.stdev()` gives the sample standard deviation (divides by n-1); `statistics.pstdev()` gives population stdev (divides by n)"
+  ],
+  "mini_exercise": "Given exam scores: [45, 72, 68, 91, 38, 82, 76, 55, 94, 63, 88, 71]. Calculate: mean, median, mode, range, standard deviation. Then add an outlier (200) and recalculate mean and median. Which changes more?",
+  "real_world_usage": "A/B testing at tech companies computes mean, median, and standard deviation of user metrics (time on page, click rate) for each variant. The mean alone can be misleading — a 1% improvement in mean click rate might be from 1% of users clicking 100× more. The distribution (stdev, percentiles) tells the real story.",
+  "explain_back_prompt": "What is the difference between mean and median? When would you use each? What does standard deviation tell you that the mean doesn't?",
+  "build_task": {
+    "title": "Build a statistics summary function",
+    "context": "A reusable function that summarises any numeric dataset.",
+    "steps": [
+      "Write `summarise(data)` that returns a dict with: mean, median, stdev, min, max, range, count",
+      "Test with: normal data, skewed data (with outliers), and a list with only 1 value",
+      "Plot a histogram of the data",
+      "Add percentiles: 25th, 75th, and interquartile range (IQR = Q3 - Q1)"
+    ],
+    "expected_output": "A dict like {'mean': 72.3, 'median': 74.0, 'stdev': 12.1, ...} and a histogram.",
+    "starter_code": "import statistics\nimport matplotlib.pyplot as plt\n\ndef summarise(data):\n    if len(data) < 2:\n        return {'error': 'need at least 2 values'}\n    # TODO: compute all statistics\n    # TODO: return dict\n    pass\n\ndata = [45, 72, 68, 91, 38, 82, 76, 55, 94, 63, 88, 71]\nprint(summarise(data))\n# TODO: plot histogram"
+  }
+}

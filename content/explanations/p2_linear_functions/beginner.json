@@ -1,0 +1,29 @@
+{
+  "skill_id": "p2_linear_functions",
+  "depth": "beginner",
+  "title": "Linear Functions — The Foundation of All Models",
+  "key_insight": "A linear function is y = mx + b. It describes a straight-line relationship between two variables. Linear regression finds the best-fit line through data — the simplest and most widely used predictive model.",
+  "body": "## What is a Linear Function?\n\n```python\n# y = mx + b\n# m = slope  (how much y changes per unit of x)\n# b = intercept (value of y when x = 0)\n\ndef predict_price(size_sqft):\n    slope = 150      # £150 per square foot\n    intercept = 50_000  # base price £50,000\n    return slope * size_sqft + intercept\n\nprint(predict_price(1000))  # £200,000\nprint(predict_price(1500))  # £275,000\nprint(predict_price(2000))  # £350,000\n```\n\n## Visualising a Linear Relationship\n\n```python\nimport numpy as np\nimport matplotlib.pyplot as plt\n\n# Real data: study hours vs exam score\nhours  = [1, 2, 3, 4, 5, 6, 7, 8]\nscores = [45, 55, 65, 68, 75, 80, 88, 92]\n\nplt.scatter(hours, scores, color='blue', label='Data points')\n\n# Best-fit line:\nm, b = np.polyfit(hours, scores, 1)  # degree 1 = linear\nprint(f'Slope: {m:.2f}, Intercept: {b:.2f}')\n# Slope: ~6.3, meaning each extra hour = ~6 more points\n\nx_line = np.linspace(0, 9, 100)\nplt.plot(x_line, m * x_line + b, 'r-', label=f'y = {m:.1f}x + {b:.1f}')\nplt.xlabel('Hours Studied'); plt.ylabel('Exam Score')\nplt.legend(); plt.title('Study Hours vs Exam Score'); plt.show()\n```\n\n## Linear Regression with scikit-learn\n\n```python\nfrom sklearn.linear_model import LinearRegression\nimport numpy as np\n\nX = np.array([1, 2, 3, 4, 5, 6, 7, 8]).reshape(-1, 1)  # reshape for sklearn\ny = np.array([45, 55, 65, 68, 75, 80, 88, 92])\n\nmodel = LinearRegression()\nmodel.fit(X, y)\n\nprint(f'Slope (coefficient): {model.coef_[0]:.2f}')  # ~6.3\nprint(f'Intercept: {model.intercept_:.2f}')           # ~37.6\nprint(f'R² score: {model.score(X, y):.3f}')           # ~0.99 (1.0 = perfect fit)\n\n# Predict for a new value:\nnew_hours = np.array([[9]])\nprint(f'Predicted score for 9 hours: {model.predict(new_hours)[0]:.1f}')\n```\n\n## What R² Means\n\n```\nR² (R-squared) = how much variance in y is explained by x\n\nR² = 0.0  → model explains nothing; as good as predicting the mean\nR² = 0.5  → model explains 50% of the variation\nR² = 1.0  → perfect fit — line goes through every point\n\nFor exam prediction (R²=0.99): hours studied explains 99% of score variance\n```",
+  "common_mistakes": [
+    "Using R² alone — R²=0.99 can be misleading with outliers or non-linear data; always plot the data",
+    "Extrapolating far beyond training data — the line may not extend validly outside the data range",
+    "Forgetting to reshape for sklearn: `X.reshape(-1, 1)` converts a 1D array to a 2D column vector"
+  ],
+  "mini_exercise": "You have monthly advertising spend and sales revenue data. Plot them, fit a linear regression, interpret the slope ('each £1 spent on ads generates £X in revenue'), and predict revenue for a £5,000 advertising budget.",
+  "real_world_usage": "Amazon's pricing algorithms use linear and non-linear regression to predict demand elasticity — how much sales change per £1 change in price. Google's ad auction pricing model is linear in several features. Even modern deep learning layers are fundamentally linear transformations followed by activation functions.",
+  "explain_back_prompt": "What is the slope in y = mx + b and what does it tell you? What does R² measure? Why would you use LinearRegression from sklearn instead of np.polyfit?",
+  "build_task": {
+    "title": "Predict house prices with linear regression",
+    "context": "Linear regression is the first model every ML practitioner learns.",
+    "steps": [
+      "Generate synthetic house data: size (500-3000 sqft) and price = 200*size + noise",
+      "Split 80/20 train/test",
+      "Fit LinearRegression on training data",
+      "Evaluate on test set: print R² and RMSE",
+      "Plot: scatter (test data) + regression line",
+      "Predict price for a 1750 sqft house"
+    ],
+    "expected_output": "Plot with scatter + line, R² > 0.95, correct prediction.",
+    "starter_code": "import numpy as np\nimport matplotlib.pyplot as plt\nfrom sklearn.linear_model import LinearRegression\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.metrics import r2_score, mean_squared_error\n\nnp.random.seed(42)\nn = 200\nX = np.random.randint(500, 3000, n).reshape(-1, 1)\ny = 200 * X.flatten() + np.random.normal(0, 30_000, n) + 50_000\n\n# TODO: split, fit, evaluate, plot, predict"
+  }
+}

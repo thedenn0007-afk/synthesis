@@ -1,0 +1,29 @@
+{
+  "skill_id": "p3_ai_dev_cycle",
+  "depth": "beginner",
+  "title": "The AI Development Cycle — From Problem to Working Model",
+  "key_insight": "Building an AI model is not a single step — it's a cycle of problem definition, data collection, training, evaluation, and deployment. Most projects spend 80% of time on data, not algorithms.",
+  "body": "## The 6 Steps of Every ML Project\n\n```\n1. Define the problem\n      ↓\n2. Collect & clean data\n      ↓\n3. Explore and understand the data\n      ↓\n4. Build and train a model\n      ↓\n5. Evaluate the model\n      ↓\n6. Deploy and monitor\n      ↓\n    (repeat — models degrade over time)\n```\n\n## Step 1: Define the Problem\n\nBefore writing any code, answer these questions:\n- What prediction are we making?\n- What is 'correct' — how do we measure success?\n- What data exists or could be collected?\n- What happens if the model is wrong? (stakes)\n\n**Bad problem definition**: 'build AI to improve customer satisfaction'\n**Good problem definition**: 'predict which support tickets will escalate within 24 hours, so we can proactively assign senior agents. Success = 80% recall at <15% false positive rate'\n\n## Step 2: Data is Everything\n\n```python\nimport pandas as pd\n\n# Before modelling, understand your data:\ndf = pd.read_csv('data.csv')\n\nprint(df.shape)          # How many rows and columns?\nprint(df.dtypes)          # What types are the columns?\nprint(df.isnull().sum())  # How many missing values per column?\nprint(df.describe())      # Basic statistics for numeric columns\nprint(df['label'].value_counts())  # How many of each class?\n```\n\nData problems to look for:\n- **Class imbalance**: 99% negative, 1% positive\n- **Missing values**: 40% of rows missing key feature\n- **Data leakage**: a feature that reveals the answer (e.g. 'outcome' column)\n- **Distribution shift**: training data from 2019, but we're predicting 2024\n\n## Step 3: Baseline First\n\n```python\nfrom sklearn.dummy import DummyClassifier\nfrom sklearn.metrics import accuracy_score\n\n# Always start with the dumbest possible model\nbaseline = DummyClassifier(strategy='most_frequent')\nbaseline.fit(X_train, y_train)\nbaseline_acc = accuracy_score(y_test, baseline.predict(X_test))\nprint(f'Baseline (always predict majority): {baseline_acc:.2f}')\n\n# If your model can't beat the dummy baseline, something is wrong\n```\n\n## The Reality: Most Time Is Spent on Data\n\n```\nTypical ML project time distribution:\n\n  Problem definition & planning:  10%\n  Data collection & cleaning:     40%\n  Feature engineering:            20%\n  Model training & tuning:        10%\n  Evaluation & iteration:         10%\n  Deployment & monitoring:        10%\n```\n\nThe algorithm you choose matters much less than the quality of your data.",
+  "common_mistakes": [
+    "Jumping straight to training without exploring the data — always do EDA first; unexpected patterns will change your approach",
+    "Not establishing a baseline — without a baseline, you don't know if your model is actually adding value",
+    "Treating deployment as an afterthought — a model that isn't deployed adds zero value; design for deployment from day one"
+  ],
+  "mini_exercise": "A startup wants to predict customer churn. Write out all 6 steps of the ML lifecycle for this specific problem. For step 1 (problem definition), what metric would you optimise? For step 2 (data), list 5 features you might collect.",
+  "real_world_usage": "LinkedIn's job recommendation system went through 15+ iterations over 5 years. The biggest improvements never came from better algorithms — they came from better problem definition ('optimise apply rate' instead of 'optimise click rate') and better data (using more signals about what jobs users actually took, not just clicked on). The algorithm was almost always logistic regression.",
+  "explain_back_prompt": "Walk through the 6 steps of an ML project. What is a baseline model and why should you always build one first? Why do practitioners say ML is '80% data, 20% algorithms'?",
+  "build_task": {
+    "title": "Run the full ML cycle on the Titanic dataset",
+    "context": "Completing all 6 steps end-to-end is more important than any individual step.",
+    "steps": [
+      "Step 1 (Problem): Binary classification — survived (1) or not (0)",
+      "Step 2 (Data): Load titanic, check nulls, class balance, data types",
+      "Step 3 (EDA): Plot survival rate by sex, pclass, and age bucket",
+      "Step 4 (Model): Train a baseline DummyClassifier, then a DecisionTree",
+      "Step 5 (Evaluate): Compare accuracy, precision, recall for both",
+      "Step 6 (Iterate): Try adding one new feature — does it help?"
+    ],
+    "expected_output": "Printed baseline vs tree performance, 3 visualisations, and a feature improvement report.",
+    "starter_code": "import seaborn as sns\nimport pandas as pd\nimport matplotlib.pyplot as plt\nfrom sklearn.dummy import DummyClassifier\nfrom sklearn.tree import DecisionTreeClassifier\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.metrics import classification_report\n\ndf = sns.load_dataset('titanic').dropna(subset=['survived', 'sex', 'pclass', 'age'])\ndf['sex_enc'] = (df['sex'] == 'male').astype(int)\nX = df[['pclass', 'sex_enc', 'age']]\ny = df['survived']\n\nX_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)\n# TODO: complete steps 3-6"
+  }
+}

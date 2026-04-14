@@ -1,0 +1,30 @@
+{
+  "skill_id": "p3_feature_engineering",
+  "depth": "beginner",
+  "title": "Feature Engineering — Teaching the Model What to Look At",
+  "key_insight": "Raw data is almost never in the right form for a model. Feature engineering is the art of transforming messy real-world data into numbers that capture the signal the model needs.",
+  "body": "## What Is a Feature?\n\nA **feature** is any input variable your model uses to make a prediction.\n\n- Predicting house price: features = size, location, number of rooms, age\n- Detecting spam: features = word frequencies, sender history, link count\n- Recognising a face: features = pixel values (or learned edge detectors)\n\nThe model only sees the features you give it. If the most important signal isn't in your features, the model can't find it.\n\n## The Problem with Raw Data\n\nRaw data comes in messy forms:\n- **Text**: 'New York', 'new york', 'NY', 'NYC' — same place, four representations\n- **Numbers at different scales**: income ($0–$1,000,000) vs age (0–100) — models treat bigger numbers as 'more important'\n- **Categories**: 'red', 'blue', 'green' — models can't do maths on words\n- **Missing values**: some rows have NaN where data wasn't recorded\n\n## Three Core Transformations\n\n### 1. Normalisation (Scaling)\n```python\nfrom sklearn.preprocessing import StandardScaler\n\n# StandardScaler: mean=0, std=1 for every feature\nscaler = StandardScaler()\nX_scaled = scaler.fit_transform(X_train)\n\n# Now age=25 and income=50000 are on the same scale\n# Models that use distance (KNN, SVM, neural nets) need this\n```\n\n### 2. Encoding Categories\n```python\nimport pandas as pd\n\n# One-hot encoding: 'colour' → three binary columns\ndf = pd.DataFrame({'colour': ['red', 'blue', 'green', 'red']})\ndf_encoded = pd.get_dummies(df, columns=['colour'])\n# Result: colour_blue, colour_green, colour_red (0 or 1 each)\n```\n\n### 3. Handling Missing Values\n```python\nfrom sklearn.impute import SimpleImputer\n\n# Fill missing values with the column median\nimputer = SimpleImputer(strategy='median')\nX_filled = imputer.fit_transform(X)\n```\n\n## Creating New Features\n\nSometimes raw features aren't enough — you create better ones:\n\n```python\nimport pandas as pd\n\ndf['age_at_purchase'] = df['purchase_year'] - df['birth_year']\ndf['price_per_sqft']  = df['price'] / df['size_sqft']\ndf['is_weekend']      = df['day_of_week'].isin([5, 6]).astype(int)\n```\n\nThese derived features often capture the real signal better than raw columns.",
+  "common_mistakes": [
+    "Fitting the scaler on the test set — always fit on train, transform both train and test",
+    "Forgetting to encode categorical features — most sklearn models crash or give wrong results on strings",
+    "Dropping rows with missing values immediately — imputation often preserves important signal"
+  ],
+  "mini_exercise": "You have a dataset with columns: 'city' (string), 'salary' (0–200000), 'years_experience' (0–40), 'last_promotion' (NaN for some rows). What preprocessing step does each column need before feeding to a logistic regression?",
+  "real_world_usage": "Netflix's recommendation system originally used only user ratings as features. Adding features like 'time of day', 'day of week', and 'device type' improved recommendations significantly — users watch different content on mobile vs TV, and late night vs morning. The model logic didn't change; the feature engineering did.",
+  "explain_back_prompt": "What is feature engineering and why is it necessary? Explain normalisation, one-hot encoding, and imputation in plain terms. Why should you never fit a scaler on the test set?",
+  "build_task": {
+    "title": "Preprocess the Titanic dataset from scratch",
+    "context": "The Titanic dataset has messy real-world features — the perfect practice ground.",
+    "steps": [
+      "Load the Titanic dataset (seaborn.load_dataset('titanic'))",
+      "Identify which columns are numeric, categorical, and have missing values",
+      "Impute missing 'age' with median, 'embarked' with mode",
+      "One-hot encode 'sex' and 'embarked'",
+      "Drop columns that are identifiers or too sparse: 'name', 'ticket', 'cabin'",
+      "Scale numeric features",
+      "Train a LogisticRegression and check accuracy"
+    ],
+    "expected_output": "A clean feature matrix fed to a working classifier with ~80% accuracy on held-out test set.",
+    "starter_code": "import seaborn as sns\nimport pandas as pd\nfrom sklearn.preprocessing import StandardScaler\nfrom sklearn.impute import SimpleImputer\nfrom sklearn.linear_model import LogisticRegression\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.metrics import accuracy_score\n\ndf = sns.load_dataset('titanic')\nprint(df.isnull().sum())\nprint(df.dtypes)\n# TODO: preprocess and train"
+  }
+}

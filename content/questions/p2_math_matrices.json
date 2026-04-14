@@ -1,0 +1,77 @@
+{
+  "skill_id": "p2_math_matrices",
+  "questions": [
+    {
+      "id": "p2_math_matrices_q1",
+      "stem": "What is the shape of the result when multiplying matrices of shapes (32, 128) and (128, 64)?",
+      "options": [
+        "(32, 64) — the outer dimensions, with the inner 128 summed away",
+        "(128, 128) — the inner dimensions form the result",
+        "(32, 128, 64) — all three dimensions are kept",
+        "This multiplication is invalid — shapes must match exactly"
+      ],
+      "answer": 0,
+      "explanation": "Matrix multiplication rule: (m, k) @ (k, n) → (m, n). The inner dimensions (both k=128) must match; they're summed away in the computation. Result: (32, 64). In a neural network linear layer: input (batch=32, d_in=128) @ weights (d_in=128, d_out=64) → output (32, 64). The 128 hidden dimensions are contracted into the output via learned weights."
+    },
+    {
+      "id": "p2_math_matrices_q2",
+      "stem": "What is the difference between element-wise multiplication (A * B) and matrix multiplication (A @ B)?",
+      "options": [
+        "They are equivalent — * and @ are just different syntax for the same operation",
+        "* multiplies each element at position (i,j) with the corresponding element — REQUIRES same shape; @ computes Σₖ A[i,k] × B[k,j] — requires (m,k) and (k,n) shapes",
+        "* only works on 1D arrays; @ works on 2D matrices",
+        "@ always produces a scalar (dot product); * preserves shape"
+      ],
+      "answer": 1,
+      "explanation": "A * B (Hadamard product): A[i,j] × B[i,j] — both must have identical shapes. A @ B (matrix product): Σₖ A[i,k] × B[k,j] — inner dims must match, outer dims form result shape. Common bug: using * instead of @ for matrix multiplication, getting a wrong result instead of an error. In attention: softmax_weights @ V uses @; dropout applied to attention weights uses * (element-wise mask)."
+    },
+    {
+      "id": "p2_math_matrices_q3",
+      "stem": "Why is transposing the weight matrix necessary in the linear layer equation y = x @ W.T + b?",
+      "options": [
+        "Transposing is required to make gradients flow during backpropagation",
+        "Weights W are stored as (d_out, d_in) for memory efficiency; transposing gives (d_in, d_out) matching the input's last dimension — shape rule: (batch, d_in) @ (d_in, d_out) → (batch, d_out)",
+        "The transpose makes the layer faster on GPU due to memory access patterns",
+        "Without transpose, the bias term b cannot be added"
+      ],
+      "answer": 1,
+      "explanation": "PyTorch stores Linear weights as (out_features, in_features). Input is (batch, in_features). For matmul: inner dims must match. Without transpose: (batch, in_features) @ (out_features, in_features) — inner dims in_features ≠ out_features in general. With W.T: (in_features, out_features) → (batch, in_features) @ (in_features, out_features) = (batch, out_features) ✓. The storage convention is from the backward pass: efficient gradient computation."
+    },
+    {
+      "id": "p2_math_matrices_q4",
+      "stem": "What is the rank of a matrix, and what does it mean for a neural network weight matrix?",
+      "options": [
+        "Rank is the number of rows, which determines how many examples the model can learn from",
+        "Rank is the number of linearly independent rows (or columns) — the actual 'degrees of freedom' in the transformation. Full-rank matrices represent maximally expressive transformations; low-rank matrices have redundant directions",
+        "Rank is always equal to min(rows, cols) for square matrices",
+        "Rank measures the magnitude of the largest weight in the matrix"
+      ],
+      "answer": 1,
+      "explanation": "A (1000 × 768) matrix has rank at most 768 (full rank). If rank = 8, the matrix only transforms input into an 8-dimensional subspace — 760 dimensions of expressivity are unused. LoRA exploits this: if fine-tuning updates ΔW have low rank (~4-64), you only need to store two small matrices (d × r and r × d) instead of the full (d × d) update. Empirically, fine-tuning updates to LLMs are low-rank — this is the key LoRA insight."
+    },
+    {
+      "id": "p2_math_matrices_q5",
+      "stem": "What does the identity matrix I do when multiplied with any matrix A (where shapes are compatible)?",
+      "options": [
+        "Returns a matrix of all zeros",
+        "Returns A unchanged — just like multiplying a number by 1. I has 1s on the diagonal and 0s elsewhere",
+        "Returns the transpose of A",
+        "Returns a matrix where all values equal the determinant of A"
+      ],
+      "answer": 1,
+      "explanation": "The identity matrix I (ones on diagonal, zeros elsewhere) satisfies A @ I = I @ A = A. This is the matrix equivalent of multiplying by 1. In residual connections: x + F(x) = x @ I + F(x) — the identity path preserves information while F(x) adds an update. Layer normalisation initialises with γ=1, β=0 — identity transformation at the start. Skip connections in ResNets are motivated by making it easy to learn near-identity transformations."
+    },
+    {
+      "id": "p2_math_matrices_q6",
+      "stem": "LoRA fine-tunes a model by adding ΔW = B @ A to frozen weights, where B is (d, r) and A is (r, d), with r << d. If d=768 and r=8, how many parameters does LoRA add vs full fine-tuning?",
+      "options": [
+        "LoRA adds the same number as full fine-tuning",
+        "Full fine-tuning: d² = 589,824 parameters; LoRA: 2×d×r = 2×768×8 = 12,288 parameters — about 48× fewer trainable parameters",
+        "LoRA adds zero parameters — it only modifies existing weights",
+        "LoRA adds d×r = 6,144 parameters"
+      ],
+      "answer": 1,
+      "explanation": "Full fine-tuning a (d×d) = (768×768) matrix: 589,824 parameters. LoRA: matrix A is (r×d) = (8×768) = 6,144 params; matrix B is (d×r) = (768×8) = 6,144 params; total 12,288 — 48× fewer. For a 7B model with hundreds of linear layers: full fine-tuning = 7B trainable params; LoRA r=8 ≈ 160M trainable params. This reduction makes fine-tuning possible on consumer hardware with 24 GB VRAM instead of requiring 8× A100s."
+    }
+  ]
+}

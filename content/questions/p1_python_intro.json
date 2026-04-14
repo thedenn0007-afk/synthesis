@@ -1,0 +1,77 @@
+{
+  "skill_id": "p1_python_intro",
+  "questions": [
+    {
+      "id": "p1_python_intro_q1",
+      "stem": "Why is Python the dominant language for AI and data science despite being slower than C++?",
+      "options": [
+        "Python is actually faster than C++ for mathematical operations",
+        "Python's ease of use enables rapid experimentation; numerical bottlenecks are handled by C/CUDA extensions (NumPy, PyTorch) — you get Python's expressiveness with near-C performance for computation",
+        "AI researchers exclusively use Python because they don't know C++",
+        "Python is the only language that can run on GPUs"
+      ],
+      "answer": 1,
+      "explanation": "Python is slow for pure Python loops (~100ns per iteration) but this rarely matters: the bottleneck in ML is tensor operations, which run in optimised C/CUDA (NumPy, PyTorch). Python provides the 'glue' for configuration, data loading, training loops, and experiments. The result: fast development cycles with near-optimal runtime for the math. This is why all major ML frameworks (PyTorch, TensorFlow, JAX) have Python APIs."
+    },
+    {
+      "id": "p1_python_intro_q2",
+      "stem": "What does the with keyword do in Python (context manager)?",
+      "options": [
+        "Creates a conditional block, like an advanced if statement",
+        "Ensures setup and teardown code runs reliably — guarantees __enter__ runs before the block and __exit__ runs after, even if an exception occurs",
+        "Creates a new variable scope where variables don't persist after the block",
+        "Imports a module temporarily for use within the block"
+      ],
+      "answer": 1,
+      "explanation": "Context managers use __enter__ and __exit__ to bracket a block. Examples: with open('file') as f: (closes file even if error), with torch.no_grad(): (disables gradient tracking), with torch.autocast('cuda'): (enables mixed precision). The guarantee is that __exit__ ALWAYS runs — preventing resource leaks even when exceptions occur."
+    },
+    {
+      "id": "p1_python_intro_q3",
+      "stem": "What is the purpose of requirements.txt in a Python project?",
+      "options": [
+        "Documents the project's goals and requirements for stakeholders",
+        "Lists all Python package dependencies with optional version pins — allows anyone to reproduce the exact environment with pip install -r requirements.txt",
+        "Lists the Python files required to run the project",
+        "Contains test cases that the code is required to pass"
+      ],
+      "answer": 1,
+      "explanation": "requirements.txt is a pip-readable file listing dependencies: torch==2.1.0, numpy>=1.24, transformers>=4.35. Running pip install -r requirements.txt installs them all. Without it, collaborators must manually install dependencies or debug version incompatibilities. For reproducibility (essential in ML experiments), always pin exact versions: torch==2.1.0 not just torch."
+    },
+    {
+      "id": "p1_python_intro_q4",
+      "stem": "What is a virtual environment and why should every Python project use one?",
+      "options": [
+        "A virtual machine that runs Python in isolation from the host OS",
+        "An isolated directory with its own Python interpreter and packages — prevents version conflicts between projects that need different library versions",
+        "A cloud environment for running Python in the browser",
+        "A testing environment where code runs without side effects"
+      ],
+      "answer": 1,
+      "explanation": "Without virtual environments, all Python projects share the same system packages. If Project A needs numpy==1.23 and Project B needs numpy==1.26, only one can be installed. Virtual environments (python -m venv .venv or conda create) create isolated package installations per project. Activate with source .venv/bin/activate; then pip installs go into that environment only."
+    },
+    {
+      "id": "p1_python_intro_q5",
+      "stem": "What does @dataclass do in Python?",
+      "options": [
+        "Connects a Python class to a database table automatically",
+        "Automatically generates __init__, __repr__, and __eq__ methods from annotated field definitions — eliminating boilerplate for data-holding classes",
+        "Makes a class immutable so its values cannot be changed after creation",
+        "Marks a class as a data type that can be used in type hints"
+      ],
+      "answer": 1,
+      "explanation": "A @dataclass generates common boilerplate automatically. Without it: you write __init__ with every field as a parameter, __repr__ for printing, __eq__ for comparison. With it: annotate fields and Python generates these methods. In ML: use @dataclass for configuration classes (TrainingConfig), data records (Sample), and result objects (EvaluationResult). Add slots=True for 40% less memory per instance."
+    },
+    {
+      "id": "p1_python_intro_q6",
+      "stem": "What is the purpose of torch.manual_seed(42) and np.random.seed(42) at the start of an ML script?",
+      "options": [
+        "They initialise all weights to the value 42",
+        "They seed the random number generators so the same 'random' values are produced on every run — making experiments reproducible and bugs debuggable",
+        "They set the maximum number of random samples to 42",
+        "They are required by PyTorch and NumPy to activate GPU support"
+      ],
+      "answer": 1,
+      "explanation": "Without seeds, weight initialisation and data shuffling are random — two runs of identical code produce different results, making it impossible to determine if a change improved results or just got lucky. Setting seeds makes random operations deterministic: same seed → same initial weights → same training trajectory → reproducible results. Essential for debugging (reproduce a bug consistently) and reporting (confirm results are reproducible)."
+    }
+  ]
+}

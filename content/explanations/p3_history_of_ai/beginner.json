@@ -1,0 +1,28 @@
+{
+  "skill_id": "p3_history_of_ai",
+  "depth": "beginner",
+  "title": "The Story of AI: From Science Fiction to Your Phone",
+  "key_insight": "AI has been through multiple hype cycles — booms followed by crashes (AI winters). Each boom was driven by a new idea. The current one is driven by scale.",
+  "body": "## AI's Surprisingly Long History\n\nAI isn't new. Researchers have been working on it since the 1950s.\n\n### The Key Chapters\n\n**1950 — The Turing Test**\nAlan Turing asked: 'Can a machine think?' He proposed that if a machine could hold a conversation indistinguishable from a human, we'd call it intelligent. This became the Turing Test.\n\n**1956 — The Birth of 'Artificial Intelligence'**\nAt a conference at Dartmouth, scientists officially named the field. Early optimism was enormous — many thought human-level AI was 10–20 years away.\n\n**1970s–80s — First AI Winter**\nComputers were too slow. Problems were harder than expected. Funding dried up. The field nearly died.\n\n**1980s–90s — Expert Systems**\nResearchers built AI from hand-written rules: IF patient has fever AND cough THEN might have flu. These worked for narrow problems but couldn't scale.\n\n**1997 — Deep Blue Beats Kasparov**\nIBM's chess computer beat the world champion. Big news — but Deep Blue couldn't play checkers, drive a car, or do anything else.\n\n**2012 — The ImageNet Moment**\nA deep neural network (AlexNet) smashed the previous image recognition record by a huge margin. The deep learning era began.\n\n**2017 — The Transformer**\nGoogle published 'Attention Is All You Need'. This architecture became the foundation of every modern language model.\n\n**2022 — ChatGPT**\nOpenAI released ChatGPT. 100 million users in 2 months. AI became a household topic overnight.\n\n### The Pattern\n\nNew idea → Hype → Reality check → Winter → New breakthrough → Repeat.",
+  "common_mistakes": [
+    "Thinking current AI is the 'final wave' — history shows AI keeps hitting limits and then breaking through",
+    "Attributing the current boom only to better algorithms — it's mainly more compute (GPUs) and more data (the internet)",
+    "Thinking Turing's test defines intelligence — it was a thought experiment, not a real definition"
+  ],
+  "mini_exercise": "Make a timeline. On paper, mark: 1950 (Turing), 1956 (Dartmouth), 1997 (Deep Blue), 2012 (AlexNet/ImageNet), 2017 (Transformer), 2022 (ChatGPT). Notice the long gaps followed by rapid progress.",
+  "real_world_usage": "Understanding AI winters protects you from hype. Many companies in the 1980s invested heavily in 'expert systems' and lost everything when the technology hit its limits. Today's investors are making the same bets in AI — some will pay off, many won't. Knowing history makes you a clearer-eyed engineer.",
+  "explain_back_prompt": "What is an 'AI winter' and what causes them? Name two from history. What ended the most recent dark period and started the current AI boom?",
+  "build_task": {
+    "title": "Build an AI history timeline",
+    "context": "Understanding the arc of the field helps you see where current trends fit.",
+    "steps": [
+      "Research: find the Wikipedia article on 'History of artificial intelligence'",
+      "List 8 key milestones in chronological order",
+      "For each, note: what was the breakthrough? Why did it matter?",
+      "Identify the two AI winters — what caused each?",
+      "Mark where you think we are now on that arc"
+    ],
+    "expected_output": "An 8-event annotated timeline with cause-and-effect reasoning.",
+    "hint": "The two key drivers of the modern era: the ImageNet competition (2010-2017) and the invention of the Transformer architecture in 2017."
+  }
+}

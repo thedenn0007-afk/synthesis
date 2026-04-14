@@ -1,0 +1,77 @@
+{
+  "skill_id": "p1_data_types",
+  "questions": [
+    {
+      "id": "p1_data_types_q1",
+      "stem": "What are the four fundamental Python data types?",
+      "options": [
+        "String, Array, Object, Function",
+        "int (integer), float (decimal), str (text), bool (True/False)",
+        "number, text, boolean, none",
+        "char, double, varchar, boolean"
+      ],
+      "answer": 1,
+      "explanation": "Python's four core scalar types: int (whole numbers: 1, -42, 1_000_000), float (decimals: 3.14, 1e-4), str (text: 'hello', f-strings), bool (True/False — subclass of int). Everything in Python is an object of some type; type(x) returns the type. ML adds many more: torch.Tensor, np.ndarray, pd.DataFrame — all built on these primitives."
+    },
+    {
+      "id": "p1_data_types_q2",
+      "stem": "What is the difference between a Python list and a NumPy array?",
+      "options": [
+        "Lists can hold multiple items; arrays can only hold one",
+        "Lists hold arbitrary Python objects with no type constraint; NumPy arrays hold a single numeric dtype (float32, int8, etc.) in a contiguous memory block — enabling SIMD vectorisation and BLAS acceleration",
+        "NumPy arrays can only hold integers; lists can hold any type",
+        "They are identical — NumPy array is just a faster name for list"
+      ],
+      "answer": 1,
+      "explanation": "Python list: [1, 'hello', 3.14] — heterogeneous, elements are Python objects with type overhead, non-contiguous. NumPy array: dtype=float32, elements packed in C-contiguous memory, no Python overhead per element. For 1M elements: list = ~56 MB (8 bytes pointer + object overhead); np.float32 array = 4 MB. NumPy can call BLAS/SIMD because the data is homogeneous and contiguous."
+    },
+    {
+      "id": "p1_data_types_q3",
+      "stem": "Why do PyTorch models use torch.long (int64) for token IDs but torch.float32 (or float16) for weights?",
+      "options": [
+        "PyTorch randomly assigns types and you cannot change them",
+        "Token IDs are indices (integers, up to vocab_size ~50000); weights are continuous values requiring decimal precision — using float for indices wastes memory and using int for weights loses precision",
+        "GPU only supports int64 for all operations",
+        "It is a performance optimisation with no correctness impact"
+      ],
+      "answer": 1,
+      "explanation": "Token IDs are whole numbers (indices into a vocabulary of ~50,000 tokens) — int64 is appropriate. Using float32 for indices would waste memory and cause precision issues for large vocabularies. Model weights represent continuous learned values — float32/float16/bfloat16 provide the necessary decimal precision. Embedding layers specifically require torch.long input: nn.Embedding(vocab_size, d_model) will error on float inputs."
+    },
+    {
+      "id": "p1_data_types_q4",
+      "stem": "What does .to(device) do when training a model in PyTorch?",
+      "options": [
+        "Converts the tensor's data type (e.g. float32 to float16)",
+        "Moves the tensor or model's data from one device to another (CPU ↔ GPU) — all tensors in an operation must be on the same device",
+        "Saves the tensor to a file on disk",
+        "Creates a copy of the tensor without modifying the original"
+      ],
+      "answer": 1,
+      "explanation": ".to('cuda') or .to('cpu') moves the underlying data between CPU RAM and GPU VRAM. If you call model(x) with model on GPU and x on CPU, PyTorch raises a RuntimeError. The pattern: device = 'cuda' if torch.cuda.is_available() else 'cpu'; model.to(device); x = x.to(device). .to() can also change dtype: tensor.to(torch.float16) — useful for mixed precision."
+    },
+    {
+      "id": "p1_data_types_q5",
+      "stem": "What happens when you store image pixels as float32 instead of uint8 in a dataset?",
+      "options": [
+        "Nothing — float32 and uint8 produce identical results for images",
+        "4× more memory is used: uint8 = 1 byte/pixel, float32 = 4 bytes/pixel — a 224×224 RGB image uses 150 KB as uint8 but 600 KB as float32",
+        "The image cannot be displayed because monitors only understand uint8",
+        "Training will be slower because float32 is not supported on GPU"
+      ],
+      "answer": 1,
+      "explanation": "uint8 pixels (0-255) use 1 byte each. float32 uses 4 bytes. A 224×224×3 image: uint8 = 150 KB, float32 = 601 KB. For a dataset of 1M images: uint8 = 150 GB, float32 = 600 GB. Best practice: store images as uint8, load as uint8 in DataLoader, cast to float32 and normalise (divide by 255) only right before the model. This saves 4× RAM and DataLoader I/O bandwidth."
+    },
+    {
+      "id": "p1_data_types_q6",
+      "stem": "What is bfloat16 and why is it preferred over float16 for training large models?",
+      "options": [
+        "bfloat16 is more widely supported by older GPUs than float16",
+        "bfloat16 keeps float32's 8-bit exponent (same numeric range ±3.4×10³⁸) while reducing mantissa to 7 bits — preventing gradient overflow that float16 (5-bit exponent, max ±65504) frequently suffers during training",
+        "bfloat16 is actually 16-bit integer format, not floating point",
+        "bfloat16 uses less VRAM than float16"
+      ],
+      "answer": 1,
+      "explanation": "float16 limits: exponent 5 bits → max value 65504. Gradients and activations in large models regularly exceed this, producing inf. bfloat16 copies float32's 8-bit exponent → max value 3.4×10³⁸ — same as float32, so overflow never occurs in practice. Fewer mantissa bits (7 vs 10) means less precision, but training with bf16 + AMP is now standard for LLMs. float16 requires loss scaling to compensate for overflow risk."
+    }
+  ]
+}

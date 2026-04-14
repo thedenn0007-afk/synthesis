@@ -1,0 +1,77 @@
+{
+  "skill_id": "p2_probability_basics",
+  "questions": [
+    {
+      "id": "p2_probability_basics_q1",
+      "stem": "A language model outputs logits [2.0, 1.0, 0.1] before softmax. What do the softmax probabilities sum to, and why?",
+      "options": [
+        "They sum to 3.1 (the sum of the logits)",
+        "They sum to 1.0 — softmax guarantees a valid probability distribution by dividing each exp(logit) by the sum of all exp(logits)",
+        "They sum to e (Euler's number ≈ 2.718)",
+        "They sum to the number of classes (3 in this case)"
+      ],
+      "answer": 1,
+      "explanation": "softmax(zᵢ) = exp(zᵢ) / Σⱼ exp(zⱼ). Each output is non-negative (exp is always positive) and they sum to 1.0 by construction. For [2.0, 1.0, 0.1]: exp values ≈ [7.39, 2.72, 1.11]; sum = 11.22; probabilities ≈ [0.659, 0.242, 0.099]; sum = 1.0. This makes the output a valid probability distribution — every LM output can be interpreted as 'probability of each token being next'."
+    },
+    {
+      "id": "p2_probability_basics_q2",
+      "stem": "What does cross-entropy loss measure, and why does it reach its minimum when predictions match targets?",
+      "options": [
+        "The average squared difference between predictions and targets",
+        "The negative log probability assigned to the correct class — low loss means high probability assigned to the right answer; minimum is 0 when P(correct class) = 1.0",
+        "The number of incorrect predictions divided by total predictions",
+        "The distance between the predicted vector and the one-hot target vector"
+      ],
+      "answer": 1,
+      "explanation": "Cross-entropy loss = -log(P(correct class)). If the model assigns P=0.99 to the correct class: loss = -log(0.99) ≈ 0.01 (good). If P=0.01: loss = -log(0.01) ≈ 4.6 (bad). At P=1.0: loss = 0 (perfect). At P≈0: loss → ∞. Training minimises this — pushing probability toward 1 for correct classes. For a random model on 50,000 tokens: expected loss ≈ log(50,000) ≈ 10.8 bits (perplexity = 50,000)."
+    },
+    {
+      "id": "p2_probability_basics_q3",
+      "stem": "What does 'temperature' control during language model text generation?",
+      "options": [
+        "The maximum length of the generated sequence",
+        "The diversity of generation: temperature < 1 makes the distribution more peaked (safer, more predictable); temperature > 1 makes it more uniform (more random, creative); temperature = 1 leaves it unchanged",
+        "The speed of generation — higher temperature generates text faster",
+        "The number of candidate tokens considered at each step"
+      ],
+      "answer": 1,
+      "explanation": "Temperature modifies logits before softmax: probs = softmax(logits / T). T < 1: dividing makes large logits relatively larger — distribution concentrates on top tokens (greedy-like). T > 1: differences shrink — distribution flattens (more uniform). T = 1: unchanged. Common values: T=0.7 for factual tasks (more conservative), T=1.0 for balanced, T=1.2 for creative writing. T→0 gives argmax (greedy); T→∞ gives uniform random."
+    },
+    {
+      "id": "p2_probability_basics_q4",
+      "stem": "What is conditional probability P(A|B), and how does it appear in language modelling?",
+      "options": [
+        "The probability that both A and B happen simultaneously",
+        "P(A|B) = P(A ∩ B) / P(B) — the probability of A GIVEN that B has already occurred. In LMs: P(token_n | token_1, ..., token_{n-1}) is the conditional probability of each next token given all previous tokens",
+        "The probability that A and B are independent events",
+        "The probability that event A causes event B"
+      ],
+      "answer": 1,
+      "explanation": "Conditional probability P(A|B): 'given we know B happened, how likely is A?'. Language models compute P(next_token | all_previous_tokens) at each step. The full text probability is a product of conditionals: P(w₁,w₂,...,wₙ) = P(w₁) × P(w₂|w₁) × P(w₃|w₁,w₂) × ... This chain rule factorisation is what autoregressive models learn. Perplexity = 2^(average negative log-probability per token)."
+    },
+    {
+      "id": "p2_probability_basics_q5",
+      "stem": "A model predicts fraud with 90% accuracy on a dataset where 1% of transactions are fraud. Why is accuracy misleading here?",
+      "options": [
+        "90% accuracy is too low — you need at least 95% for fraud detection",
+        "A model that always predicts 'not fraud' achieves 99% accuracy — the 90% model may actually be WORSE, detecting no fraud at all. Use precision, recall, or AUC instead",
+        "The dataset is too small — accuracy is only meaningful for > 10,000 samples",
+        "Fraud models should use regression, not classification"
+      ],
+      "answer": 1,
+      "explanation": "With 1% fraud rate: 'always predict not-fraud' achieves 99% accuracy — better than the 90% model. This is the class imbalance problem. Better metrics: precision = TP/(TP+FP) (of predicted frauds, what fraction are real?), recall = TP/(TP+FN) (of real frauds, what fraction did we catch?), AUC-ROC (overall discrimination ability). In fraud detection, missing a fraud (false negative) is much worse than a false alarm — focus on recall."
+    },
+    {
+      "id": "p2_probability_basics_q6",
+      "stem": "What is the purpose of the KL divergence KL(P || Q) in machine learning?",
+      "options": [
+        "It measures the Euclidean distance between two probability distributions",
+        "It measures how much information is lost when using Q to approximate P — how 'different' Q is from P. Minimising KL(data || model) is equivalent to maximum likelihood training; KL appears in VAEs and RLHF",
+        "It computes the correlation coefficient between two probability distributions",
+        "It normalises both distributions to sum to 1 before comparison"
+      ],
+      "answer": 1,
+      "explanation": "KL(P||Q) = Σ P(x) log(P(x)/Q(x)). Minimum is 0 when P = Q everywhere. Asymmetric: KL(P||Q) ≠ KL(Q||P). In VAE: minimise KL(q(z|x) || p(z)) — keep the learned posterior close to the prior. In RLHF: KL(π_RL || π_SFT) penalises the RL policy from deviating too far from the supervised fine-tuned model, preventing reward hacking. In knowledge distillation: minimise KL(teacher || student)."
+    }
+  ]
+}

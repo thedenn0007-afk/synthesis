@@ -1,0 +1,28 @@
+{
+  "skill_id": "p3_types_of_learning",
+  "depth": "mid",
+  "title": "Types of Learning — Algorithms and Use Cases",
+  "key_insight": "The type of learning you choose is driven by what data you have and what signal tells the model it's improving.",
+  "body": "## Supervised Learning: The Details\n\n```python\nfrom sklearn.linear_model import LogisticRegression\nfrom sklearn.datasets import load_iris\n\nX, y = load_iris(return_X_y=True)  # X = features, y = labels (0, 1, 2)\n\nmodel = LogisticRegression()\nmodel.fit(X, y)   # Training: adjust weights to predict y from X\n\nprint(model.score(X, y))  # Accuracy on training data\n```\n\n**Key variants:**\n- **Classification**: output is a category (spam/not spam)\n- **Regression**: output is a continuous number (house price)\n- **Sequence-to-sequence**: output is a sequence (translation)\n\n## Unsupervised Learning: Finding Structure\n\n```python\nfrom sklearn.cluster import KMeans\nfrom sklearn.decomposition import PCA\nimport numpy as np\n\nX = np.random.randn(1000, 20)  # 1000 samples, 20 features, no labels\n\n# Clustering: find natural groups\nclusters = KMeans(n_clusters=5).fit(X)\nprint(clusters.labels_)  # which cluster each sample belongs to\n\n# Dimensionality reduction: find compact representation\npca = PCA(n_components=2)\nX_reduced = pca.fit_transform(X)  # 20 features → 2 dimensions\n```\n\n**Key variants:**\n- **Clustering**: K-means, DBSCAN, hierarchical\n- **Dimensionality reduction**: PCA, t-SNE, UMAP\n- **Density estimation**: learn the data distribution\n- **Self-supervised learning**: create labels from the data itself\n\n## Self-Supervised Learning (Important Modern Category)\n\nA bridge between supervised and unsupervised:\n\n```python\n# Language model pre-training: supervised, but labels come from the data itself\n# Input:  'The cat sat on the ___'\n# Label:  'mat'  (taken from the actual next word in the text)\n\n# No human labelling needed — the internet is the label source\n# GPT, BERT, all modern LLMs are trained this way\n```\n\n## Reinforcement Learning: The Reward Signal\n\n```python\nimport gym\n\nenv = gym.make('CartPole-v1')  # balance a pole on a cart\nstate = env.reset()\n\nfor step in range(1000):\n    action = agent.choose_action(state)    # left or right\n    state, reward, done, _ = env.step(action)\n    agent.learn(state, reward)             # update from reward signal\n    if done: break\n\n# reward = +1 for each step the pole stays upright\n# reward = 0 when pole falls\n# Agent learns: which actions keep the pole up?\n```\n\n**Key RL concepts:**\n- Agent, environment, state, action, reward\n- Policy: function mapping state → action\n- Value function: expected future reward from a state",
+  "common_mistakes": [
+    "Treating self-supervised learning as unsupervised — it has label signals, just auto-generated from the data",
+    "Using RL when supervised learning would suffice — RL is complex, unstable, and slow to train",
+    "Forgetting that unsupervised learning still needs a loss function — it just measures structure, not correctness"
+  ],
+  "mini_exercise": "What is 'self-supervised learning'? How does GPT's 'predict next token' training fit into this category? Is it supervised or unsupervised? Write a one-paragraph answer.",
+  "real_world_usage": "Word2Vec (Google, 2013) used self-supervised learning to learn word embeddings: given surrounding words, predict the middle word. No labels — the text itself is the supervision. The resulting vectors captured semantic relationships: king - man + woman ≈ queen. This was the precursor to all modern language model pre-training.",
+  "explain_back_prompt": "Explain self-supervised learning and why it became so important for NLP and vision. How does it differ from supervised and unsupervised learning? Give one example of a self-supervised task.",
+  "build_task": {
+    "title": "Compare supervised vs unsupervised on the same data",
+    "context": "Seeing the difference in code crystallises the conceptual difference.",
+    "steps": [
+      "Load iris dataset: from sklearn.datasets import load_iris",
+      "Supervised: train a classifier that uses the labels",
+      "Unsupervised: run KMeans(n_clusters=3) on just X, without using labels",
+      "Compare: does unsupervised clustering find the same groups as the labels?",
+      "Compute purity: for each cluster, what fraction of its points share the same true label?"
+    ],
+    "expected_output": "Cluster purity scores. Observation: unsupervised clustering roughly recovers the 3 iris species without being told about them.",
+    "starter_code": "from sklearn.datasets import load_iris\nfrom sklearn.cluster import KMeans\nimport numpy as np\n\nX, y = load_iris(return_X_y=True)\n\nkm = KMeans(n_clusters=3, random_state=42).fit(X)\nprint('Cluster assignments:', km.labels_)\nprint('True labels:        ', y)\n# TODO: compute what fraction of each cluster is the majority class"
+  }
+}

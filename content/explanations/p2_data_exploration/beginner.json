@@ -1,0 +1,31 @@
+{
+  "skill_id": "p2_data_exploration",
+  "depth": "beginner",
+  "title": "Data Exploration — Understanding Your Data Before Modelling",
+  "key_insight": "Never train a model on data you haven't explored. EDA (Exploratory Data Analysis) finds data quality issues, reveals patterns, and guides feature engineering — all before writing a single model.",
+  "body": "## Loading and Inspecting Data\n\n```python\nimport pandas as pd\nimport matplotlib.pyplot as plt\nimport seaborn as sns\n\n# Load the Titanic dataset\ndf = sns.load_dataset('titanic')\n\n# First things to check:\nprint(df.shape)         # (891, 15) — 891 rows, 15 columns\nprint(df.head())         # first 5 rows\nprint(df.dtypes)         # data types of each column\nprint(df.info())         # non-null counts + dtypes\nprint(df.describe())     # statistics for numeric columns\nprint(df.isnull().sum()) # missing values per column\nprint(df['survived'].value_counts())  # class distribution\n```\n\n## The 5 Questions to Answer in EDA\n\n```\n1. What are the data types?   (numeric, categorical, datetime, text)\n2. How much is missing?       (nulls per column, patterns in missingness)\n3. What are the distributions? (skew, outliers, bimodal?)\n4. Are there obvious errors?  (negative ages, impossible values)\n5. What correlates with the target? (which features matter)\n```\n\n## Visualising Distributions\n\n```python\nplt.figure(figsize=(12, 8))\n\n# Distribution of numeric variable\nplt.subplot(2, 2, 1)\ndf['age'].hist(bins=30)\nplt.title('Age Distribution'); plt.xlabel('Age')\n\n# Category counts\nplt.subplot(2, 2, 2)\ndf['pclass'].value_counts().plot(kind='bar')\nplt.title('Passenger Class'); plt.xlabel('Class')\n\n# Target vs feature\nplt.subplot(2, 2, 3)\nsurvival_by_class = df.groupby('pclass')['survived'].mean()\nsurvival_by_class.plot(kind='bar')\nplt.title('Survival Rate by Class'); plt.ylabel('Survival Rate')\n\n# Boxplot: distribution per category\nplt.subplot(2, 2, 4)\ndf.boxplot(column='age', by='survived')\nplt.title('Age by Survival Status')\n\nplt.tight_layout()\nplt.show()\n```\n\n## Correlation Matrix\n\n```python\n# Numeric features only:\ndf_numeric = df.select_dtypes(include=['number'])\n\nplt.figure(figsize=(8, 6))\nsns.heatmap(df_numeric.corr(), annot=True, cmap='coolwarm', fmt='.2f')\nplt.title('Correlation Matrix')\nplt.show()\n```",
+  "common_mistakes": [
+    "Skipping EDA and going straight to modelling — you'll build models on data with silent issues that make results untrustworthy",
+    "Looking at correlations before checking distributions — a correlation can be dominated by outliers",
+    "Not checking target distribution — class imbalance (99% class A, 1% class B) requires different metrics and preprocessing"
+  ],
+  "mini_exercise": "Load the Titanic dataset. In 5 lines of code, answer: (1) What percentage of passengers survived? (2) Which gender had higher survival rate? (3) What was the average age? (4) What percentage of 'age' values are missing? (5) Which passenger class had the highest survival rate?",
+  "real_world_usage": "At Airbnb, data scientists spend 2-3 days doing EDA before writing any model code. They look for: outlier listings (£1 per night or £10,000 per night), geographic anomalies (listings in the ocean), and seasonal patterns. Problems found in EDA save weeks of modelling time.",
+  "explain_back_prompt": "What are the 5 key questions EDA should answer? Why should you always check for missing values before modelling? What does a correlation matrix tell you?",
+  "build_task": {
+    "title": "Complete EDA on a real dataset",
+    "context": "Structured EDA is a professional habit — this template works for any dataset.",
+    "steps": [
+      "Load the Titanic or Iris dataset",
+      "Step 1: Shape, dtypes, first 5 rows",
+      "Step 2: Missing values count and percentage per column",
+      "Step 3: Numeric distributions — histogram for each numeric column",
+      "Step 4: Categorical counts — bar chart for each categorical column",
+      "Step 5: Correlation matrix heatmap",
+      "Step 6: Target analysis — survival rate by sex, class, and age group",
+      "Write 3 sentences summarising the most important findings"
+    ],
+    "expected_output": "6+ visualisations and a written summary of key patterns.",
+    "starter_code": "import pandas as pd\nimport matplotlib.pyplot as plt\nimport seaborn as sns\n\ndf = sns.load_dataset('titanic')\n\n# Step 1: Basic info\nprint('Shape:', df.shape)\nprint(df.head())\n\n# TODO: complete steps 2-6\n# TODO: print/plot everything described above"
+  }
+}

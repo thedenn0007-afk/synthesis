@@ -1,0 +1,77 @@
+{
+  "skill_id": "p1_how_code_works",
+  "questions": [
+    {
+      "id": "p1_how_code_works_q1",
+      "stem": "How does Python code get executed on a CPU?",
+      "options": [
+        "Python source code is directly run by the CPU as machine code",
+        "Python source → compiled to bytecode (.pyc) → CPython VM interprets bytecode → machine instructions",
+        "Python is always compiled to C first, then compiled to machine code",
+        "Python code runs in a JavaScript engine inside the browser"
+      ],
+      "answer": 1,
+      "explanation": "Python's execution pipeline: (1) CPython compiles source.py to bytecode (platform-independent .pyc files), (2) the CPython virtual machine (VM) interprets each bytecode instruction one by one, (3) each bytecode instruction ultimately calls C code that produces CPU machine instructions. This interpretation overhead is why pure Python is ~50-100× slower than compiled languages for numeric loops."
+    },
+    {
+      "id": "p1_how_code_works_q2",
+      "stem": "What is the GIL (Global Interpreter Lock) and what does it prevent?",
+      "options": [
+        "A lock on file access — prevents two programs writing the same file",
+        "A lock in CPython that only allows one thread to execute Python bytecode at a time — prevents true CPU parallelism with Python threads",
+        "A graphics library lock — prevents multiple threads from drawing to screen",
+        "A lock that prevents importing the same module twice"
+      ],
+      "answer": 1,
+      "explanation": "The GIL is a mutex in CPython's C code that must be held to execute any Python bytecode. Even with 8 CPU threads, only one runs Python at a time. This means Python threads cannot parallelise CPU-bound code. The GIL IS released for I/O and for C extensions (NumPy, PyTorch) — so numpy operations and GPU kernels DO run in parallel. For true CPU parallelism: use multiprocessing instead of threading."
+    },
+    {
+      "id": "p1_how_code_works_q3",
+      "stem": "Why is NumPy's a + b vastly faster than [x + y for x, y in zip(a, b)] for large arrays?",
+      "options": [
+        "NumPy uses a different mathematical definition of addition",
+        "NumPy calls optimised C code with SIMD instructions on contiguous memory, eliminating Python interpreter overhead for every element — one C call vs millions of Python bytecode dispatches",
+        "NumPy caches all previous addition results",
+        "Python list comprehensions have a bug that makes them artificially slow"
+      ],
+      "answer": 1,
+      "explanation": "A Python loop has overhead per iteration: bytecode dispatch, type lookup, reference counting. For a million elements, that's millions of operations. NumPy's a + b makes one call into C code, which uses SIMD to process 8-16 elements per CPU instruction. The ratio is roughly: 1 C function call vs 1,000,000 Python bytecode dispatches — explaining the 50-100× speedup."
+    },
+    {
+      "id": "p1_how_code_works_q4",
+      "stem": "What does torch.compile() do, and when does the speedup occur?",
+      "options": [
+        "It converts Python code to TensorFlow format",
+        "On the FIRST call: traces the computation graph and compiles to optimised machine code (Triton CUDA kernels). SUBSEQUENT calls execute the compiled native code — 2-5× faster",
+        "It makes the model smaller by removing unused layers",
+        "It converts the model to run on CPU instead of GPU"
+      ],
+      "answer": 1,
+      "explanation": "torch.compile() uses PyTorch's Dynamo + Inductor backend: Dynamo traces Python execution to capture the computation graph; Inductor generates optimised Triton CUDA kernels with operator fusion (e.g. linear + activation → one kernel instead of two). The first call is slow (~10s for a large model). All subsequent calls use the compiled path — avoiding Python interpreter overhead for every operation."
+    },
+    {
+      "id": "p1_how_code_works_q5",
+      "stem": "What is the difference between compiled and interpreted languages?",
+      "options": [
+        "Compiled languages require a GPU; interpreted languages run on CPU",
+        "Compiled languages translate source code to machine code before execution (C, C++, Rust); interpreted languages translate and execute line by line at runtime (Python, JavaScript)",
+        "Compiled languages are always faster — there is no trade-off",
+        "Interpreted languages cannot use loops or functions"
+      ],
+      "answer": 1,
+      "explanation": "Compiled languages (C, C++, Rust, Go) translate all code to machine instructions before running — fast execution, no runtime translation overhead. Interpreted languages (Python, Ruby) translate on-the-fly — slower for computation but faster to write, debug, and iterate. Python's success in AI comes from combining Python's ease of use with C/CUDA extensions (NumPy, PyTorch) for the hot numerical paths."
+    },
+    {
+      "id": "p1_how_code_works_q6",
+      "stem": "What does cProfile.run('my_function()') tell you, and why should you always profile before optimising?",
+      "options": [
+        "It checks if the function has any syntax errors",
+        "It measures time spent in each function call — showing where actual bottlenecks are, which is often NOT where you expect them to be",
+        "It converts the function to run on GPU automatically",
+        "It tests the function with different inputs to find bugs"
+      ],
+      "answer": 1,
+      "explanation": "cProfile records how many times each function was called and how much cumulative time was spent in it. Engineers consistently misjudge where bottlenecks are — often spending hours optimising a function that accounts for 2% of runtime while the real bottleneck (data loading, string processing, I/O) is ignored. Profile first, then optimise only the actual hotspot. In ML code, the bottleneck is usually data loading, not the model forward pass."
+    }
+  ]
+}

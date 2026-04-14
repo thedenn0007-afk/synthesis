@@ -1,0 +1,28 @@
+{
+  "skill_id": "p3_training_vs_inference",
+  "depth": "mid",
+  "title": "Training vs Inference — Technical Differences",
+  "key_insight": "Training requires gradients (backward pass), inference doesn't. This single difference explains most of the cost, memory, and speed differences between the two modes.",
+  "body": "## The Backward Pass: What Training Adds\n\n```python\nimport torch\n\nmodel = torch.nn.Linear(10, 1)\noptimizer = torch.optim.Adam(model.parameters())\n\n# Training: forward + backward + update\nx = torch.randn(32, 10)  # batch of 32 inputs\ny = torch.randn(32, 1)   # true labels\n\n# Forward pass (same as inference)\npred = model(x)\n\n# Loss computation (only during training)\nloss = torch.nn.MSELoss()(pred, y)\n\n# Backward pass (ONLY during training)\n# Computes gradients for every parameter\n# Takes ~2x the memory of forward pass\nloss.backward()\noptimizer.step()   # updates weights\noptimizer.zero_grad()\n\n# --- vs ---\n\n# Inference: forward pass only\nwith torch.no_grad():  # disable gradient tracking\n    pred = model(x)    # uses ~40-60% less memory\n    # No loss, no backward, no optimizer step\n```\n\n## Memory Differences\n\n```python\n# During training, memory holds:\n# 1. Model weights              (e.g. 14GB for 7B param model in fp16)\n# 2. Optimizer state (Adam: 2x) (e.g. 28GB)\n# 3. Gradients                  (e.g. 14GB)\n# 4. Activations (for backprop) (varies with batch size)\n# Total: ~4-8x the model size\n\n# During inference, memory holds:\n# 1. Model weights only         (e.g. 14GB)\n# 2. KV cache (for autoregressive) (depends on sequence length)\n# Total: ~1-2x the model size\n```\n\n## Autoregressive Inference (LLMs)\n\n```python\n# Language model inference is sequential, not batched\n# Each new token requires a full forward pass using all previous tokens\n\ntokens = [tokenize('The weather is')]  # = [464, 4965, 318]\n\nfor step in range(max_new_tokens):\n    with torch.no_grad():\n        logits = model(tokens)        # forward pass with ALL previous tokens\n    next_token = sample(logits[-1])   # pick next token\n    tokens.append(next_token)         # extend sequence\n    if next_token == END_TOKEN: break\n\n# This is why LLMs are slow: N tokens = N sequential forward passes\n# KV cache: store key/value vectors to avoid recomputing from scratch\n```\n\n## Batching at Inference\n\n```python\n# You can batch multiple requests together for efficiency:\nbatch_inputs = [request_1, request_2, request_3]  # pad to same length\nwith torch.no_grad():\n    batch_outputs = model(batch_inputs)  # one forward pass, 3 results\n\n# Tradeoff: batching reduces cost per request but increases latency\n# Production systems tune batch size to balance throughput vs latency SLAs\n```",
+  "common_mistakes": [
+    "Forgetting torch.no_grad() during inference — wastes memory and compute tracking unused gradients",
+    "Trying to call loss.backward() during inference — there's no loss target, and it would crash",
+    "Assuming inference latency scales linearly with model size — batching and KV cache change the dynamics significantly"
+  ],
+  "mini_exercise": "In PyTorch, time a forward pass WITH torch.no_grad() vs WITHOUT on a medium-sized model. Measure peak memory usage with torch.cuda.max_memory_allocated(). What's the ratio?",
+  "real_world_usage": "LLaMA.cpp compresses a 7B model to 4-bit precision (4-bit quantisation), dropping inference memory from ~14GB to ~4GB. This allows running the model on a laptop. The training of the original model still required 16-bit precision and multiple A100 GPUs. Training and inference hardware requirements are completely different.",
+  "explain_back_prompt": "Why does training require more memory than inference? What is the backward pass, and why isn't it needed during inference? What is torch.no_grad() and why should you always use it during inference?",
+  "build_task": {
+    "title": "Measure the memory cost of gradients",
+    "context": "Quantifying the cost of training vs inference makes the difference tangible.",
+    "steps": [
+      "Create a moderately sized PyTorch model (3 linear layers)",
+      "Run inference with torch.no_grad() — record memory",
+      "Run a training step (forward + backward) — record memory",
+      "Calculate the ratio: training_memory / inference_memory",
+      "Print the model's parameter count: sum(p.numel() for p in model.parameters())"
+    ],
+    "expected_output": "Memory ratio typically 2-4x for training vs inference. Parameter count printed.",
+    "starter_code": "import torch\nimport torch.nn as nn\n\nmodel = nn.Sequential(\n    nn.Linear(512, 1024),\n    nn.ReLU(),\n    nn.Linear(1024, 1024),\n    nn.ReLU(),\n    nn.Linear(1024, 10),\n)\n\nparams = sum(p.numel() for p in model.parameters())\nprint(f'Parameters: {params:,}')\n\nx = torch.randn(64, 512)\n\n# Inference\ntorch.cuda.reset_peak_memory_stats()  # if using GPU\nwith torch.no_grad():\n    out = model(x)\n    inf_mem = torch.cuda.max_memory_allocated() / 1e6\n    print(f'Inference memory: {inf_mem:.1f} MB')\n\n# Training\nloss_fn = nn.CrossEntropyLoss()\ny = torch.randint(0, 10, (64,))\ntorch.cuda.reset_peak_memory_stats()\nout = model(x)\nloss = loss_fn(out, y)\nloss.backward()\ntrain_mem = torch.cuda.max_memory_allocated() / 1e6\nprint(f'Training memory:  {train_mem:.1f} MB')\nprint(f'Ratio: {train_mem/inf_mem:.1f}x')"
+  }
+}

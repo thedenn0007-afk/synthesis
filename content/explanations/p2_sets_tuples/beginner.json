@@ -1,0 +1,28 @@
+{
+  "skill_id": "p2_sets_tuples",
+  "depth": "beginner",
+  "title": "Sets & Tuples — More Ways to Store Collections",
+  "key_insight": "Tuples store ordered, unchangeable data. Sets store unordered unique items with O(1) membership testing. Choosing the right collection type makes code clearer and faster.",
+  "body": "## Tuples — Ordered, Immutable\n\n```python\n# Create a tuple: use parentheses or just commas\npoint = (3, 4)\ncolour = 'red', 255, 0, 0   # no parentheses needed\nsingleton = (42,)            # single item — note the comma!\n\n# Access like lists:\nprint(point[0])    # 3\nprint(point[1])    # 4\n\n# Unpack into variables:\nx, y = point\nprint(x, y)  # 3 4\n\nname, age, city = ('Alice', 30, 'London')\nprint(city)  # London\n\n# Tuples are immutable — you CANNOT change them:\npoint[0] = 10   # TypeError: 'tuple' object does not support item assignment\n```\n\n**When to use tuples:**\n- Coordinates: `(x, y)`, `(lat, lon)`\n- RGB colours: `(255, 0, 0)`\n- Returning multiple values from a function\n- Dictionary keys (lists can't be dict keys, tuples can)\n\n## Sets — Unique, Unordered\n\n```python\n# Create a set:\nfruits = {'apple', 'banana', 'cherry'}\nfrom_list = set(['a', 'b', 'a', 'c', 'b'])  # removes duplicates\nprint(from_list)  # {'a', 'b', 'c'} — order not guaranteed\n\n# Key property: no duplicates\nnumbers = {1, 2, 3, 2, 1}\nprint(numbers)  # {1, 2, 3}\n\n# Membership testing: much faster than lists!\nprint('apple' in fruits)   # True  — O(1)\nprint('grape' in fruits)   # False — O(1)\n\n# Modify sets:\nfruits.add('date')       # add one item\nfruits.remove('banana')  # remove (raises KeyError if missing)\nfruits.discard('grape')  # remove if present, silent if not\n```\n\n## Set Operations — Like Venn Diagrams\n\n```python\na = {1, 2, 3, 4, 5}\nb = {3, 4, 5, 6, 7}\n\nprint(a | b)   # Union: {1,2,3,4,5,6,7} — all items\nprint(a & b)   # Intersection: {3,4,5} — items in BOTH\nprint(a - b)   # Difference: {1,2} — in a but NOT in b\nprint(a ^ b)   # Symmetric difference: {1,2,6,7} — in one but not both\n```\n\n## Choosing the Right Type\n\n| Need | Use |\n|---|---|\n| Ordered, changeable | list |\n| Ordered, unchangeable | tuple |\n| Unique items, fast lookup | set |\n| Key-value pairs | dict |",
+  "common_mistakes": [
+    "Empty set must be `set()`, not `{}` — `{}` creates an empty dict!",
+    "Sets are unordered — you cannot index a set: `my_set[0]` raises TypeError",
+    "Forgetting the comma in single-element tuple: `(42)` is just the integer 42, `(42,)` is a tuple"
+  ],
+  "mini_exercise": "Given two lists of students: class_a = ['Alice', 'Bob', 'Carol'] and class_b = ['Bob', 'Carol', 'Dave']. Using sets, find: (1) students in both classes, (2) students in class_a only, (3) all unique students across both classes. How many lines of code does each take?",
+  "real_world_usage": "Python functions return tuples for multiple values: `min_val, max_val = min_max(data)`. DNS lookup returns a tuple of IP addresses. Sets are used for deduplication at scale: removing duplicate URLs in a web crawler, or checking whether a user has already seen a notification.",
+  "explain_back_prompt": "What is the key difference between a list and a tuple? What is the main advantage of a set over a list for membership testing? What does the `&` operator do with two sets?",
+  "build_task": {
+    "title": "Analyse word frequencies with sets",
+    "context": "Sets are perfect for unique-item analysis.",
+    "steps": [
+      "Take a paragraph of text (a few sentences)",
+      "Split into words, convert to lowercase, strip punctuation",
+      "Use a set to find all unique words",
+      "Use set operations to find words that appear in both a second paragraph but not the first",
+      "Print: total words, unique words, words exclusive to each paragraph"
+    ],
+    "expected_output": "Total: 50 words, Unique: 32, Only in para1: {'the', ...}, Only in para2: {'a', ...}.",
+    "starter_code": "import string\n\npara1 = 'Python is a great programming language for data science and machine learning'\npara2 = 'Machine learning and deep learning are key parts of artificial intelligence'\n\n# Process words: lowercase and remove punctuation\ndef get_words(text):\n    return set(text.lower().translate(str.maketrans('', '', string.punctuation)).split())\n\nwords1 = get_words(para1)\nwords2 = get_words(para2)\n\n# TODO: find intersection, difference, union\n# TODO: print results"
+  }
+}

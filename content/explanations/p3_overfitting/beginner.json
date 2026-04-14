@@ -1,0 +1,29 @@
+{
+  "skill_id": "p3_overfitting",
+  "depth": "beginner",
+  "title": "Overfitting & Underfitting — The Goldilocks Problem",
+  "key_insight": "Overfitting: model memorised the training data but can't generalise. Underfitting: model too simple to learn the pattern at all. You need to find the sweet spot.",
+  "body": "## The Exam Analogy\n\n**Overfitting** = a student who memorised the exact practice questions word-for-word. They score 100% on practice tests. But on the real exam with slightly different questions, they fail — because they memorised, not understood.\n\n**Underfitting** = a student who barely studied. They can't answer practice questions OR real exam questions. The model is too simple.\n\n**Just right** = a student who understood the concepts. They can answer variations, new questions, and edge cases.\n\n## Spotting the Difference\n\n### Overfitting signs:\n- Training accuracy: very high (95%+)\n- Test accuracy: much lower (60%)\n- Gap between training and test = 'generalisation gap'\n\n### Underfitting signs:\n- Training accuracy: low (60%)\n- Test accuracy: also low (60%)\n- No gap — model is equally bad everywhere\n\n## What Causes Overfitting?\n\n1. **Model too complex for the dataset size** — a huge network trained on 50 examples will memorise them\n2. **Too many training epochs** — kept training past the sweet spot\n3. **Not enough data** — model sees the same examples too many times\n4. **Noisy features** — model learns noise in features rather than true patterns\n\n## Simple Fixes\n\n| Problem | Fix |\n|---|---|\n| Overfitting | Get more data, simplify model, add dropout, stop early |\n| Underfitting | Make model more complex, train longer, add more features |\n\n## The Loss Curve Tells All\n\n```\nLoss\n  │  training loss\n  │  \\ \n  │   \\      validation loss\n  │    \\      /──────── overfitting starts here\n  │     \\    /\n  │      \\  /\n  │       \\/  ← optimal stopping point\n  └──────────────── Epochs\n```\n\nWhen validation loss starts going up while training loss keeps going down: stop training.",
+  "common_mistakes": [
+    "Thinking high training accuracy is the goal — it means nothing if test accuracy is low",
+    "Training until training loss hits zero — this almost always causes severe overfitting",
+    "Adding more model capacity when accuracy is low — if training accuracy is also low, the problem is underfitting"
+  ],
+  "mini_exercise": "Look at these two scenarios. Which is overfitting, which is underfitting? Scenario A: train=98%, test=55%. Scenario B: train=62%, test=60%. What would you change in each case?",
+  "real_world_usage": "Face recognition models trained only on light-skinned faces (like many early academic datasets) showed severe underfitting for darker-skinned faces — the model had never learned that pattern. This wasn't a theory problem but a real deployment failure, studied by MIT Media Lab researcher Joy Buolamwini.",
+  "explain_back_prompt": "Explain overfitting and underfitting using different analogies than the exam example. How do you detect each from the training curves? What are two concrete fixes for each?",
+  "build_task": {
+    "title": "Witness overfitting in real time",
+    "context": "Seeing the training/validation loss diverge is the clearest possible demonstration of overfitting.",
+    "steps": [
+      "Create a small dataset: 50 samples with noise",
+      "Train a high-degree polynomial regression (or deep tree): model is too complex",
+      "Record training and validation error at each step",
+      "Plot both curves on the same graph",
+      "Find the point where they diverge — that's where overfitting starts",
+      "Now add a depth limit (max_depth=3) and repeat — does it help?"
+    ],
+    "expected_output": "A plot showing training loss decreasing while validation loss first decreases then increases. Clear overfitting visible.",
+    "starter_code": "from sklearn.datasets import make_regression\nfrom sklearn.tree import DecisionTreeRegressor\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.metrics import mean_squared_error\nimport matplotlib.pyplot as plt\nimport numpy as np\n\nX, y = make_regression(n_samples=50, n_features=1, noise=20, random_state=42)\nX_train, X_val, y_train, y_val = train_test_split(X, y, test_size=0.3)\n\ntrain_errs, val_errs = [], []\nfor depth in range(1, 20):\n    model = DecisionTreeRegressor(max_depth=depth)\n    model.fit(X_train, y_train)\n    train_errs.append(mean_squared_error(y_train, model.predict(X_train)))\n    val_errs.append(mean_squared_error(y_val,   model.predict(X_val)))\n\nplt.plot(range(1,20), train_errs, label='Train')\nplt.plot(range(1,20), val_errs,   label='Validation')\nplt.xlabel('Max Depth'); plt.ylabel('MSE'); plt.legend(); plt.show()"
+  }
+}

@@ -1,17 +1,17 @@
 {
-  "graph_version": "1.0.0",
+  "graph_version": "2.0.0",
   "domain_name": "AI Engineering",
   "phases_active": [
     "phase_1_computer_basics",
-    "phase_2_cs_data"
+    "phase_2_cs_data",
+    "phase_3_intro_ai"
   ],
   "phases_planned": [
-    "phase_3_intro_ai",
     "phase_4_machine_learning",
     "phase_5_deep_learning",
     "phase_6_modern_ai",
     "phase_7_real_world",
     "phase_8_mastery"
   ],
-  "last_updated": "2026-04-10"
+  "last_updated": "2026-04-13"
 }

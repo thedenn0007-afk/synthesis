@@ -1,0 +1,28 @@
+{
+  "skill_id": "p3_model_evaluation",
+  "depth": "beginner",
+  "title": "Evaluating a Model — How Do You Know If It Works?",
+  "key_insight": "A model's score on training data means nothing. The only score that matters is on data it has never seen before.",
+  "body": "## The Student Exam Problem\n\nImagine a student who memorises every question in the practice book. They score 100% on every practice test. But on exam day — with new questions they've never seen — they score 40%.\n\nThat student didn't learn the material. They memorised the practice book.\n\nThis is exactly what happens to ML models that 'overfit'.\n\n## The Solution: Held-Out Test Data\n\nBefore training:\n1. Take your full dataset\n2. Lock away 20% as your **test set** — never show this to the model\n3. Train the model on the remaining 80%\n4. After training is done, evaluate ONCE on the test set\n\nThe test set score is honest because the model has never seen those examples.\n\n## The Main Metrics\n\n### Accuracy\nOf all predictions, what fraction was correct?\n\n```\nAccuracy = Correct predictions / Total predictions\n\nExample: 90 right out of 100 = 90% accuracy\n```\n\n**Problem**: Accuracy is misleading if one class is very rare.\n\nExample: If 99% of emails are NOT spam, a model that ALWAYS says 'not spam' gets 99% accuracy — but catches 0 spam.\n\n### Loss\nA more precise measure of how 'wrong' the model's predictions are — even when they're right.\n\nLow loss = model is confident AND correct\nHigh loss = model is either wrong OR uncertain\n\n## The Two Curves That Tell You Everything\n\nDuring training, plot two lines:\n- **Training loss** (goes down over time)\n- **Validation loss** (goes down... then what?)\n\nIf validation loss starts going back UP while training loss keeps dropping: your model is starting to memorise training data (overfitting). Time to stop training.",
+  "common_mistakes": [
+    "Checking only training accuracy — always check validation and test set performance",
+    "Running the test set multiple times to pick the best result — this contaminates the test set",
+    "Ignoring loss in favour of accuracy — loss gives earlier warning of overfitting and better gradients"
+  ],
+  "mini_exercise": "A doctor is building a cancer detection model. 95% of patients are healthy, 5% have cancer. A naive model that always says 'healthy' gets 95% accuracy. What is wrong with this? What metric would be better?",
+  "real_world_usage": "In 2019, Google published a paper claiming AI could detect diabetic retinopathy from eye scans as well as specialists. But an independent study found the model failed badly in Thai clinics because the lighting in those clinics was different from the training photos. Test set performance ≠ real-world performance when distributions differ.",
+  "explain_back_prompt": "Explain the train/test split in your own words. Why can't you evaluate a model on the data it trained on? What does it mean for a model to 'overfit' and how do you detect it from the loss curves?",
+  "build_task": {
+    "title": "Plot training and validation loss curves",
+    "context": "Seeing the overfitting signal in real curves is the most important skill in model evaluation.",
+    "steps": [
+      "Create a dataset with 200 samples, 10 features",
+      "Train a decision tree with max_depth=None (will overfit) and max_depth=3 (better)",
+      "For each: record train accuracy and test accuracy",
+      "Compare: which model has higher train accuracy? Which has higher test accuracy?",
+      "This is overfitting in action"
+    ],
+    "expected_output": "Two models: overfit tree has 100% train but ~60% test. Pruned tree has ~85% train AND ~83% test — better generalisation.",
+    "starter_code": "from sklearn.datasets import make_classification\nfrom sklearn.tree import DecisionTreeClassifier\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.metrics import accuracy_score\n\nX, y = make_classification(n_samples=200, n_features=10, random_state=42)\nX_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3)\n\nfor depth in [None, 3]:\n    tree = DecisionTreeClassifier(max_depth=depth)\n    tree.fit(X_train, y_train)\n    train_acc = accuracy_score(y_train, tree.predict(X_train))\n    test_acc  = accuracy_score(y_test,  tree.predict(X_test))\n    print(f'depth={depth}: train={train_acc:.2f}, test={test_acc:.2f}')"
+  }
+}

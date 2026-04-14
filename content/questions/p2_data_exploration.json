@@ -1,0 +1,77 @@
+{
+  "skill_id": "p2_data_exploration",
+  "questions": [
+    {
+      "id": "p2_data_exploration_q1",
+      "stem": "Which of the following should you check FIRST when you receive a new dataset before doing any modelling?",
+      "options": [
+        "Train a baseline model immediately to establish performance",
+        "Shape, data types, missing values, and target distribution",
+        "Run PCA to reduce dimensionality",
+        "Normalise all numeric features to [0, 1]"
+      ],
+      "answer": 1,
+      "explanation": "EDA always starts with basic inspection: shape (how many rows/columns), dtypes (numeric vs categorical), missing values per column, and the target distribution. Silent data issues — class imbalance, unexpected nulls, wrong types — will break any downstream model if not caught first."
+    },
+    {
+      "id": "p2_data_exploration_q2",
+      "stem": "You plot a boxplot of 'fare' in the Titanic dataset and see several points far above the upper whisker. What is the most responsible next step?",
+      "options": [
+        "Immediately drop all values above the upper whisker",
+        "Replace them with the median",
+        "Investigate whether they are legitimate extreme values before deciding what to do",
+        "Log-transform the column and never look at the outliers again"
+      ],
+      "answer": 2,
+      "explanation": "Outliers may be data entry errors, sensor failures, or legitimate extreme values (a very wealthy passenger really did pay much more). Drop before investigating loses real signal. The correct process is: identify → investigate → then decide (cap, transform, keep, or drop)."
+    },
+    {
+      "id": "p2_data_exploration_q3",
+      "stem": "You notice that the 'cabin' column in the Titanic dataset is missing for 77% of passengers, and those missing values correlate with lower passenger class. This missingness is best described as:",
+      "options": [
+        "MCAR — Missing Completely at Random",
+        "MAR — Missing at Random (dependent on observed variables like pclass)",
+        "MNAR — Missing Not at Random (dependent on the missing value itself)",
+        "A data entry error that should be ignored"
+      ],
+      "answer": 1,
+      "explanation": "MAR means missingness is related to observed data (pclass), not to the missing value itself. Lower-class passengers rarely had cabin assignments, so the probability of 'cabin' being missing depends on the observed 'pclass'. This means simple mean imputation will be biased — you should create an 'cabin_missing' indicator feature."
+    },
+    {
+      "id": "p2_data_exploration_q4",
+      "stem": "PCA is applied to a dataset with 50 features. The first two principal components explain 73% of the variance. What do the 'loadings' of PC1 tell you?",
+      "options": [
+        "Which samples are outliers in the PCA space",
+        "How much variance each original feature contributes to PC1 — showing which features drive that dimension",
+        "The correlation between PC1 and the target variable",
+        "The explained variance ratio of PC1"
+      ],
+      "answer": 1,
+      "explanation": "Loadings (from pca.components_[0]) show how each original feature maps onto PC1. A large absolute loading means that feature strongly influences PC1's direction. This lets you interpret PC1 as, for example, 'size dimension' or 'malignancy dimension' in a medical dataset."
+    },
+    {
+      "id": "p2_data_exploration_q5",
+      "stem": "How does UMAP differ from PCA for dimensionality reduction?",
+      "options": [
+        "UMAP is always faster and produces better results than PCA in every case",
+        "PCA is linear and maximises global variance; UMAP is non-linear and preserves both local and global neighbourhood structure",
+        "PCA requires labelled data; UMAP works without labels",
+        "UMAP uses kernel methods; PCA cannot handle non-linear data"
+      ],
+      "answer": 1,
+      "explanation": "PCA finds orthogonal linear directions of maximum variance — it's interpretable and deterministic but misses non-linear structure. UMAP learns a low-dimensional graph that preserves local neighbourhoods (nearby points stay near) and global topology. UMAP is better for visualisation of complex manifolds; PCA is better when you need interpretable linear combinations."
+    },
+    {
+      "id": "p2_data_exploration_q6",
+      "stem": "SHAP values are used in a Data-Centric AI workflow. What do SHAP values reveal that a simple correlation-with-target analysis cannot?",
+      "options": [
+        "The statistical significance of each feature",
+        "Per-prediction explanations: how much each feature pushed a specific prediction higher or lower, plus interaction effects",
+        "Whether features are normally distributed",
+        "The multicollinearity between features"
+      ],
+      "answer": 1,
+      "explanation": "Correlation gives a global average relationship. SHAP gives a per-instance, directional decomposition: for THIS specific passenger, 'female' pushed survival probability up by 0.3, 'pclass=3' pushed it down by 0.2. Dependence plots then reveal non-linear interactions — how one feature's effect changes with another feature's value."
+    }
+  ]
+}

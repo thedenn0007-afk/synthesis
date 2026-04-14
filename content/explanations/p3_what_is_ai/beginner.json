@@ -1,0 +1,28 @@
+{
+  "skill_id": "p3_what_is_ai",
+  "depth": "beginner",
+  "title": "What is AI? (Simple Version)",
+  "key_insight": "AI is software that can do tasks that normally require a human — but it learns how to do them from examples, not from rules someone wrote.",
+  "body": "## What Does 'Artificial Intelligence' Actually Mean?\n\nLet's strip away the hype.\n\nArtificial = made by humans. Intelligence = the ability to do tasks that require thinking.\n\nSo **Artificial Intelligence** = software that can do tasks that used to require human thinking.\n\n### What kinds of tasks?\n\n- Recognise what's in a photo (cat? dog? person?)\n- Understand what you're saying and reply back\n- Recommend the next song you'll probably like\n- Translate a sentence from English to French\n- Drive a car without a human steering\n\n### The key difference from normal software\n\nNormal software follows rules that a programmer wrote:\n\n> IF email contains 'win a prize' → mark as spam\n\nAI learns its own rules from examples:\n\n> Here are 1 million spam emails and 1 million real emails — figure out the pattern yourself.\n\nThe AI sees the data. The AI figures out what makes spam look like spam. You didn't tell it — it found out.\n\n### What AI is NOT\n\n- It is not conscious\n- It does not have feelings or goals\n- It does not 'think' the way you do\n- It is not magic\n\nIt is a very sophisticated pattern-matching machine. Impressive, useful, but still just software.",
+  "common_mistakes": [
+    "Thinking AI is one single technology — it's actually a wide field with many different approaches",
+    "Thinking AI is conscious or has desires — it has no awareness, just pattern matching",
+    "Thinking AI always works perfectly — it fails constantly, often in surprising ways"
+  ],
+  "mini_exercise": "Name three AI products you used in the last 24 hours. For each one, describe: what is the input? What is the output? What pattern did it have to learn?",
+  "real_world_usage": "Every major technology company — Google, Meta, Apple, Amazon — has AI teams using these ideas at massive scale. Google Search ranks pages using AI models. Spotify recommendations are AI. Face ID on your phone is AI. These aren't future concepts — they're running right now on billions of devices.",
+  "explain_back_prompt": "Without looking at the explanation, describe AI in your own words to a 10-year-old. What makes it different from normal software? Give one example.",
+  "build_task": {
+    "title": "Find the AI in 5 apps you use",
+    "context": "Spotting AI in the wild trains your intuition for what AI is actually doing.",
+    "steps": [
+      "List 5 apps or websites you use regularly (Instagram, YouTube, Google, Spotify, etc.)",
+      "For each, identify: is there AI involved? What task is it doing?",
+      "Classify each: is it recognising something? Predicting something? Generating something? Recommending something?",
+      "Write down: what data do you think it trained on?",
+      "Mark one as 'surprised me' — the AI use you least expected"
+    ],
+    "expected_output": "A list of 5 apps with the AI task labelled and a guess at what training data was used.",
+    "hint": "Almost every app you use daily has AI running somewhere. Search, recommendations, autocomplete, spam filters — all AI."
+  }
+}

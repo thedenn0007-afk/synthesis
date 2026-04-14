@@ -1,0 +1,77 @@
+{
+  "skill_id": "p1_variables",
+  "questions": [
+    {
+      "id": "p1_variables_q1",
+      "stem": "In Python, what is a variable?",
+      "options": [
+        "A fixed value that cannot change during program execution",
+        "A name that refers (points) to an object stored in memory — reassigning the name makes it point to a different object",
+        "A reserved word in the Python language",
+        "A container that can only hold numbers"
+      ],
+      "answer": 1,
+      "explanation": "Python variables are references (labels) to objects. x = 5 creates an integer object 5 and makes x point to it. x = 'hello' makes x point to a string instead — the integer 5 still exists until garbage collected. This is why y = x means both names point to the SAME object: modifying a mutable object via y also affects x. Understanding this prevents subtle bugs with lists and tensors."
+    },
+    {
+      "id": "p1_variables_q2",
+      "stem": "What is the difference between mutable and immutable objects in Python?",
+      "options": [
+        "Mutable objects are stored in RAM; immutable objects are stored on disk",
+        "Mutable objects can be changed after creation (lists, dicts, tensors); immutable objects cannot (int, str, tuple) — modifying an immutable object creates a new one",
+        "Mutable objects can hold any type; immutable objects can only hold numbers",
+        "Mutable means the variable name can change; immutable means the name is fixed"
+      ],
+      "answer": 1,
+      "explanation": "Mutable: a = [1, 2, 3]; a.append(4) modifies the same list object. Immutable: s = 'hello'; s.upper() returns a NEW string. In ML: torch.Tensor is mutable (in-place ops like tensor.add_(1) modify it directly); Python int/float/str are immutable. Gotcha: using in-place operations on requires_grad tensors breaks autograd computation graphs."
+    },
+    {
+      "id": "p1_variables_q3",
+      "stem": "What does loss.item() do in PyTorch and why is it important?",
+      "options": [
+        "Moves the loss tensor from GPU to CPU",
+        "Extracts the Python scalar value from a single-element tensor, detaching it from the computation graph — prevents the training loop from accumulating the entire gradient graph in memory",
+        "Computes the gradient of the loss with respect to all parameters",
+        "Resets the loss to zero for the next batch"
+      ],
+      "answer": 1,
+      "explanation": "loss is a PyTorch tensor that carries a computation graph (to enable backprop). If you store loss in a list, you're storing the GRAPH too. After thousands of batches, this consumes gigabytes. loss.item() extracts a plain Python float — no graph attached. Critical pattern: losses.append(loss.item()), NOT losses.append(loss). The same applies to any metric you log during training."
+    },
+    {
+      "id": "p1_variables_q4",
+      "stem": "What is type annotation in Python (e.g. def train(model: nn.Module, lr: float = 0.001) -> None:)?",
+      "options": [
+        "Runtime enforcement that raises an error if the wrong type is passed",
+        "Documentation for humans and tools (like mypy and IDEs) that describes expected types — not enforced by Python at runtime but enables static checking and autocomplete",
+        "A way to convert variables to the specified type automatically",
+        "Required syntax for Python 3.10+ — code won't run without it"
+      ],
+      "answer": 1,
+      "explanation": "Python type hints are metadata — they don't change runtime behaviour. def f(x: int) still accepts a string at runtime. The value: (1) IDEs can autocomplete and detect bugs before running, (2) mypy performs static type checking to catch type errors in a whole codebase, (3) they serve as machine-readable documentation. In large ML codebases, type hints prevent entire classes of bugs (wrong tensor shapes, wrong argument types)."
+    },
+    {
+      "id": "p1_variables_q5",
+      "stem": "Why does the following code print 'hello' instead of 'world'?\n\nx = 'hello'\ny = x\nx = 'world'\nprint(y)",
+      "options": [
+        "Python has a bug in string assignment",
+        "y = x copies the reference at that moment; x = 'world' makes x point to a new string, but y still points to 'hello' — they're independent references after reassignment",
+        "Strings in Python are passed by value, so y gets a copy immediately",
+        "x = 'world' is invalid syntax and Python silently ignores it"
+      ],
+      "answer": 1,
+      "explanation": "When y = x executes, both x and y point to the string 'hello'. Then x = 'world' makes x point to a new string object — but y is unchanged. y still points to 'hello'. This is reference semantics: assignment changes where a name points, not the object itself. Contrast with mutable objects: a = [1,2]; b = a; a.append(3); print(b) → [1,2,3] because both names point to the SAME list and .append modifies it in place."
+    },
+    {
+      "id": "p1_variables_q6",
+      "stem": "What is the purpose of Python's None, and how does it differ from 0 or False?",
+      "options": [
+        "None is equivalent to 0 — it's just a different way to represent zero",
+        "None is a special singleton object representing the ABSENCE of a value — semantically different from 0 (a number), False (a boolean), or '' (an empty string)",
+        "None means the variable has been deleted from memory",
+        "None is Python's version of null that causes errors when accessed"
+      ],
+      "answer": 1,
+      "explanation": "None represents 'no value' or 'not yet set'. 0 is a valid integer; False is a valid boolean; '' is a valid empty string. None is the absence of any of these. In ML: functions that don't explicitly return something return None; optional parameters default to None (def forward(self, mask=None)); checking 'if mask is not None' is idiomatic Python for optional arguments. Never use == None — use 'is None' (None is a singleton)."
+    }
+  ]
+}

@@ -1,0 +1,77 @@
+{
+  "skill_id": "p2_problem_solving",
+  "questions": [
+    {
+      "id": "p2_problem_solving_q1",
+      "stem": "What is the most important first step when starting a new ML project?",
+      "options": [
+        "Choose the most powerful model architecture available",
+        "Collect as much data as possible before writing any code",
+        "Clearly define the problem: what is the input, what is the target output, and what metric defines 'success' — before writing any code",
+        "Set up the GPU environment and install PyTorch"
+      ],
+      "answer": 2,
+      "explanation": "Ambiguous problem definitions cause most ML project failures. 'Build a spam detector' is incomplete: is the metric precision (fewer false alarms) or recall (catch more spam)? What counts as spam? What's the latency requirement? Answering these before writing code prevents building the wrong thing. Write a one-sentence problem statement: 'Given a user's 30-day activity features (input), predict whether they'll churn in the next 7 days (output), maximising AUC-ROC (metric).' This alignment takes 1 hour and saves weeks."
+    },
+    {
+      "id": "p2_problem_solving_q2",
+      "stem": "You're building an ML system and your training loss decreases but validation loss plateaus. What is the most likely cause and first step to investigate?",
+      "options": [
+        "The model is too small — immediately switch to a larger architecture",
+        "Overfitting — the model memorises training data but doesn't generalise; first step: check the train/val split for data leakage, then try dropout/regularisation or more data",
+        "The learning rate is too high — halve it and retrain from scratch",
+        "The GPU is overheating and causing numerical errors"
+      ],
+      "answer": 1,
+      "explanation": "Diverging train/val loss is the signature of overfitting. But FIRST check for data leakage (validation data leaking into training features — a silent bug that inflates train performance artificially). Then: (1) reduce model capacity, (2) add regularisation (dropout, weight decay), (3) collect more training data, (4) use data augmentation. Jumping to architecture changes without investigating the actual cause is a common mistake — always check the data first."
+    },
+    {
+      "id": "p2_problem_solving_q3",
+      "stem": "What does it mean to establish a 'baseline' model, and why is it essential before building complex solutions?",
+      "options": [
+        "A baseline is the minimum accuracy required before a model can be deployed",
+        "A simple, well-understood model (e.g. logistic regression, heuristic rule, mean prediction) that establishes the floor — complex models must beat this to justify their added complexity and cost",
+        "A model trained on the base dataset without any augmentation",
+        "The first version of a model before any hyperparameter tuning"
+      ],
+      "answer": 1,
+      "explanation": "A baseline answers: 'what can we achieve with minimal effort?' For fraud detection: baseline = flag all transactions above £10,000. For text classification: baseline = bag-of-words + logistic regression. If your complex transformer only matches the baseline, you've over-engineered. Baselines also reveal the actual difficulty: if baseline = 95% and your model = 96%, the ML value-add is tiny. Always implement and measure the simplest solution first."
+    },
+    {
+      "id": "p2_problem_solving_q4",
+      "stem": "What is the ML debugging checklist when your model is not learning (loss isn't decreasing)?",
+      "options": [
+        "Immediately increase the model size and retrain",
+        "Systematically check: (1) Is gradient flowing? (check .grad), (2) Is loss computed correctly? (manual check on small batch), (3) Are learning rate and optimizer correct? (try larger lr), (4) Are inputs/labels aligned? (log first batch)",
+        "Switch to a different dataset to verify the code is correct",
+        "Reinstall PyTorch — numerical issues often come from library bugs"
+      ],
+      "answer": 1,
+      "explanation": "Loss not decreasing is almost always a code bug, not a model architecture problem. Systematic checklist: (1) print loss for first 5 steps — should decrease somewhat; (2) overfit a single batch (model should reach near-zero loss on 1 batch); (3) check that optimizer.zero_grad() is called; (4) verify loss = cross_entropy(logits, labels) not cross_entropy(probs, labels); (5) check input and label shapes are correct. Always debug on 1 batch first."
+    },
+    {
+      "id": "p2_problem_solving_q5",
+      "stem": "What is 'overfitting to the validation set' and how does it happen?",
+      "options": [
+        "The model is too complex and memorises validation examples during training",
+        "By making many decisions (model selection, hyperparameter tuning, feature engineering) based on validation performance, the validation set gradually becomes a de facto training signal — you need a held-out test set evaluated only once at the end",
+        "Validation loss being lower than training loss — a statistical artifact",
+        "Running validation too frequently causes the model to 'see' validation data"
+      ],
+      "answer": 1,
+      "explanation": "Every time you look at validation metrics and adjust something, you're implicitly training on validation performance. After 100 hyperparameter trials, your best config is specifically good at the validation set — not necessarily at unseen data. Solution: three-way split: train (model weights), validation (hyperparameter decisions), test (final evaluation, touched once). Never tune on the test set — it must represent truly unseen data to give an honest performance estimate."
+    },
+    {
+      "id": "p2_problem_solving_q6",
+      "stem": "Why is it important to first explore the data (EDA) before choosing a model architecture?",
+      "options": [
+        "EDA is only necessary for data cleaning — architecture can be chosen independently",
+        "EDA reveals data characteristics that determine which model is appropriate: class imbalance (needs resampling or different loss), missing values (needs imputation or model that handles them), feature distributions (whether normalisation is needed), label noise (whether a robust loss is needed)",
+        "EDA is required by law for GDPR compliance before building ML models",
+        "EDA automatically generates the optimal model architecture based on the data"
+      ],
+      "answer": 1,
+      "explanation": "EDA shapes every downstream decision. Examples: (1) finding class imbalance (99% negative) before training tells you to use weighted loss and focus on recall, not accuracy; (2) finding that 'age' is missing for 40% of records tells you imputation strategy; (3) finding that 'timestamp' is leaking future information into features tells you to fix the split before training; (4) finding features on wildly different scales tells you to normalise. Skipping EDA means discovering these problems during training — hours or days later."
+    }
+  ]
+}

@@ -1,0 +1,27 @@
+{
+  "skill_id": "p3_ai_applications",
+  "depth": "beginner",
+  "title": "AI Applications — What AI Actually Does in the Real World",
+  "key_insight": "AI is not a single technology — it's a collection of techniques applied to specific problems. Understanding the main application categories helps you identify which AI approach fits which problem.",
+  "body": "## The Main Categories of AI Applications\n\n### 1. Classification\n**Task**: Put this thing into one of N categories\n- Email spam or not spam\n- Tumour benign or malignant\n- Sentiment: positive, neutral, negative\n- Image: cat, dog, bird, or horse\n\n### 2. Regression (Prediction)\n**Task**: Predict a number\n- House price given features\n- Tomorrow's weather temperature\n- Expected delivery time\n\n### 3. Generation\n**Task**: Create new content that resembles training data\n- Write an essay (GPT-4)\n- Paint an image (Stable Diffusion, DALL-E)\n- Compose music\n- Write code (GitHub Copilot)\n\n### 4. Recommendation\n**Task**: Given a user and context, suggest what they want next\n- Netflix: which movie to watch\n- Spotify: which song to play\n- Amazon: which product to buy\n- TikTok: which video to show\n\n### 5. Translation and Conversion\n**Task**: Convert from one form to another\n- Speech to text (Whisper)\n- English to French\n- Photo to description\n- Description to code\n\n## AI You Use Every Day (Without Knowing)\n\n| App | AI underneath |\n|---|---|\n| Gmail spam filter | Classifier trained on billions of emails |\n| Google Search ranking | Multiple ranking models + NLP |\n| iPhone face unlock | Face recognition (classification) |\n| Google Maps ETA | Regression on traffic patterns |\n| Spotify Discover Weekly | Collaborative filtering + NLP |\n| Google Photos grouping | Face clustering (unsupervised) |\n| Grammar suggestions | Sequence model (BERT-family) |\n\n## What AI Can and Can't Do\n\n**AI is very good at:**\n- Finding patterns in large datasets\n- Doing the same task millions of times without fatigue\n- Processing images, text, audio at scale\n- Detecting subtle statistical regularities humans miss\n\n**AI is bad at:**\n- Reasoning about novel situations it hasn't seen\n- Understanding physical causality ('what happens if I drop this?')\n- Generalising far outside training data distribution\n- Knowing when it doesn't know (calibration)",
+  "common_mistakes": [
+    "Thinking AI means one thing — a spam filter and GPT-4 are both 'AI' but have almost nothing in common technically",
+    "Overestimating AI on uncommon cases — AI systems often fail badly on inputs very different from their training distribution",
+    "Underestimating narrow AI — a model trained specifically for one task (e.g. chess) can be vastly superhuman, even though it can't do anything else"
+  ],
+  "mini_exercise": "Think of three apps you use daily. For each one, identify one place where AI is likely being used. What type of AI application is it (classification, regression, generation, recommendation, or translation)?",
+  "real_world_usage": "Google Translate now uses a neural sequence-to-sequence model that processes the entire sentence at once (transformers), rather than word by word. This one architectural change improved translation quality enough that professional translators noticed. For low-resource languages with little training data, quality is still poor — a reminder that AI applications are only as good as the training data available.",
+  "explain_back_prompt": "Name five categories of AI applications and give one real example of each. What is one thing AI does better than humans, and one thing humans still do better than AI?",
+  "build_task": {
+    "title": "Build three different AI applications in 30 lines each",
+    "context": "Seeing the same workflow applied to different problem types makes the categories concrete.",
+    "steps": [
+      "Application 1 — Classification: train a classifier on the iris dataset, predict the species of a new flower",
+      "Application 2 — Regression: train a regressor on the Boston housing dataset, predict price",
+      "Application 3 — Clustering (unsupervised): run KMeans on customer data, discover natural groups",
+      "For each: print the prediction/output and interpret what it means"
+    ],
+    "expected_output": "Three working applications with output printed and explained.",
+    "starter_code": "from sklearn.datasets import load_iris, load_diabetes\nfrom sklearn.tree import DecisionTreeClassifier\nfrom sklearn.linear_model import LinearRegression\nfrom sklearn.cluster import KMeans\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.metrics import accuracy_score\nimport numpy as np\n\n# --- Application 1: Classification ---\niris = load_iris()\nX_train, X_test, y_train, y_test = train_test_split(iris.data, iris.target)\nclf = DecisionTreeClassifier().fit(X_train, y_train)\nprint('Iris classification accuracy:', accuracy_score(y_test, clf.predict(X_test)))\n\n# --- Application 2: Regression ---\n# TODO: load_diabetes, train LinearRegression, print test score\n\n# --- Application 3: Clustering ---\n# TODO: KMeans on iris.data (no labels), print cluster centres"
+  }
+}

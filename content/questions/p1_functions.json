@@ -1,0 +1,77 @@
+{
+  "skill_id": "p1_functions",
+  "questions": [
+    {
+      "id": "p1_functions_q1",
+      "stem": "What is the primary benefit of breaking code into functions?",
+      "options": [
+        "Functions always make code run faster",
+        "Functions eliminate code duplication, make logic testable in isolation, and give meaningful names to operations — reducing bugs and making large codebases manageable",
+        "Functions are required by Python — code without functions won't run",
+        "Functions automatically parallelise code across multiple CPU cores"
+      ],
+      "answer": 1,
+      "explanation": "Functions serve three purposes: (1) DRY (Don't Repeat Yourself) — write once, call many times; (2) abstraction — give complex logic a clear name; (3) testability — test each function independently. In ML: splitting training into prepare_data(), build_model(), train_epoch(), evaluate() makes each piece independently verifiable. A 500-line training script without functions is unmaintainable; with functions, each piece is ~20 lines and understandable."
+    },
+    {
+      "id": "p1_functions_q2",
+      "stem": "What is a default argument in Python, and what is the classic bug with mutable defaults?",
+      "options": [
+        "Default arguments are required; functions without them raise errors",
+        "Default values used when an argument is not provided; the bug: def f(x, items=[]) shares the same list across all calls — mutations to items persist between calls",
+        "Default arguments are always None and must be set explicitly",
+        "Using a mutable default causes an immediate syntax error in Python"
+      ],
+      "answer": 1,
+      "explanation": "def f(x, items=[]) creates ONE list object at function definition time, shared by ALL calls. f(1) → f(2) → items has accumulated [1, 2]. Fix: def f(x, items=None): if items is None: items = []. In ML: def train(config, callbacks=None): if callbacks is None: callbacks = []. Mutable defaults (list, dict, set) should always use None as the default sentinel."
+    },
+    {
+      "id": "p1_functions_q3",
+      "stem": "What is *args and **kwargs in a function definition?",
+      "options": [
+        "Pointers to external files — *args for positional files, **kwargs for keyword files",
+        "*args collects extra positional arguments into a tuple; **kwargs collects extra keyword arguments into a dict — enables flexible APIs that accept varying numbers of arguments",
+        "*args multiplies each argument by itself; **kwargs raises each argument to a power",
+        "They are required in every Python function definition"
+      ],
+      "answer": 1,
+      "explanation": "def f(*args, **kwargs) accepts any number of positional and keyword arguments. args is a tuple, kwargs is a dict. Common uses: wrapper functions (def timed_train(*args, **kwargs): start=time.time(); result=train(*args, **kwargs); return result), PyTorch nn.Module.forward (passes through arguments), logging wrappers. torch.nn.Sequential uses *args: Sequential(layer1, layer2, layer3)."
+    },
+    {
+      "id": "p1_functions_q4",
+      "stem": "What is a lambda function and when is it appropriate to use one?",
+      "options": [
+        "A function that runs on AWS Lambda cloud service",
+        "An anonymous single-expression function: lambda x: x**2 — appropriate for short, one-use operations passed to higher-order functions (sorted, map, filter)",
+        "A function that can only take one argument",
+        "A function defined inside a class method"
+      ],
+      "answer": 1,
+      "explanation": "lambda arguments: expression creates a function without a name. Use for short operations: sorted(data, key=lambda x: x['score']) sorts by score; map(lambda x: x*2, items) doubles each item. Avoid for complex logic — use a named function instead for readability. In PyTorch: scheduler = LambdaLR(optimizer, lr_lambda=lambda epoch: 0.95**epoch) applies exponential decay."
+    },
+    {
+      "id": "p1_functions_q5",
+      "stem": "What is the forward() method in a PyTorch nn.Module, and how does PyTorch call it?",
+      "options": [
+        "It moves the model's weights forward in time for sequence models",
+        "It defines the computation of the model's forward pass; PyTorch calls it via model(x) — which actually calls __call__(), which calls forward() after running hooks",
+        "It manually advances to the next training step",
+        "It must be called explicitly: model.forward(x) — using model(x) is not supported"
+      ],
+      "answer": 1,
+      "explanation": "Every nn.Module defines forward(self, x) as the computation graph. model(x) calls __call__() which: runs pre-forward hooks, calls self.forward(x), runs post-forward hooks. ALWAYS call model(x) not model.forward(x) — only __call__ triggers hooks (needed for gradient checkpointing, quantisation, etc.). Define forward, call via __call__. This is Python's __call__ dunder method used as an interface convention."
+    },
+    {
+      "id": "p1_functions_q6",
+      "stem": "What does torch.autograd.Function.forward/backward allow you to do that nn.Module.forward doesn't?",
+      "options": [
+        "Run the forward pass on multiple GPUs simultaneously",
+        "Define CUSTOM gradient computations — control exactly what gradient flows backward through your operation, bypassing PyTorch's automatic differentiation for non-standard math",
+        "Create functions that run faster than standard PyTorch operations",
+        "Call the function from both Python and C++ without modification"
+      ],
+      "answer": 1,
+      "explanation": "nn.Module.forward uses autograd's automatic differentiation. torch.autograd.Function lets you define both forward and backward manually. Uses: (1) Straight-Through Estimator (quantisation-aware training — discrete rounding has no gradient, so fake a gradient), (2) numerically stable custom ops (fused log-softmax), (3) integrating non-PyTorch operations (numpy, scipy). The forward context saves tensors for backward via ctx.save_for_backward()."
+    }
+  ]
+}

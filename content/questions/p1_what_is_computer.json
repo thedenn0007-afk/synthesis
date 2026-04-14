@@ -1,0 +1,77 @@
+{
+  "skill_id": "p1_what_is_computer",
+  "questions": [
+    {
+      "id": "p1_what_is_computer_q1",
+      "stem": "What are the four main components of a computer system?",
+      "options": [
+        "Keyboard, mouse, monitor, printer",
+        "CPU, memory (RAM), storage, and input/output devices",
+        "Transistors, capacitors, resistors, and diodes",
+        "Python, Java, C++, and JavaScript"
+      ],
+      "answer": 1,
+      "explanation": "A computer system has four core components: the CPU (processes instructions), memory/RAM (stores data currently being used), storage (hard drive/SSD, stores data permanently), and I/O devices (keyboard, screen, etc.). Understanding these components helps you reason about where performance bottlenecks occur."
+    },
+    {
+      "id": "p1_what_is_computer_q2",
+      "stem": "What is the key difference between RAM and storage (hard drive/SSD)?",
+      "options": [
+        "RAM stores data permanently; storage is temporary",
+        "RAM is much faster but volatile (loses data when power is off); storage is slower but persistent",
+        "RAM is used for programs; storage is used for the operating system",
+        "They are the same thing with different names"
+      ],
+      "answer": 1,
+      "explanation": "RAM (Random Access Memory) is extremely fast (nanosecond access) but loses its contents when powered off — it's for data currently in use. Storage (HDD/SSD) is slower (microseconds to milliseconds) but persistent. When you open a program, it's copied from storage into RAM so the CPU can access it quickly."
+    },
+    {
+      "id": "p1_what_is_computer_q3",
+      "stem": "Why are GPUs preferred over CPUs for training neural networks?",
+      "options": [
+        "GPUs have higher clock speeds than CPUs",
+        "GPUs have thousands of simple cores optimised for parallel operations, while CPUs have a few powerful cores for sequential logic",
+        "GPUs have more RAM than CPUs",
+        "CPUs cannot perform floating-point arithmetic"
+      ],
+      "answer": 1,
+      "explanation": "CPUs have 8–64 powerful cores optimised for sequential tasks with complex branching. GPUs have thousands of simpler cores designed to run the same operation on many data points simultaneously — perfect for matrix multiplications in neural networks. Training a model involves billions of parallel multiply-add operations, which GPUs handle 100–1000× faster than CPUs."
+    },
+    {
+      "id": "p1_what_is_computer_q4",
+      "stem": "What is the Von Neumann architecture, and what bottleneck does it create?",
+      "options": [
+        "It separates CPU and GPU — the bottleneck is moving data between them",
+        "It stores both program instructions and data in the same memory — the bottleneck is the bus between CPU and memory",
+        "It requires all programs to be written in assembly language",
+        "It limits computers to processing one instruction at a time forever"
+      ],
+      "answer": 1,
+      "explanation": "Von Neumann architecture uses a single shared memory for both instructions and data. The CPU must constantly fetch from memory, and the memory bus becomes a bottleneck — the 'Von Neumann bottleneck'. For AI workloads, this matters because LLM weights (gigabytes) must be streamed from VRAM to compute units continuously, making inference memory-bandwidth bound."
+    },
+    {
+      "id": "p1_what_is_computer_q5",
+      "stem": "A program on a 64-bit CPU can address up to how much virtual memory?",
+      "options": [
+        "4 GB (same as 32-bit)",
+        "16 GB",
+        "16 exabytes (2^64 bytes — practically unlimited for current use)",
+        "1 TB exactly"
+      ],
+      "answer": 2,
+      "explanation": "A 64-bit address space is 2^64 bytes = 16 exabytes (16 million terabytes). In practice, current hardware uses 48-bit physical addresses (256 TB), but this is still vastly larger than 32-bit's 4 GB limit. This is why 64-bit systems can train large models: you can map multi-gigabyte model weights into a single virtual address space."
+    },
+    {
+      "id": "p1_what_is_computer_q6",
+      "stem": "What does 'memory bandwidth bound' mean for LLM inference?",
+      "options": [
+        "The model is too large to fit on the GPU",
+        "The GPU's arithmetic units sit idle waiting for data to arrive from memory — the bottleneck is data transfer speed, not compute speed",
+        "The CPU is bottlenecking the GPU via the PCIe bus",
+        "The network connection is limiting inference throughput"
+      ],
+      "answer": 1,
+      "explanation": "At batch size 1, LLM inference requires loading all model weights from GPU memory (VRAM) for every token generated. The arithmetic intensity (FLOPs per byte) is low (~1), far below the GPU's roofline. The compute units finish their calculations and then wait for the next layer's weights to arrive from HBM — this is memory bandwidth bound. Quantisation helps by reducing the bytes that need to be moved."
+    }
+  ]
+}

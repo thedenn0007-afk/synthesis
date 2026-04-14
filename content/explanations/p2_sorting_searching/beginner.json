@@ -1,0 +1,28 @@
+{
+  "skill_id": "p2_sorting_searching",
+  "depth": "beginner",
+  "title": "Sorting & Searching — Organising and Finding Data",
+  "key_insight": "Sorting and searching are the most fundamental operations in computing. Python's built-in sort is excellent — but knowing when to use a sorted list, when to use binary search, and when to use a hash table changes performance from O(n) to O(1).",
+  "body": "## Sorting in Python\n\n```python\nnumbers = [64, 34, 25, 12, 22, 11, 90]\n\n# Two ways to sort:\nnumbers.sort()              # in-place, returns None, modifies original\nprint(numbers)  # [11, 12, 22, 25, 34, 64, 90]\n\noriginal = [64, 34, 25, 12, 22, 11, 90]\nsorted_copy = sorted(original)  # returns new list, original unchanged\n\n# Reverse order:\nnumbers.sort(reverse=True)  # [90, 64, 34, 25, 22, 12, 11]\n\n# Sort by key:\nwords = ['banana', 'apple', 'cherry', 'date']\nwords.sort(key=len)          # sort by length\nprint(words)  # ['date', 'apple', 'banana', 'cherry']\n\n# Sort objects:\nstudents = [('Alice', 88), ('Bob', 75), ('Carol', 92)]\nstudents.sort(key=lambda s: s[1], reverse=True)  # sort by grade, highest first\nprint(students)  # [('Carol', 92), ('Alice', 88), ('Bob', 75)]\n```\n\n## Linear Search — Check Every Item\n\n```python\ndef linear_search(lst, target):\n    for i, item in enumerate(lst):\n        if item == target:\n            return i   # return index where found\n    return -1          # not found\n\nnumbers = [64, 34, 25, 12, 22, 11, 90]\nprint(linear_search(numbers, 22))  # 4\nprint(linear_search(numbers, 99))  # -1\n\n# Time: O(n) — must check every element in worst case\n# Works on any list — sorted or not\n# Python's 'in' keyword does the same thing: 22 in numbers\n```\n\n## Binary Search — Divide and Conquer\n\n```python\n# Binary search requires SORTED data\n# Each step cuts remaining search space in half → O(log n)\n\nimport bisect\n\nnums = [11, 12, 22, 25, 34, 64, 90]  # sorted!\n\n# Find position for inserting 30:\npos = bisect.bisect_left(nums, 30)\nprint(pos)  # 4 — insert at index 4 to keep sorted\n\n# Find if element exists:\npos = bisect.bisect_left(nums, 34)\nif pos < len(nums) and nums[pos] == 34:\n    print(f'Found 34 at index {pos}')  # Found 34 at index 4\nelse:\n    print('Not found')\n\n# Manual binary search:\ndef binary_search(arr, target):\n    low, high = 0, len(arr) - 1\n    while low <= high:\n        mid = (low + high) // 2\n        if arr[mid] == target:   return mid\n        elif arr[mid] < target:  low  = mid + 1\n        else:                    high = mid - 1\n    return -1\n```\n\n## Performance Comparison\n\n```\n          Linear Search    Binary Search    Set lookup\nN=1000     1000 ops         10 ops           1 op\nN=1M       1M ops           20 ops           1 op\nN=1B       1B ops           30 ops           1 op\n\nLinear: O(n)   — doubles when data doubles\nBinary: O(log n) — 10 ops to search 1024 items\nSet:    O(1)   — same time regardless of size\n```",
+  "common_mistakes": [
+    "Using binary search on an unsorted list — gives wrong results, no error",
+    "Using linear search when you need to search the same list many times — sort once, then binary search repeatedly, or use a set for O(1) lookups",
+    "`sorted()` is stable — elements with equal keys maintain their original relative order. This matters when sorting by multiple fields."
+  ],
+  "mini_exercise": "Given a sorted list of 1000 numbers. You need to search for 50 different values. Compare: (1) linear search for each, (2) binary search for each, (3) convert to set, lookup each. Count the total operations for each approach.",
+  "real_world_usage": "Python's sorted() uses Timsort — a hybrid merge/insertion sort that is O(n log n) worst case. It's used everywhere: database index traversal, autocomplete suggestions, search result ranking. Binary search powers: database B-tree lookups, git bisect, pip's version resolution.",
+  "explain_back_prompt": "What is the difference between linear search and binary search? Why does binary search require sorted data? When would you use a set instead of binary search?",
+  "build_task": {
+    "title": "Implement and benchmark three search strategies",
+    "context": "Understanding search performance is essential for writing efficient code.",
+    "steps": [
+      "Generate a sorted list of 100,000 random integers",
+      "Generate 1,000 search targets",
+      "Implement linear search (explicit loop), use bisect for binary search, and use a set",
+      "Time all three approaches using time.perf_counter()",
+      "Print a table: method, total time, time per search"
+    ],
+    "expected_output": "Clear timing table showing O(n) vs O(log n) vs O(1) in practice.",
+    "starter_code": "import random\nimport time\nimport bisect\n\n# Generate data\ndata = sorted(random.sample(range(1_000_000), 100_000))\ntargets = [random.randint(0, 1_000_000) for _ in range(1_000)]\ndata_set = set(data)\n\n# TODO: implement linear_search\n# TODO: implement binary_search_bisect\n# TODO: time each approach with the 1000 targets\n# TODO: print results"
+  }
+}

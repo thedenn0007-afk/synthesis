@@ -1,0 +1,77 @@
+{
+  "skill_id": "p1_loops",
+  "questions": [
+    {
+      "id": "p1_loops_q1",
+      "stem": "What is the difference between a for loop and a while loop in Python?",
+      "options": [
+        "for loops are faster; while loops are more memory efficient",
+        "for loops iterate over a fixed sequence (list, range, etc.); while loops repeat as long as a condition is True — use while when you don't know the number of iterations in advance",
+        "for loops can only iterate over numbers; while loops can iterate over anything",
+        "They are identical — for is just syntactic sugar for while"
+      ],
+      "answer": 1,
+      "explanation": "for loop: for x in [1, 2, 3]: processes each element. for i in range(10): counts 0-9. Use for when the sequence is known. while loop: while loss > threshold: train_step(). Use while when the stopping condition is dynamic (e.g. convergence criteria, early stopping, interactive input). In ML training: the outer epoch loop is for; the early-stopping check inside could be while or if+break."
+    },
+    {
+      "id": "p1_loops_q2",
+      "stem": "What does enumerate() do and why is it preferred over range(len(list))?",
+      "options": [
+        "enumerate() is faster than range(len()) for large lists",
+        "enumerate(iterable) yields (index, value) pairs — more readable than range(len(x)) and works on any iterable, not just sequences with a defined length",
+        "enumerate() automatically sorts the list by index",
+        "enumerate() is only used for debugging — it prints each iteration"
+      ],
+      "answer": 1,
+      "explanation": "for i, item in enumerate(my_list): is cleaner and works on any iterable (generators, file objects, etc.). for i in range(len(my_list)): requires len(), which doesn't exist for generators. In ML training: for epoch, batch in enumerate(train_loader): gives both the batch index and data in one line. enumerate(iterable, start=1) starts counting from 1 if needed."
+    },
+    {
+      "id": "p1_loops_q3",
+      "stem": "Why are Python loops ~100x slower than NumPy operations for large arrays, and what should you do instead?",
+      "options": [
+        "NumPy is written by better programmers than the Python core team",
+        "Each Python loop iteration has interpreter overhead (bytecode dispatch, type checking, reference counting). NumPy calls C code once, which processes elements with SIMD — eliminating per-element Python overhead entirely",
+        "Python loops use more memory per iteration, causing cache misses",
+        "NumPy operations run on GPU automatically, while Python loops run on CPU"
+      ],
+      "answer": 1,
+      "explanation": "A Python loop doing x[i] * 2 for each of 1M elements involves: 1M bytecode dispatches, 1M integer object creations, 1M reference count updates. NumPy's arr * 2 makes one C function call that uses SIMD to process 8-16 elements/cycle. Rule: if you're writing a loop over tensor/array elements, there's almost always a NumPy/PyTorch operation that does it 50-200× faster: np.sum, np.where, tensor.mean(dim=1), etc."
+    },
+    {
+      "id": "p1_loops_q4",
+      "stem": "What is a list comprehension and when is it preferable to a for loop?",
+      "options": [
+        "A way to understand lists better — a comprehension exercise, not a code construct",
+        "[expression for item in iterable if condition] — a concise, idiomatic way to create lists that is typically 30-50% faster than an equivalent for loop due to optimised bytecode",
+        "A special loop that creates dictionaries instead of lists",
+        "A way to loop through a list backwards"
+      ],
+      "answer": 1,
+      "explanation": "squares = [x**2 for x in range(100) if x % 2 == 0] creates a list of even squares. Equivalent for loop: 4 lines. Comprehension: 1 line. Performance: Python bytecode for comprehensions is slightly optimised (LIST_APPEND opcode) vs explicit .append(). For numeric work, still use NumPy: np.arange(0, 100, 2)**2 is 100× faster than the comprehension. Use comprehensions for non-numeric transformations: names = [user.name for user in users]."
+    },
+    {
+      "id": "p1_loops_q5",
+      "stem": "What is a generator in Python and how does it differ from a list?",
+      "options": [
+        "A generator creates random values; a list stores specific values",
+        "A generator yields values one at a time (lazy evaluation) — uses O(1) memory regardless of how many elements it produces; a list stores all elements in memory at once",
+        "Generators are for whole numbers only; lists can hold any type",
+        "A generator and a list are the same — 'generator' is an older name for 'list'"
+      ],
+      "answer": 1,
+      "explanation": "list = [x**2 for x in range(1_000_000)] creates 1M integers in RAM (~8 MB). gen = (x**2 for x in range(1_000_000)) creates a tiny generator object — each value is computed only when requested by next(). PyTorch's DataLoader uses generators: it loads batches from disk on demand, not all at once. Custom generators with yield are perfect for infinite data streams: def data_stream(): while True: yield load_batch()."
+    },
+    {
+      "id": "p1_loops_q6",
+      "stem": "In a PyTorch training loop, what is the purpose of optimizer.zero_grad() and when must it be called?",
+      "options": [
+        "It resets the model's weights to their initial values at the start of each epoch",
+        "It clears accumulated gradients from the previous batch — must be called before loss.backward() (or after optimizer.step()) to prevent gradients accumulating across batches",
+        "It sets the learning rate to zero at the end of training",
+        "It frees GPU memory used by the optimizer's state variables"
+      ],
+      "answer": 1,
+      "explanation": "PyTorch accumulates gradients by default — each .backward() call ADDS to existing .grad tensors. Without zero_grad(), gradients from all previous batches pile up, giving wildly wrong parameter updates. Pattern: optimizer.zero_grad() → forward pass → loss.backward() → optimizer.step(). Some advanced techniques (gradient accumulation) intentionally skip zero_grad() for multiple batches before stepping — but this must be deliberate, not accidental."
+    }
+  ]
+}

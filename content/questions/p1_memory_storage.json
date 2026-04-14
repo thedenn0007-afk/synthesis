@@ -1,0 +1,77 @@
+{
+  "skill_id": "p1_memory_storage",
+  "questions": [
+    {
+      "id": "p1_memory_storage_q1",
+      "stem": "What is the memory hierarchy, ordered from fastest to slowest?",
+      "options": [
+        "HDD → RAM → L1 cache → CPU registers",
+        "CPU registers → L1/L2/L3 cache → RAM → SSD → HDD",
+        "RAM → CPU cache → Hard drive → Network",
+        "GPU memory → CPU memory → registers → cache"
+      ],
+      "answer": 1,
+      "explanation": "From fastest to slowest: CPU registers (~0.3ns) → L1 cache (~1ns) → L2 cache (~4ns) → L3 cache (~20ns) → RAM (~100ns) → NVMe SSD (~100µs) → HDD (~10ms). Each level is 5-100× slower but much larger. Neural network training performance is dominated by how well the data access pattern uses the cache hierarchy."
+    },
+    {
+      "id": "p1_memory_storage_q2",
+      "stem": "During neural network training, what are the four categories of GPU memory usage?",
+      "options": [
+        "Weights, code, operating system, network buffers",
+        "Model parameters, activations (intermediate outputs stored for backprop), gradients, and optimizer state (e.g. Adam's m and v)",
+        "Training data, test data, validation data, and labels",
+        "Input layer, hidden layers, output layer, and loss function"
+      ],
+      "answer": 1,
+      "explanation": "Training memory = parameters (2 bytes fp16) + activations (2 bytes; largest for long sequences) + gradients (2 bytes) + optimizer state (8 bytes for Adam's two momentum terms). For a 7B model with Adam in fp32: (2+2+2+8) × 7B = 98 GB. Gradient checkpointing trades ~30% speed for ~60% activation memory reduction by recomputing activations during backward pass."
+    },
+    {
+      "id": "p1_memory_storage_q3",
+      "stem": "What is gradient checkpointing and what trade-off does it make?",
+      "options": [
+        "Saves model weights every N steps — trades storage space for recovery ability",
+        "Discards intermediate activations during forward pass and recomputes them during backward pass — trades ~30% slower backward for ~60% less activation memory",
+        "Reduces gradient precision to float16 to save memory",
+        "Skips computing gradients for certain layers to speed up training"
+      ],
+      "answer": 1,
+      "explanation": "During backpropagation, PyTorch needs the activations from the forward pass to compute gradients. Normally, all activations are stored in VRAM. Gradient checkpointing discards most activations after the forward pass and recomputes only the needed ones during backward. This reduces activation memory by ~60% at the cost of ~30% more compute — essential for training with very long sequences or large batch sizes."
+    },
+    {
+      "id": "p1_memory_storage_q4",
+      "stem": "What is Flash Attention and what memory problem does it solve?",
+      "options": [
+        "A fast SSD storage format for training datasets",
+        "A rewritten attention algorithm that avoids materialising the O(n²) attention weight matrix, reducing memory from O(n²) to O(n) for sequence length n",
+        "A technique to compress model weights into flash storage",
+        "An NVIDIA library for faster memory allocation"
+      ],
+      "answer": 1,
+      "explanation": "Standard attention creates an (n × n) attention matrix where n = sequence length. For n=4096 in float16, that's 4096² × 2 bytes = 32 MB per head per batch item — quickly exhausting VRAM. Flash Attention computes attention in tiles, keeping intermediate values in fast SM shared memory and never writing the full matrix to HBM. Result: O(n) memory, 2-4× speedup for long sequences."
+    },
+    {
+      "id": "p1_memory_storage_q5",
+      "stem": "What is ZeRO (Zero Redundancy Optimizer) Stage 3?",
+      "options": [
+        "A quantisation technique that reduces weights to zero where possible",
+        "A distributed training strategy that shards model parameters, gradients, AND optimizer state across all GPUs — each GPU only holds 1/N of the model",
+        "A technique that removes zero-valued weights from a sparse model",
+        "A learning rate scheduler that reduces the rate to zero at the end of training"
+      ],
+      "answer": 1,
+      "explanation": "Standard data-parallel training replicates the full model on every GPU. ZeRO Stage 3 (from the DeepSpeed library) shards all three memory components across GPUs: each GPU holds 1/N of parameters, 1/N of gradients, and 1/N of optimizer state. With 8 GPUs, you can train a model 8× larger than would fit on one GPU. Weights are gathered via all-gather when needed and immediately discarded."
+    },
+    {
+      "id": "p1_memory_storage_q6",
+      "stem": "Why does calling del tensor in Python not immediately release GPU VRAM?",
+      "options": [
+        "PyTorch doesn't support freeing individual tensors",
+        "del reduces the Python reference count to 0, which triggers CPython's memory system, but PyTorch's CUDA allocator returns memory to an internal pool — not to the OS/GPU driver — until torch.cuda.empty_cache() is called",
+        "GPU memory can only be freed when the Python script ends",
+        "del is a Python 2 command that is no longer supported"
+      ],
+      "answer": 1,
+      "explanation": "PyTorch manages a CUDA memory pool for performance — allocating from the OS is slow. When you del a tensor or its refcount drops to 0, the memory goes back to PyTorch's pool, not the OS. Other code sees the tensor as freed (Python side), but nvidia-smi still shows the process holding the memory. torch.cuda.empty_cache() releases unused cached memory back to the GPU driver."
+    }
+  ]
+}

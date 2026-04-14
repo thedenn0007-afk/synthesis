@@ -1,0 +1,29 @@
+{
+  "skill_id": "p3_model_evaluation",
+  "depth": "mid",
+  "title": "Model Evaluation — Precision, Recall, and the Right Metric",
+  "key_insight": "Choosing the right metric is as important as choosing the right model. The metric determines what 'better' means — and models will optimise exactly what you measure.",
+  "body": "## The Confusion Matrix\n\n```python\nfrom sklearn.metrics import confusion_matrix\nimport numpy as np\n\n# Binary classification: cancer detection (1=cancer, 0=healthy)\ny_true = [1, 0, 1, 1, 0, 1, 0, 0, 1, 0]\ny_pred = [1, 0, 0, 1, 0, 1, 1, 0, 1, 0]\n\ncm = confusion_matrix(y_true, y_pred)\nprint(cm)\n# [[4, 1],   ← actual 0: 4 correct (TN), 1 wrong (FP)\n#  [1, 4]]   ← actual 1: 1 wrong (FN), 4 correct (TP)\n\n# The four cells:\n# True Positive  (TP): predicted cancer, has cancer     → good\n# True Negative  (TN): predicted healthy, is healthy    → good\n# False Positive (FP): predicted cancer, is healthy     → false alarm\n# False Negative (FN): predicted healthy, has cancer    → missed case\n```\n\n## Precision, Recall, and F1\n\n```python\nfrom sklearn.metrics import classification_report\n\nprint(classification_report(y_true, y_pred))\n\n# Precision = TP / (TP + FP) = 'of what I flagged as cancer, how many had it?'\n# Recall    = TP / (TP + FN) = 'of all actual cancers, how many did I catch?'\n# F1        = harmonic mean of precision and recall\n\n# Cancer detection: high recall matters more\n# (missing a cancer = worse than false alarm)\n\n# Spam filter: high precision matters more\n# (blocking real emails = worse than missing spam)\n```\n\n## ROC Curve and AUC\n\n```python\nfrom sklearn.metrics import roc_curve, roc_auc_score\nimport matplotlib.pyplot as plt\n\n# Most classifiers output a probability, not a binary prediction\n# By varying the threshold, you trade off precision vs recall\n\ny_prob = model.predict_proba(X_test)[:, 1]  # probability of positive class\n\nfpr, tpr, thresholds = roc_curve(y_test, y_prob)\nplt.plot(fpr, tpr)\nplt.xlabel('False Positive Rate')\nplt.ylabel('True Positive Rate (Recall)')\nplt.title('ROC Curve')\n\nauc = roc_auc_score(y_test, y_prob)\nprint(f'AUC = {auc:.3f}')  # 0.5 = random, 1.0 = perfect\n```\n\n## Cross-Validation: More Robust Than a Single Split\n\n```python\nfrom sklearn.model_selection import cross_val_score\n\n# 5-fold CV: train on 4/5, test on 1/5, repeat 5 times, average results\nscores = cross_val_score(\n    model, X, y,\n    cv=5,\n    scoring='f1'\n)\nprint(f'F1: {scores.mean():.3f} ± {scores.std():.3f}')\n# Mean and standard deviation give confidence in the estimate\n# High std = performance is unstable (maybe need more data)\n```",
+  "common_mistakes": [
+    "Optimising for accuracy on imbalanced datasets — always use F1 or AUC-ROC",
+    "Forgetting that ROC AUC doesn't tell you the operating point — you still need to choose a threshold for deployment",
+    "Using a single train/test split on small datasets — cross-validation gives a much more reliable estimate"
+  ],
+  "mini_exercise": "For a credit card fraud detector: is false positive (flagging a legitimate transaction) or false negative (missing actual fraud) worse? Which metric should you maximise — precision or recall? Explain why.",
+  "real_world_usage": "Spotify's recommendation system is evaluated using offline metrics (AUC on historical data) and online metrics (stream rate, skip rate, playlist completion rate). The two sometimes disagree — a model with higher AUC can have lower stream rate if it optimises for the wrong signal. Companies A/B test model changes in production to measure the metrics that actually matter.",
+  "explain_back_prompt": "Draw the confusion matrix for a binary classifier. Define TP, TN, FP, FN. Then define precision, recall, and F1 using those terms. When would you prioritise precision over recall?",
+  "build_task": {
+    "title": "Build a full evaluation dashboard",
+    "context": "Every ML project needs a standard evaluation report before deployment.",
+    "steps": [
+      "Load breast cancer dataset, split 80/20",
+      "Train LogisticRegression",
+      "Print classification_report (precision/recall/F1 per class)",
+      "Plot the confusion matrix with seaborn.heatmap",
+      "Plot the ROC curve and print AUC",
+      "Interpret: which class has better precision? Which has better recall? Why?"
+    ],
+    "expected_output": "Classification report, confusion matrix heatmap, ROC curve with AUC score.",
+    "starter_code": "from sklearn.datasets import load_breast_cancer\nfrom sklearn.linear_model import LogisticRegression\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.metrics import classification_report, confusion_matrix, roc_auc_score, roc_curve\nimport seaborn as sns\nimport matplotlib.pyplot as plt\n\nX, y = load_breast_cancer(return_X_y=True)\nX_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)\n\nmodel = LogisticRegression(max_iter=1000).fit(X_train, y_train)\n# TODO: print classification_report\n# TODO: plot confusion matrix\n# TODO: plot ROC curve"
+  }
+}

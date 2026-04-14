@@ -1,0 +1,28 @@
+{
+  "skill_id": "p3_what_is_ai",
+  "depth": "mid",
+  "title": "What is AI? — The Technical Picture",
+  "key_insight": "AI systems learn a function f(x) → y from data. The 'intelligence' is in the learned function, not in any programming of rules.",
+  "body": "## The Function View of AI\n\nEvery AI system is learning a function:\n\n```\nf(input) → output\n```\n\nExamples:\n- `f(image)` → `'cat'` or `'dog'`\n- `f(email_text)` → `spam` or `not_spam`\n- `f(sentence_in_french)` → `sentence_in_english`\n- `f(user_history)` → `list_of_recommended_songs`\n\n## How It Learns That Function\n\nYou provide examples:\n\n```python\ntraining_data = [\n    (image_of_cat,  label='cat'),\n    (image_of_dog,  label='dog'),\n    # ... millions more ...\n]\n```\n\nThe model adjusts its internal numbers (weights) until its output matches the labels. That's it. No rules written — rules discovered.\n\n## Three Types of AI Output\n\n**Classification** — 'This belongs to category X'\n- Spam/not spam, tumour/no tumour, cat/dog\n\n**Regression** — 'The value is approximately X'\n- House price prediction, stock price forecast\n\n**Generation** — 'Create a new X that fits this pattern'\n- Write text, generate an image, produce audio\n\n## Narrow vs General AI\n\n```\nNarrow AI (today)\n  ├── Spam filter        — only detects spam\n  ├── Face recogniser    — only identifies faces\n  ├── Chess engine       — only plays chess\n  └── GPT-4             — broad but still narrow (no body, no memory)\n\nGeneral AI (hypothetical)\n  └── Does anything a human can do — doesn't exist yet\n```\n\nEverything you interact with today is Narrow AI.",
+  "common_mistakes": [
+    "Confusing AI with AGI (Artificial General Intelligence) — current AI is always narrow and task-specific",
+    "Thinking 'learning from data' is simple — the hard part is getting the right data in the right format",
+    "Assuming output confidence = correctness — a model can be 98% confident and still wrong"
+  ],
+  "mini_exercise": "Pick any AI system (spam filter, image classifier, chatbot). Write out its f(x)→y function. What exactly is x? What exactly is y? What does 'learning' mean for that specific system?",
+  "real_world_usage": "OpenAI's GPT-4 is a function: f(token_sequence) → next_token_probabilities. It was trained on hundreds of billions of text examples. The 'intelligence' is 1.7 trillion parameters — weights that were tuned to predict text well. Understanding it as a function removes the mystery.",
+  "explain_back_prompt": "Describe the difference between rule-based programming and AI learning. Use the spam filter example. What does the AI actually produce — a function, a list of rules, or something else?",
+  "build_task": {
+    "title": "Classify AI systems by their f(x)→y",
+    "context": "Framing AI as a function clarifies exactly what any system does.",
+    "steps": [
+      "Pick 4 AI systems: a chatbot, an image classifier, a recommendation engine, and a voice assistant",
+      "For each, write: f( ??? ) → ???",
+      "Fill in what x is (exact data type) and what y is (exact output format)",
+      "Note: is it classification, regression, or generation?",
+      "Identify: where does the training data come from for each?"
+    ],
+    "expected_output": "4 filled-in function descriptions with data types and learning task categorised.",
+    "hint": "ChatGPT: f(previous tokens) → probability distribution over next token. That's literally it."
+  }
+}

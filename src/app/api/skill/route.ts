@@ -48,7 +48,7 @@ export async function GET(req: NextRequest) {
   try {
     explanation = require(`@/../content/explanations/${skill_id}/${depth}.json`) as Explanation
   } catch {
-    for (const fb of ['beginner', 'mid', 'advanced'] as ExplanationDepth[]) {
+    for (const fb of ['beginner', 'mid', 'advanced', 'expert'] as ExplanationDepth[]) {
       try {
         explanation = require(`@/../content/explanations/${skill_id}/${fb}.json`) as Explanation
         break
@@ -97,6 +97,7 @@ export async function GET(req: NextRequest) {
 }
 
 function chooseDepth(state: LearnerSkillState): ExplanationDepth {
+  if (state.p_know >= 0.90) return 'expert'
   if (state.p_know >= 0.75) return 'advanced'
   if (state.p_know >= 0.45) return 'mid'
   return 'beginner'

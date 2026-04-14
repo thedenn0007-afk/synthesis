@@ -1,0 +1,29 @@
+{
+  "skill_id": "p3_data_and_labels",
+  "depth": "beginner",
+  "title": "Data, Labels & Datasets — The Fuel of AI",
+  "key_insight": "Data is what ML models train on. Labels are the correct answers attached to each example. Without good data, no algorithm can produce a good model.",
+  "body": "## What Is a Dataset?\n\nA dataset is a collection of examples. Think of it as a table:\n\n| Email text | Label |\n|---|---|\n| 'You won £1 million! Click now!' | spam |\n| 'Meeting at 3pm tomorrow?' | not spam |\n| 'URGENT: your account expires!' | spam |\n\nEach row = one **example** (also called a sample or data point)\nThe 'Email text' column = the **feature** (input)\nThe 'Label' column = the **label** (correct answer)\n\n## Where Do Labels Come From?\n\nLabels don't appear by magic — someone has to provide them.\n\n**Option 1: Humans label the data**\n- Workers look at each example and assign a label\n- Expensive, slow, imperfect\n- Common for medical images, content moderation, sentiment analysis\n\n**Option 2: Labels come from existing records**\n- Historical emails already marked as spam by users\n- Hospital records with diagnosis outcomes\n- E-commerce returns marked as 'defective'\n\n**Option 3: The data labels itself (self-supervised)**\n- For language models: the text is both input and label\n- Input: 'The cat sat on the' → Label: 'mat'\n- Free, at internet scale\n\n## Why Data Quality Matters More Than Model Size\n\nGarbage in = garbage out.\n\nIf your training data is:\n- **Biased**: the model will learn and amplify the bias\n- **Mislabelled**: the model will learn the wrong thing\n- **Too small**: the model will memorise instead of generalise\n- **Not representative**: the model will fail on real-world inputs\n\n## Famous Datasets\n\n| Dataset | What it contains | Used to train |\n|---|---|---|\n| MNIST | 60,000 handwritten digits | Image classifiers (beginner ML) |\n| ImageNet | 14M labelled images | Computer vision models |\n| Common Crawl | Petabytes of web text | Language models (GPT, BERT) |\n| SQuAD | Wikipedia + questions | Reading comprehension models |",
+  "common_mistakes": [
+    "Assuming more data always helps — 1 billion mislabelled examples is worse than 1 million clean ones",
+    "Forgetting that the test set must not touch labels during training — leaking labels invalidates your evaluation",
+    "Collecting data that matches your test set but not the real world — model will perform well in testing and fail in production"
+  ],
+  "mini_exercise": "Think of a real AI application you use (Spotify recommendations, Google autocomplete, Netflix suggestions). What is the data? What are the 'labels'? Where do those labels come from? Are they human-provided or automatic?",
+  "real_world_usage": "ImageNet was labelled by 50,000+ workers over 2.5 years through Amazon Mechanical Turk, creating 14 million labelled images. This dataset cost millions of dollars to create and directly enabled the 2012 deep learning revolution. The dataset itself — not the algorithm — was the bottleneck for 20 years.",
+  "explain_back_prompt": "What is the difference between a feature and a label? Where do labels come from in a supervised learning system? What is self-supervised learning and why does it avoid the cost of human labelling?",
+  "build_task": {
+    "title": "Explore a real dataset",
+    "context": "Understanding what a dataset looks like is the first skill of any ML engineer.",
+    "steps": [
+      "from sklearn.datasets import load_breast_cancer; data = load_breast_cancer()",
+      "Print: data.feature_names, data.target_names",
+      "Print: the shape of data.data (how many samples? how many features?)",
+      "Print: how many examples of each class? np.bincount(data.target)",
+      "Print a few rows to see what the features look like",
+      "Is this dataset balanced? What would imbalance mean for training?"
+    ],
+    "expected_output": "Dataset shape, feature names, class distribution, 3-5 example rows.",
+    "starter_code": "from sklearn.datasets import load_breast_cancer\nimport numpy as np\n\ndata = load_breast_cancer()\nprint('Features:', data.feature_names)\nprint('Classes:', data.target_names)\nprint('Shape:', data.data.shape)\nprint('Class counts:', np.bincount(data.target))"
+  }
+}

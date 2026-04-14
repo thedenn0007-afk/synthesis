@@ -1,0 +1,29 @@
+{
+  "skill_id": "p3_how_machines_learn",
+  "depth": "beginner",
+  "title": "How Machines Actually Learn",
+  "key_insight": "A machine 'learns' by making guesses, checking if they're right, then adjusting its internal numbers to do better next time — over and over, millions of times.",
+  "body": "## Learning by Getting Things Wrong\n\nHere's the core loop, in plain English:\n\n1. The machine makes a guess\n2. We check if the guess was right\n3. If it was wrong, we tell the machine *how* wrong\n4. The machine adjusts its internal settings to be less wrong next time\n5. Repeat — millions of times\n\nThat's it. That's machine learning.\n\n### A Concrete Example: Learning to Recognise Cats\n\n**Round 1:**\n- Machine sees a photo of a cat\n- Machine guesses: 'dog'\n- We say: 'Wrong! That's a cat.'\n- Machine slightly adjusts its settings\n\n**Round 100:**\n- Machine sees a different cat photo\n- Machine guesses: 'cat'\n- We say: 'Correct!'\n- Settings reinforced\n\n**Round 1,000,000:**\n- Machine has seen so many examples that it recognises cat features reliably\n\n### What Are the 'Settings'?\n\nInside every machine learning model are thousands (or billions) of numbers called **weights**. These start as random. Training moves them toward values that make correct predictions.\n\nThink of them like the knobs on a stereo. Too much treble, too much bass — you adjust until the music sounds right. Training is the process of adjusting millions of knobs until the 'music' (predictions) sounds right.\n\n### Key Insight: No Rules Were Written\n\nNobody told the machine 'cats have pointy ears'. Nobody wrote: 'IF whiskers THEN cat'.\n\nThe machine found these patterns on its own by seeing thousands of examples. That's what makes it learning — not following instructions, but discovering patterns.",
+  "common_mistakes": [
+    "Thinking the machine 'understands' — it adjusts numbers to minimise error, there is no understanding",
+    "Thinking more examples always helps — low-quality or mislabelled examples can hurt learning",
+    "Thinking once trained, the model is done — the world changes, and models need updating"
+  ],
+  "mini_exercise": "Imagine you're teaching a child to recognise apples vs oranges by showing photos. What would the child learn to look for? Size? Colour? Shape? Now think — could a machine learn those same visual cues from photos without you ever naming them?",
+  "real_world_usage": "Shazam (the music recognition app) uses this exact process — trained on millions of audio clips paired with song labels. It didn't learn 'in G major, with drums at 120BPM = song X'. It learned the patterns directly from examples. It now identifies a song in 5 seconds from a 10-second clip in a noisy room.",
+  "explain_back_prompt": "Explain machine learning to someone with zero technical background. Use the cat example. What are the 'weights'? What does 'training' mean? What happens to the weights when the machine gets an answer wrong?",
+  "build_task": {
+    "title": "Experience learning manually",
+    "context": "Doing gradient-free optimization by hand gives you the intuitive feel for what training does.",
+    "steps": [
+      "On paper, draw a target: a circle at position (5, 5) on a grid",
+      "Start with a 'guess' at (0, 0)",
+      "Each round: look at the target, move your guess 1 step closer in each direction",
+      "Count how many steps it takes to reach (5, 5)",
+      "Now start at (8, 3) — how many steps? Is the process the same?",
+      "This is the basic idea of gradient descent: move toward the target, one step at a time"
+    ],
+    "expected_output": "Two step counts, an observation about the starting point's effect.",
+    "hint": "In real machine learning, 'the target' is the correct answer for each training example, and 'steps' are tiny weight adjustments."
+  }
+}

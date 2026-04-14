@@ -1,0 +1,77 @@
+{
+  "skill_id": "p1_input_output",
+  "questions": [
+    {
+      "id": "p1_input_output_q1",
+      "stem": "What is the difference between print() and logging in a production ML system?",
+      "options": [
+        "print() is for users; logging is for developers — no technical difference",
+        "logging provides severity levels (DEBUG, INFO, WARNING, ERROR), timestamps, caller context, and can be directed to files or monitoring systems; print() outputs text to stdout with no metadata",
+        "logging is slower than print() due to overhead",
+        "print() should be used for all important messages; logging only for errors"
+      ],
+      "answer": 1,
+      "explanation": "In production: logging.info(f'epoch={e}, loss={loss:.4f}') logs with timestamp and level; these can be filtered, redirected to log files, or shipped to Datadog/CloudWatch. print() just writes to stdout — no level, no timestamp, no filtering. Pattern: logger = logging.getLogger(__name__). Use DEBUG for detailed diagnostics (disable in prod), INFO for training progress, WARNING for anomalies, ERROR for failures."
+    },
+    {
+      "id": "p1_input_output_q2",
+      "stem": "When reading a large CSV dataset with pandas, what is the most memory-efficient approach?",
+      "options": [
+        "Always load the entire file into memory first, then filter",
+        "Use chunksize parameter: pd.read_csv('data.csv', chunksize=10000) to read and process the file in chunks, or use Parquet format which supports columnar partial loading",
+        "Use pd.read_csv with low_memory=False to speed up loading",
+        "Convert the CSV to a database first, then query it"
+      ],
+      "answer": 1,
+      "explanation": "pd.read_csv() loads everything into RAM. For a 10 GB CSV, that requires 10 GB RAM. With chunksize: for chunk in pd.read_csv('data.csv', chunksize=10_000): process(chunk) — only 10,000 rows in memory at once. Better yet: convert to Parquet (columnar) which loads only the columns you need and compresses 5-10×. For ML: use Parquet + PyArrow for dataset storage, not CSV."
+    },
+    {
+      "id": "p1_input_output_q3",
+      "stem": "What does with open('data.txt', 'r') as f: do, and why is the with statement important?",
+      "options": [
+        "Opens the file and keeps it locked for the duration of the program",
+        "Opens the file, assigns the file object to f, and guarantees the file is closed (even on exception) when the with block exits — preventing resource leaks",
+        "Reads the entire file into a string variable named f",
+        "Opens the file in read-only mode that prevents any writes"
+      ],
+      "answer": 1,
+      "explanation": "with open() creates a context manager that calls file.close() automatically when the block exits — whether normally or via exception. Without with: if an exception occurs between open() and close(), the file stays open indefinitely (file descriptor leak). On Linux, each process has a limit (~1024) on open file descriptors. In ML: always use with open() for file I/O, especially in loops that process many files."
+    },
+    {
+      "id": "p1_input_output_q4",
+      "stem": "What is the purpose of num_workers parameter in PyTorch DataLoader?",
+      "options": [
+        "Controls how many GPUs are used for data processing",
+        "Spawns that many separate processes to load and preprocess data in parallel with GPU computation — hides I/O latency so the GPU is never waiting for data",
+        "Sets the maximum number of training epochs",
+        "Controls how many data augmentation operations run on each sample"
+      ],
+      "answer": 1,
+      "explanation": "With num_workers=0 (default): data loading happens in the main process, blocking GPU computation. With num_workers=4: 4 separate processes prefetch and preprocess batches while the GPU trains the previous batch. The GPU sees no idle time — I/O latency is hidden. Rule of thumb: num_workers = 2-4 × (number of GPUs). Also set pin_memory=True to enable faster CPU→GPU transfers via page-pinned memory."
+    },
+    {
+      "id": "p1_input_output_q5",
+      "stem": "What is JSON and when should you use it versus pickle for saving ML artifacts?",
+      "options": [
+        "JSON is for large files; pickle is for small files",
+        "JSON is human-readable, language-agnostic, and safe to load from untrusted sources; pickle is Python-specific, can serialize any Python object (tensors, functions), but loading untrusted pickles executes arbitrary code",
+        "pickle is more portable across systems; JSON only works on Unix",
+        "They are identical except for the file extension"
+      ],
+      "answer": 1,
+      "explanation": "Use JSON for: configs, metrics, hyperparameters, evaluation results — anything humans might inspect. Use pickle for: Python-specific objects when you need exact serialisation (complex class instances). NEVER load pickle from untrusted sources — pickle.load() can execute arbitrary code. For model weights: use torch.save() / torch.load() (pickle-based) or safetensors format (safe, zero-copy memory mapping). For configs: JSON or YAML."
+    },
+    {
+      "id": "p1_input_output_q6",
+      "stem": "What does tqdm do in the following code, and why is it used in ML training loops?\n\nfor batch in tqdm(dataloader, desc='Training'):",
+      "options": [
+        "tqdm sorts the batches before iteration for better cache performance",
+        "tqdm wraps any iterable to display a progress bar with ETA, iteration speed, and a description — gives visibility into long-running training loops without changing the loop logic",
+        "tqdm parallelises the iteration across multiple threads",
+        "tqdm is required by PyTorch DataLoader to enable prefetching"
+      ],
+      "answer": 1,
+      "explanation": "tqdm (from Arabic 'taqaddum', meaning progress) wraps any iterable and displays a live progress bar: 'Training:  42%|████████    | 420/1000 [02:15<03:08, 3.12it/s]'. This shows: percentage, steps completed, elapsed time, ETA, and throughput. Essential for training loops that run for hours — without it, you can't tell if the training stalled or is just slow. Also useful for data preprocessing, evaluation, and any long batch operation."
+    }
+  ]
+}

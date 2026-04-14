@@ -1,0 +1,77 @@
+{
+  "skill_id": "p3_overfitting",
+  "questions": [
+    {
+      "id": "p3_overfitting_q1",
+      "stem": "A model achieves 98% training accuracy but 62% test accuracy. This is most likely:",
+      "options": [
+        "Underfitting",
+        "Overfitting",
+        "Good generalisation",
+        "A data leakage problem"
+      ],
+      "answer": 1,
+      "explanation": "A large gap between training accuracy (98%) and test accuracy (62%) is the classic signature of overfitting — the model has memorised training patterns that don't generalise to new data."
+    },
+    {
+      "id": "p3_overfitting_q2",
+      "stem": "A model achieves 62% training accuracy and 60% test accuracy. This is most likely:",
+      "options": [
+        "Overfitting",
+        "Underfitting",
+        "Good generalisation",
+        "Data leakage"
+      ],
+      "answer": 1,
+      "explanation": "When both training and test accuracy are equally low, there's no generalisation gap — the model is underfitting. It hasn't learned the underlying pattern at all, performing badly everywhere."
+    },
+    {
+      "id": "p3_overfitting_q3",
+      "stem": "On the training loss curve, overfitting begins when:",
+      "options": [
+        "Training loss reaches zero",
+        "Training loss starts increasing",
+        "Validation loss starts increasing while training loss continues to decrease",
+        "Training loss and validation loss are equal"
+      ],
+      "answer": 2,
+      "explanation": "Overfitting starts when the model starts to memorise training data. The validation loss stops improving and begins to rise while training loss continues to fall — this is the divergence point."
+    },
+    {
+      "id": "p3_overfitting_q4",
+      "stem": "Which technique specifically addresses overfitting by randomly disabling neurons during training?",
+      "options": [
+        "Batch normalisation",
+        "L2 regularisation",
+        "Dropout",
+        "Early stopping"
+      ],
+      "answer": 2,
+      "explanation": "Dropout randomly zeroes out a fraction of neurons during each training step, preventing any single neuron from being relied upon and forcing distributed representations. This reduces overfitting."
+    },
+    {
+      "id": "p3_overfitting_q5",
+      "stem": "L1 regularisation (Lasso) is distinct from L2 regularisation (Ridge) because:",
+      "options": [
+        "L1 is faster to compute",
+        "L1 penalises squared weights while L2 penalises absolute weights",
+        "L1 drives some weights to exactly zero, performing feature selection",
+        "L1 works only for classification while L2 works for regression"
+      ],
+      "answer": 2,
+      "explanation": "L1 penalises the sum of absolute values of weights. Its gradient is constant (not proportional to weight size), which causes small weights to become exactly zero — performing automatic feature selection."
+    },
+    {
+      "id": "p3_overfitting_q6",
+      "stem": "Early stopping works by:",
+      "options": [
+        "Stopping training before the model learns anything",
+        "Stopping training when validation loss stops improving, to prevent memorisation of training data",
+        "Using fewer training examples",
+        "Reducing the learning rate over time"
+      ],
+      "answer": 1,
+      "explanation": "Early stopping monitors validation loss and stops training when it plateaus or starts increasing. The model is restored to the checkpoint with the best validation loss — the optimal point before overfitting."
+    }
+  ]
+}

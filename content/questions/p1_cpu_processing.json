@@ -1,0 +1,77 @@
+{
+  "skill_id": "p1_cpu_processing",
+  "questions": [
+    {
+      "id": "p1_cpu_processing_q1",
+      "stem": "What is the CPU's primary job?",
+      "options": [
+        "Displaying graphics on screen",
+        "Fetching, decoding, and executing instructions — the 'brain' that processes all logic",
+        "Storing your files permanently",
+        "Connecting to the internet"
+      ],
+      "answer": 1,
+      "explanation": "The CPU (Central Processing Unit) executes the fetch-decode-execute cycle: fetch an instruction from memory, decode what it means, execute it (add, compare, branch, etc.), then repeat. Everything your program does — function calls, loops, conditionals — is translated into these CPU instructions."
+    },
+    {
+      "id": "p1_cpu_processing_q2",
+      "stem": "What are Tensor Cores on an NVIDIA GPU and why do they matter for AI?",
+      "options": [
+        "They are CPU cores embedded in the GPU for Python code",
+        "Specialised hardware units that multiply two 4×4 matrices in one clock cycle — providing 8× higher throughput for matrix operations vs regular CUDA cores",
+        "Memory units that store tensors (multidimensional arrays)",
+        "Cooling units that prevent the GPU from overheating during training"
+      ],
+      "answer": 1,
+      "explanation": "Regular CUDA cores perform one multiply-add per cycle. Tensor Cores perform a 4×4 matrix multiply (64 multiply-adds) per cycle — 8× higher throughput for matrix operations. Since every neural network layer is a matrix multiplication, Tensor Cores are the primary reason modern training is 10-100× faster than it was in 2015. They require float16 or bfloat16 inputs and dimensions divisible by 8."
+    },
+    {
+      "id": "p1_cpu_processing_q3",
+      "stem": "What does 'clock speed' (e.g. 3.5 GHz) measure?",
+      "options": [
+        "How much data the CPU can store",
+        "How many instructions the CPU executes per second — 3.5 GHz = 3.5 billion clock cycles per second",
+        "How fast data moves between CPU and RAM",
+        "The CPU's operating temperature limit"
+      ],
+      "answer": 1,
+      "explanation": "Clock speed measures cycles per second: 3.5 GHz = 3.5 × 10⁹ cycles/second. Modern CPUs execute 1-4 instructions per cycle (IPC), so a 3.5 GHz CPU with IPC=3 performs ~10 billion instructions/second. GPU clock speeds are lower (1-2 GHz) but irrelevant — GPUs make up for it with thousands of cores running in parallel."
+    },
+    {
+      "id": "p1_cpu_processing_q4",
+      "stem": "What does it mean when LLM inference is described as 'memory bandwidth bound'?",
+      "options": [
+        "The model is too large to fit in memory",
+        "The CPU is slower than the GPU for this task",
+        "The GPU's arithmetic units finish quickly and then wait for model weights to arrive from VRAM — the limiting factor is data transfer speed, not computation speed",
+        "The Python code is not optimised"
+      ],
+      "answer": 2,
+      "explanation": "For a 7B model at batch=1, inference performs ~14 GFLOP per token but reads ~14 GB of weights. At H100's 3.35 TB/s bandwidth, the data arrives in ~4ms — but the 2000 TFLOPS compute could finish in ~0.007ms. The GPU must wait for data, not the other way around. Quantisation (reducing bytes per weight) directly improves inference speed in this regime."
+    },
+    {
+      "id": "p1_cpu_processing_q5",
+      "stem": "Why should matrix dimensions be multiples of 16 (or at least 8) when using GPU Tensor Cores?",
+      "options": [
+        "Python only supports arrays with dimensions that are powers of 2",
+        "Tensor Cores operate on 4×4 sub-matrices; hardware efficiency is highest when dimensions align to 16 — misaligned sizes cause padding or fall back to slower CUDA Cores",
+        "It's a convention that has no performance impact",
+        "The GPU VRAM is physically divided into 16-byte blocks"
+      ],
+      "answer": 1,
+      "explanation": "Tensor Cores process matrices in 4×4 (or 8×8, 16×16) tiles. When your dimensions are multiples of 16, every tile is fully utilised — no wasted computation. Odd sizes (e.g. 1000×1001) force padding, and some operations fall back to regular CUDA cores (8× slower). In practice: always pad embedding dimensions, hidden sizes, and batch sizes to multiples of 8 or 16."
+    },
+    {
+      "id": "p1_cpu_processing_q6",
+      "stem": "What is the difference between CUDA Cores and Streaming Multiprocessors (SMs) on a GPU?",
+      "options": [
+        "CUDA Cores are software; SMs are hardware",
+        "SMs are the processing units on a GPU; each SM contains multiple CUDA Cores (arithmetic units) plus shared memory, an L1 cache, and Tensor Cores",
+        "CUDA Cores handle floating-point; SMs handle integer operations",
+        "They are the same thing — just different names used by NVIDIA"
+      ],
+      "answer": 1,
+      "explanation": "An NVIDIA GPU is organised hierarchically. Streaming Multiprocessors (SMs) are independent processing units; an H100 has 132 SMs. Each SM contains 128 CUDA Cores (for scalar FP32 operations), 4 Tensor Cores (for matrix FP16/BF16), and 100+ KB of fast shared memory. Shared memory within an SM is what Flash Attention uses to avoid slow HBM reads for intermediate attention values."
+    }
+  ]
+}

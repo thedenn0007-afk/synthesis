@@ -1,0 +1,57 @@
+{
+  "skill_id": "p1_operators",
+  "questions": [
+    {
+      "id": "p1_operators_q1",
+      "stem": "What is the result of `10 % 3` in Python?",
+      "options": ["3", "1", "3.33", "0"],
+      "answer": 1,
+      "explanation": "The modulo operator `%` returns the remainder after division. 10 ÷ 3 = 3 with remainder 1, so 10 % 3 = 1."
+    },
+    {
+      "id": "p1_operators_q2",
+      "stem": "What is the difference between `=` and `==` in Python?",
+      "options": [
+        "They are identical",
+        "`=` assigns a value to a variable; `==` compares two values for equality",
+        "`==` assigns a value; `=` compares values",
+        "`=` is used only in functions"
+      ],
+      "answer": 1,
+      "explanation": "`=` is the assignment operator (stores a value). `==` is the equality comparison operator (returns True/False). Confusing them is one of the most common beginner errors."
+    },
+    {
+      "id": "p1_operators_q3",
+      "stem": "What does `x += 5` mean?",
+      "options": [
+        "Create a new variable named x+5",
+        "x = x + 5 (add 5 to x and store the result back in x)",
+        "Add 5 to x without changing x",
+        "Check if x is greater than 5"
+      ],
+      "answer": 1,
+      "explanation": "`+=` is an augmented assignment operator. `x += 5` is shorthand for `x = x + 5`."
+    },
+    {
+      "id": "p1_operators_q4",
+      "stem": "What is the result of `2 ** 10`?",
+      "options": ["20", "12", "1024", "210"],
+      "answer": 2,
+      "explanation": "`**` is the exponentiation operator. `2 ** 10` means 2 to the power of 10 = 1024."
+    },
+    {
+      "id": "p1_operators_q5",
+      "stem": "What does `True and False` evaluate to?",
+      "options": ["True", "False", "None", "Error"],
+      "answer": 1,
+      "explanation": "The `and` operator returns True only when BOTH operands are True. Since one is False, the result is False."
+    },
+    {
+      "id": "p1_operators_q6",
+      "stem": "What is the result of `15 // 4`?",
+      "options": ["3.75", "4", "3", "0.75"],
+      "answer": 2,
+      "explanation": "`//` is floor division — it divides and rounds DOWN to the nearest integer. 15 ÷ 4 = 3.75, rounded down = 3."
+    }
+  ]
+}

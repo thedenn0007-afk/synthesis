@@ -1,0 +1,77 @@
+{
+  "skill_id": "p2_algorithms_intro",
+  "questions": [
+    {
+      "id": "p2_algorithms_intro_q1",
+      "stem": "What makes a sequence of steps qualify as an 'algorithm'?",
+      "options": [
+        "It must be written in a programming language",
+        "It must be finite (terminates), deterministic (same input → same output), and correct (solves the stated problem for all valid inputs)",
+        "It must use at least one loop and one conditional",
+        "It must be more than 10 steps long to count as an algorithm"
+      ],
+      "answer": 1,
+      "explanation": "An algorithm has three requirements: (1) Finite — it must stop eventually (an infinite loop is not an algorithm); (2) Deterministic — same input always gives same output; (3) Correct — it actually solves the problem. Gradient descent is an algorithm: it terminates (after N steps), is deterministic (given same weights and data), and minimises the loss. 'Find the best neural architecture' is NOT an algorithm — it's too vague."
+    },
+    {
+      "id": "p2_algorithms_intro_q2",
+      "stem": "Gradient descent is the most important algorithm in machine learning. What problem does it solve?",
+      "options": [
+        "Finding the global maximum of any function",
+        "Iteratively adjusting model parameters in the direction that reduces the loss function — minimising prediction error by taking small steps opposite to the gradient",
+        "Sorting training examples by difficulty before feeding them to the model",
+        "Selecting which features to include in the model"
+      ],
+      "answer": 1,
+      "explanation": "Given a loss function L(weights), gradient descent computes the gradient ∇L (the direction of steepest increase) and updates: weights = weights - lr × ∇L. Moving opposite to the gradient reduces the loss. SGD, Adam, AdamW are all variants. 'Gradient' means derivative with respect to each weight — backpropagation computes these efficiently via the chain rule. The learning rate controls step size."
+    },
+    {
+      "id": "p2_algorithms_intro_q3",
+      "stem": "What is the difference between an algorithm and a heuristic?",
+      "options": [
+        "A heuristic is written in pseudocode; an algorithm is in code",
+        "An algorithm guarantees a correct solution; a heuristic is a rule-of-thumb that usually works well but has no optimality guarantee",
+        "Heuristics run faster; algorithms are more accurate",
+        "Algorithms are for sorting; heuristics are for searching"
+      ],
+      "answer": 1,
+      "explanation": "Dijkstra's shortest path algorithm guarantees the optimal path. Beam search is a heuristic — it finds a good path through token sequences but not necessarily the best one. Many ML 'algorithms' are actually heuristics: Adam's adaptive learning rates don't guarantee convergence; dropout doesn't guarantee generalisation. Knowing this distinction helps: when exact solutions are intractable (NP-hard), well-designed heuristics are the engineering answer."
+    },
+    {
+      "id": "p2_algorithms_intro_q4",
+      "stem": "What is binary search and what is its key precondition?",
+      "options": [
+        "A search algorithm that tries two random positions and picks the better one",
+        "Repeatedly halving the search space by comparing the target to the middle element — requires the array to be SORTED; achieves O(log n) comparisons",
+        "Searching through a binary tree data structure",
+        "A search that checks only even-indexed elements, then odd-indexed elements"
+      ],
+      "answer": 1,
+      "explanation": "Binary search: compare target to arr[mid]. If target < arr[mid], search left half; if target > arr[mid], search right half. Halve the search space each step: 1M elements → 20 comparisons (log₂(1,000,000) ≈ 20). REQUIRES sorted array — won't work otherwise. Used in: vocabulary token lookup (sorted vocab), hyperparameter search (bisection), finding boundaries in sorted prediction scores."
+    },
+    {
+      "id": "p2_algorithms_intro_q5",
+      "stem": "What is dynamic programming and how does it differ from brute-force recursion?",
+      "options": [
+        "Dynamic programming uses while loops instead of recursion",
+        "Dynamic programming caches (memoises) solutions to overlapping subproblems, converting exponential time recursion to polynomial time — solves each subproblem exactly once",
+        "Dynamic programming changes the algorithm based on data size",
+        "Dynamic programming is a way to train neural networks dynamically"
+      ],
+      "answer": 1,
+      "explanation": "Naive Fibonacci: fib(n) calls fib(n-1) and fib(n-2), each re-computing fib(n-2) twice — exponential O(2ⁿ). With memoisation: @lru_cache(None); each fib(k) computed once — O(n). This is DP. In ML: Viterbi algorithm (sequence labelling), edit distance (text similarity for deduplication), CTC loss (speech recognition) all use DP. The key insight: identify overlapping subproblems, cache their results."
+    },
+    {
+      "id": "p2_algorithms_intro_q6",
+      "stem": "Beam search is used to generate text from language models. What trade-off does the beam width k control?",
+      "options": [
+        "k controls the vocabulary size used during generation",
+        "k controls the number of candidate sequences kept at each step — larger k explores more paths (better quality, slower) vs k=1 (greedy, fastest, often lower quality)",
+        "k controls the maximum length of the generated sequence",
+        "k controls the temperature of the softmax during generation"
+      ],
+      "answer": 1,
+      "explanation": "Greedy decoding (k=1): always pick the most probable next token. Good for speed, often suboptimal. Beam search keeps the top-k partial sequences at each step, expanding all k candidates to pick the new top-k. k=4: 4× more compute but explores paths that start with non-optimal tokens (which may lead to better completions). k=1 is greedy; k=∞ is exhaustive (infeasible). k=4-8 is standard for machine translation."
+    }
+  ]
+}

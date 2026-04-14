@@ -1,0 +1,28 @@
+{
+  "skill_id": "p1_modules_imports",
+  "depth": "beginner",
+  "title": "Modules & Imports — Using Code From Other Files",
+  "key_insight": "You don't write everything from scratch. Python comes with hundreds of built-in modules (the standard library), and thousands more are available to install. Imports let you use this code in your programs.",
+  "body": "## What is a Module?\n\nA **module** is just a Python file. When you do `import math`, Python finds the `math.py` file and loads all its functions and variables into your program.\n\n## Importing Standard Library Modules\n\n```python\nimport math\n\nprint(math.pi)          # 3.141592...\nprint(math.sqrt(16))    # 4.0\nprint(math.floor(3.7))  # 3\nprint(math.ceil(3.2))   # 4\n```\n\n## Import Styles\n\n```python\n# Style 1: import the whole module\nimport math\nresult = math.sqrt(25)  # must prefix with 'math.'\n\n# Style 2: import specific things from a module\nfrom math import sqrt, pi\nresult = sqrt(25)  # no prefix needed\nprint(pi)          # 3.14159...\n\n# Style 3: import with an alias (rename)\nimport numpy as np    # np is the universal alias for numpy\nimport pandas as pd   # pd is the universal alias for pandas\narray = np.array([1, 2, 3])\n\n# Style 4: import everything (AVOID in most cases)\nfrom math import *  # imports all functions — pollutes namespace\n```\n\n## Commonly Used Standard Library Modules\n\n```python\nimport random\nprint(random.randint(1, 10))     # random integer 1-10\nprint(random.choice(['a','b','c']))  # random item from list\n\nimport datetime\nnow = datetime.datetime.now()\nprint(now.year, now.month, now.day)\n\nimport os\nprint(os.getcwd())     # current working directory\nprint(os.listdir('.')) # list files in current directory\n\nimport json\ndata = {'name': 'Alice', 'age': 30}\njson_string = json.dumps(data)     # dict → JSON string\nback = json.loads(json_string)     # JSON string → dict\n```\n\n## Installing Third-Party Packages\n\n```bash\n# pip installs packages from the internet (PyPI)\npip install requests     # for making HTTP requests\npip install pandas       # for data manipulation\npip install numpy        # for numerical computing\npip install matplotlib   # for plotting\n```\n\n```python\nimport requests\nresponse = requests.get('https://api.example.com/data')\nprint(response.status_code)  # 200 = success\nprint(response.json())       # parse JSON response\n```",
+  "common_mistakes": [
+    "ImportError: No module named 'X' — either the package isn't installed (run pip install X) or the module name is wrong",
+    "Using `from module import *` — this imports everything, which can overwrite your own variable names silently",
+    "Circular imports: module A imports module B, module B imports module A — causes ImportError; restructure code to avoid this"
+  ],
+  "mini_exercise": "Import the `random` module and use it to: (1) generate 5 random integers between 1 and 100, (2) shuffle a list of 5 names, (3) pick a random item from a list. Use both `import random` and `from random import choice` styles.",
+  "real_world_usage": "Every Python project of any size uses imports. Django (a web framework) has hundreds of modules. A typical data science notebook imports numpy, pandas, matplotlib, sklearn, and more. The PyPI package index (pypi.org) hosts 500,000+ packages — almost every problem has a package that solves it.",
+  "explain_back_prompt": "What is a module? What are the four ways to import from a module, and when would you use each? What does `pip install` do?",
+  "build_task": {
+    "title": "Build a mini data report using standard library modules",
+    "context": "Combining several standard library modules into a useful program.",
+    "steps": [
+      "Use `random` to generate a list of 20 random test scores (0-100)",
+      "Use `statistics` to compute mean, median, and standard deviation",
+      "Use `datetime` to add a timestamp to your report",
+      "Use `json` to save the report to a JSON file",
+      "Print a formatted report to the console"
+    ],
+    "expected_output": "A printed report and a scores_report.json file with timestamp, scores, and statistics.",
+    "starter_code": "import random\nimport statistics\nimport datetime\nimport json\n\n# Generate scores\nscores = [random.randint(0, 100) for _ in range(20)]\n\n# TODO: compute statistics\n# TODO: build report dict with datetime, scores, stats\n# TODO: save to JSON file\n# TODO: print formatted report"
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "skill_id": "p3_what_is_ai",
+  "depth": "advanced",
+  "title": "What is AI? — Engineering Precision",
+  "key_insight": "AI is empirical function approximation: parameterised models optimised on loss functions over data distributions. Everything else is implementation detail.",
+  "body": "## The Precise Definition\n\nAn AI model is a **parameterised function** f(x; θ) where:\n- x = input data\n- θ = learned parameters (weights)\n- Training = find θ that minimises loss L(f(x; θ), y) over dataset D\n\n```python\n# Abstract training loop for any supervised AI\nfor x, y in dataset:\n    y_pred = model(x)              # forward pass: f(x; θ)\n    loss   = criterion(y_pred, y)  # L(f(x;θ), y)\n    loss.backward()                # compute ∂L/∂θ\n    optimizer.step()               # θ ← θ - lr * ∂L/∂θ\n```\n\n## The Three Defining Properties of AI\n\n**1. Data-driven** — behaviour emerges from data, not programmer-specified rules\n\n**2. Generalisation** — the goal is performance on unseen data, not training data\n\n**3. Automatic optimisation** — gradient descent or similar finds θ without human guidance\n\n## What Makes Modern AI Different\n\nPre-2012 AI: hand-crafted features + simple models (SVMs, logistic regression)\nPost-2012: deep networks learn features automatically from raw data\n\n```python\n# Old ML pipeline\nimage → hand_crafted_feature_extractor → logistic_regression → prediction\n\n# Deep Learning\nimage → conv_layers_learn_features → classifier_layers → prediction\n       ↑\n       No human involvement — the network figures out useful features\n```\n\n## The Bitter Lesson (Rich Sutton, 2019)\n\nEveything that researchers spent decades engineering by hand — feature extractors, game-playing heuristics, language rules — was eventually beaten by simple methods applied to more compute and more data.\n\nThe lesson: **scale > cleverness**. More data + more compute + simple gradient descent > any clever hand-crafted approach.",
+  "common_mistakes": [
+    "Over-engineering features when more data would outperform — trust the model to learn representations",
+    "Optimising training loss without monitoring validation loss — training loss going down ≠ model improving",
+    "Confusing correlation in data with causation — models learn spurious correlations and will fail when they break"
+  ],
+  "mini_exercise": "Find the PyTorch training loop in any open-source model repo (try Karpathy's nanoGPT). Identify: where is f(x;θ)? Where is L? Where is θ updated? Can you see the abstract pattern in the actual code?",
+  "real_world_usage": "Google's AlphaFold2 (protein structure prediction) follows this exact pattern: parameterised transformer model, trained on the Protein Data Bank (170,000 solved structures), optimised using coordinate distance loss. Output: 3D atomic coordinates for any protein sequence. This cracked a 50-year biology grand challenge using the same abstract loop above.",
+  "explain_back_prompt": "Explain to a software engineer with no ML background: what exactly is a 'model', what is 'training', and what is 'inference' — using the parameterised function framing. Be precise."
+}

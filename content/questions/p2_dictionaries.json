@@ -1,0 +1,77 @@
+{
+  "skill_id": "p2_dictionaries",
+  "questions": [
+    {
+      "id": "p2_dictionaries_q1",
+      "stem": "What is the average time complexity of dictionary lookup (d[key]) in Python?",
+      "options": [
+        "O(n) — it searches through all keys one by one",
+        "O(1) average — the hash of the key directly maps to a slot, requiring no comparison with other keys",
+        "O(log n) — Python uses a binary search tree internally",
+        "O(n²) — due to hash collision resolution"
+      ],
+      "answer": 1,
+      "explanation": "CPython dict uses a hash table: hash(key) computes an integer, which maps to a slot index. If no collision, lookup finds the value immediately — O(1). Collisions (same hash slot) require probing additional slots — O(1) amortised in practice since collision rate is kept low (load factor < 2/3). This is why tokenizer vocabulary lookups (50,000 entries) and model state dict lookups are instant."
+    },
+    {
+      "id": "p2_dictionaries_q2",
+      "stem": "What does dict.get(key, default) do differently from dict[key]?",
+      "options": [
+        "get() is an older syntax; dict[key] is the modern equivalent",
+        "dict[key] raises KeyError if the key is absent; dict.get(key, default) returns default (or None) without raising an exception — safer when key presence is uncertain",
+        "get() is faster than dict[key] for large dictionaries",
+        "get() creates the key if it doesn't exist; dict[key] does not"
+      ],
+      "answer": 1,
+      "explanation": "d['missing_key'] raises KeyError — your program crashes. d.get('missing_key', 0) returns 0 silently. In ML: counts.get(token, 0) + 1 safely counts token frequencies. defaultdict(int) is even cleaner for counting: counts[token] += 1 initialises to 0 automatically. state_dict.get('module.layer.weight', None) handles the DataParallel 'module.' prefix issue gracefully."
+    },
+    {
+      "id": "p2_dictionaries_q3",
+      "stem": "What is a Python dictionary comprehension, and give an ML use case?",
+      "options": [
+        "A concise way to create dictionaries: {key_expr: value_expr for item in iterable} — e.g. creating an inverse vocabulary map {token_id: word for word, token_id in vocab.items()}",
+        "A Python built-in for reading dictionary files (like spell-check wordlists)",
+        "A way to merge two dictionaries into one",
+        "A method that generates a human-readable description of a dictionary's contents"
+      ],
+      "answer": 0,
+      "explanation": "{k: v for k, v in items} creates a dict in one expression. ML use cases: inverse vocabulary for decoding {id: token for token, id in vocab.items()}; filter state dict {k: v for k, v in state.items() if 'weight' in k}; metric dict {f'val_{m}': score for m, score in metrics.items()}. Comprehensions are cleaner than building dicts with loops."
+    },
+    {
+      "id": "p2_dictionaries_q4",
+      "stem": "What is Python's defaultdict, and when does it improve code clarity?",
+      "options": [
+        "A dict with a default value set for ALL keys at creation time",
+        "A dict that automatically creates a default value for missing keys using a factory function — eliminates the need for 'if key not in d: d[key] = default_value' checks",
+        "A read-only dict where values cannot be changed after insertion",
+        "A dict that is ordered by insertion order (standard dicts are unordered)"
+      ],
+      "answer": 1,
+      "explanation": "defaultdict(list) creates a dict where d[missing_key] returns [] and inserts it. Without: if token not in index: index[token] = []; index[token].append(doc_id). With defaultdict(list): index[token].append(doc_id). Common factories: defaultdict(int) for counting, defaultdict(list) for grouping, defaultdict(set) for unique grouping. In ML: grouping predictions by class: preds_by_class[label].append(score)."
+    },
+    {
+      "id": "p2_dictionaries_q5",
+      "stem": "When loading a PyTorch model checkpoint saved from a DataParallel model, why might load_state_dict() fail, and how do you fix it?",
+      "options": [
+        "The checkpoint is compressed and needs to be decompressed first",
+        "DataParallel adds a 'module.' prefix to all keys (e.g. 'module.layer.weight'). If loading into a non-DataParallel model, keys don't match — fix by stripping the prefix: {k.replace('module.', ''): v for k, v in state.items()}",
+        "DataParallel saves weights in float64; you must convert to float32 first",
+        "DataParallel checkpoints can only be loaded on the same number of GPUs they were saved on"
+      ],
+      "answer": 1,
+      "explanation": "torch.nn.DataParallel wraps the model and adds 'module.' to every parameter name. state_dict() yields keys like 'module.transformer.h.0.attn.weight'. Loading this into a bare model expects 'transformer.h.0.attn.weight' — KeyError. Fix: new_state = {k[7:] if k.startswith('module.') else k: v for k, v in old_state.items()}. Or use strict=False to ignore mismatches (less safe)."
+    },
+    {
+      "id": "p2_dictionaries_q6",
+      "stem": "What does Python's LRU cache (@functools.lru_cache) do and what is a practical ML use case?",
+      "options": [
+        "Caches function results keyed by arguments — subsequent calls with the same arguments return the cached result instantly without recomputing",
+        "Automatically distributes function calls across multiple CPU cores",
+        "Converts a function to run asynchronously in the background",
+        "Limits the function to run at most N times per second (rate limiting)"
+      ],
+      "answer": 0,
+      "explanation": "@lru_cache(maxsize=128) caches the return value for each unique set of arguments. Cache evicts least-recently-used entries when full. In ML: @lru_cache(maxsize=None) on tokenize(text) so repeated calls with the same text (common in evaluation) return instantly. @lru_cache on load_config(path) ensures the config file is only read once even if called from multiple places. Arguments must be hashable (not lists/dicts — use tuples instead)."
+    }
+  ]
+}

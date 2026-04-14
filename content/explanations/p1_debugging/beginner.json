@@ -1,0 +1,28 @@
+{
+  "skill_id": "p1_debugging",
+  "depth": "beginner",
+  "title": "Debugging — Finding and Fixing Bugs",
+  "key_insight": "Bugs are not failures — they're information. Every error message tells you exactly where to look. Learning to read errors is the most high-leverage skill for a new programmer.",
+  "body": "## Reading Error Messages\n\n```python\n# Python error messages have 3 parts:\n# 1. Traceback (where the error happened)\n# 2. Error type\n# 3. Error description\n\n# Example — NameError:\nprint(messag)  # typo: messag instead of message\n# Traceback (most recent call last):\n#   File \"script.py\", line 1, in <module>\n#     print(messag)\n# NameError: name 'messag' is not defined\n\n# Example — TypeError:\nage = '25'\nprint(age + 1)   # can't add string and int\n# TypeError: can only concatenate str (not 'int') to str\n\n# Example — IndexError:\nlst = [1, 2, 3]\nprint(lst[5])  # index 5 doesn't exist\n# IndexError: list index out of range\n```\n\n## Common Error Types and What They Mean\n\n| Error | What it means | Common cause |\n|---|---|---|\n| `NameError` | Variable doesn't exist | Typo, forgot to define |\n| `TypeError` | Wrong type for operation | String + int, wrong args |\n| `IndexError` | List index out of range | Off by one, empty list |\n| `KeyError` | Dictionary key missing | Wrong key name |\n| `SyntaxError` | Invalid Python code | Missing colon, bracket, indent |\n| `ValueError` | Right type, wrong value | `int('hello')` |\n| `ZeroDivisionError` | Divide by zero | `x / 0` |\n\n## Debugging with Print Statements\n\n```python\n# When your code gives wrong output, add prints to trace values\n\ndef calculate_total(prices):\n    print(f'DEBUG: prices received: {prices}')  # what are we working with?\n    total = 0\n    for price in prices:\n        print(f'DEBUG: adding {price}, running total: {total}')  # trace each step\n        total += price\n    print(f'DEBUG: final total: {total}')\n    return total\n\n# Remove debug prints once the bug is found\n```\n\n## The Debugging Process\n\n```\n1. Read the error message carefully\n   → What type? What line? What exactly does it say?\n\n2. Find the line with the problem\n   → Go to the line number in the traceback\n\n3. Add print() statements around suspect code\n   → What values are the variables at that point?\n\n4. Form a hypothesis\n   → 'I think the bug is because X'\n\n5. Make ONE change and test\n   → Don't change multiple things at once\n\n6. Confirm it's fixed\n   → Does it work for all cases?\n```\n\n## The Most Common Beginner Bugs\n\n```python\n# 1. Missing colon after if/for/while/def:\nif x > 0   # SyntaxError — missing colon\n    print(x)\n\n# 2. Wrong indentation:\nif x > 0:\nprint(x)  # IndentationError — must be indented\n\n# 3. Using = instead of == in comparison:\nif x = 5:  # SyntaxError\n    print('five')\n\n# 4. Forgetting to convert input() to a number:\nage = input('Enter age: ')\nif age > 18:  # TypeError — comparing str to int\n    print('adult')\n\n# Fix:\nage = int(input('Enter age: '))  # convert to int first\n```",
+  "common_mistakes": [
+    "Panicking when you see an error — read the last line of the traceback first, it tells you exactly what went wrong",
+    "Changing multiple things at once when debugging — change ONE thing, test, then change the next thing",
+    "Ignoring the line number in the traceback — Python tells you exactly where to look"
+  ],
+  "mini_exercise": "Fix this code (it has 4 bugs — find them all):\n```python\ndef greet(name)\n    massage = 'Hello, ' + name\nprint(massage)\n\nresult = greet('Alice)\nprint('Result: ', Result)\n```",
+  "real_world_usage": "Professional developers spend 30-50% of their time debugging. Tools like PyCharm's debugger, VS Code's debug mode, and logging frameworks automate many of the techniques here. The mindset of 'errors are information' is what separates experienced developers from frustrated beginners.",
+  "explain_back_prompt": "What are the 6 most common Python error types and what does each mean? What is the debugging process? Why is it important to change only one thing at a time when debugging?",
+  "build_task": {
+    "title": "Debug a broken calculator",
+    "context": "Practice reading errors and fixing them systematically.",
+    "steps": [
+      "Copy the code below (which has 5 deliberate bugs)",
+      "Run it and read the first error",
+      "Fix it, run again, read the next error",
+      "Repeat until all bugs are fixed",
+      "The final program should calculate average of a list of numbers"
+    ],
+    "expected_output": "Program runs without errors and correctly prints 'Average: 4.0' for input [2, 4, 6].",
+    "starter_code": "def calculate_average(numbers)\n    total = 0\n    for number in numbers:\n        total = total + Number\n    average = total / len(numbers)\n    return Average\n\nnums = [2, 4, 6]\nresult = calculate_average(nums)\nprint('Average: ' + result)  # hint: result is a float"
+  }
+}

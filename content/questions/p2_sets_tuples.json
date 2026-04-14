@@ -1,0 +1,77 @@
+{
+  "skill_id": "p2_sets_tuples",
+  "questions": [
+    {
+      "id": "p2_sets_tuples_q1",
+      "stem": "What is the key difference between a list and a tuple?",
+      "options": [
+        "Tuples are faster for all operations",
+        "Lists are ordered; tuples are unordered",
+        "Tuples are immutable (cannot be changed after creation); lists are mutable",
+        "Tuples can only store numbers"
+      ],
+      "answer": 2,
+      "explanation": "Tuples are immutable — once created, you cannot add, remove, or change elements. Lists are mutable. Both are ordered sequences."
+    },
+    {
+      "id": "p2_sets_tuples_q2",
+      "stem": "What does `{1, 2, 3, 2, 1}` evaluate to?",
+      "options": [
+        "{1, 2, 3, 2, 1}",
+        "{1, 2, 3}",
+        "[1, 2, 3]",
+        "SyntaxError"
+      ],
+      "answer": 1,
+      "explanation": "Sets automatically remove duplicates. `{1, 2, 3, 2, 1}` is a set literal, and the result is `{1, 2, 3}`."
+    },
+    {
+      "id": "p2_sets_tuples_q3",
+      "stem": "Why is `x in my_set` faster than `x in my_list`?",
+      "options": [
+        "Sets are sorted, so binary search is used",
+        "Sets use a hash table — membership testing is O(1); lists require scanning every element O(n)",
+        "Sets are stored in CPU cache",
+        "Lists compare elements with == which is slow"
+      ],
+      "answer": 1,
+      "explanation": "Set membership is O(1) because Python hashes the value and directly checks the corresponding bucket. List membership is O(n) because Python must check each element sequentially."
+    },
+    {
+      "id": "p2_sets_tuples_q4",
+      "stem": "What does `a & b` do for two sets a and b?",
+      "options": [
+        "Concatenates the sets",
+        "Returns elements in either a or b",
+        "Returns elements in both a and b (intersection)",
+        "Returns elements in a but not in b"
+      ],
+      "answer": 2,
+      "explanation": "`&` (or `.intersection()`) returns elements that are in BOTH sets. `|` is union (elements in either), `-` is difference (in left but not right)."
+    },
+    {
+      "id": "p2_sets_tuples_q5",
+      "stem": "How do you create an empty set?",
+      "options": [
+        "`{}`",
+        "`set()`",
+        "`[]`",
+        "`empty_set()`"
+      ],
+      "answer": 1,
+      "explanation": "`{}` creates an empty DICT, not a set. To create an empty set, you must use `set()`. This is a common gotcha."
+    },
+    {
+      "id": "p2_sets_tuples_q6",
+      "stem": "What is tuple unpacking?",
+      "options": [
+        "Removing elements from a tuple",
+        "Assigning tuple elements to multiple variables in one statement",
+        "Converting a tuple to a list",
+        "Sorting a tuple"
+      ],
+      "answer": 1,
+      "explanation": "Tuple unpacking: `x, y = (3, 4)` assigns 3 to x and 4 to y. Python also supports extended unpacking: `first, *rest = (1, 2, 3, 4)` gives first=1 and rest=[2,3,4]."
+    }
+  ]
+}

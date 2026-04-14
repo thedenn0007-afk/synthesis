@@ -1,0 +1,29 @@
+{
+  "skill_id": "p1_strings",
+  "depth": "beginner",
+  "title": "Strings — Working with Text in Python",
+  "key_insight": "Strings store text. Python makes text manipulation easy with built-in methods for finding, splitting, joining, and formatting strings. Almost every real program works with strings.",
+  "body": "## Creating Strings\n\n```python\nname = 'Alice'          # single quotes\ngreeting = \"Hello!\"     # double quotes — both work\nmultiline = '''Line 1\nLine 2\nLine 3'''               # triple quotes for multiple lines\n```\n\n## String Operations\n\n```python\nfirst = 'Hello'\nlast  = 'World'\n\n# Concatenation (joining strings)\nfull = first + ' ' + last\nprint(full)   # Hello World\n\n# Repetition\nline = '-' * 20\nprint(line)  # --------------------\n\n# Length\nprint(len(full))  # 11\n```\n\n## Indexing and Slicing\n\n```python\ntext = 'Python'\n# Index:  0 1 2 3 4 5\n# From end: -6 -5 -4 -3 -2 -1\n\nprint(text[0])    # 'P'  (first character)\nprint(text[-1])   # 'n'  (last character)\nprint(text[0:3])  # 'Pyt' (index 0 up to, not including, 3)\nprint(text[2:])   # 'thon' (from index 2 to end)\nprint(text[::-1]) # 'nohtyP' (reversed)\n```\n\n## Essential String Methods\n\n```python\nsentence = '  Hello, World!  '\n\nprint(sentence.strip())        # 'Hello, World!'  — remove whitespace\nprint(sentence.lower())        # '  hello, world!  '\nprint(sentence.upper())        # '  HELLO, WORLD!  '\nprint(sentence.replace('World', 'Python'))  # '  Hello, Python!  '\nprint(sentence.strip().split(', '))  # ['Hello', 'World!']\n\n# Check methods\nprint('hello'.startswith('hel'))  # True\nprint('hello'.endswith('lo'))     # True\nprint('ello' in 'hello')          # True\nprint('hello'.count('l'))         # 2\n```\n\n## f-Strings — The Best Way to Format Strings\n\n```python\nname = 'Alice'\nage  = 30\nprice = 19.99\n\n# f-string: put f before the quote, use {} for variables\nprint(f'Hello, {name}! You are {age} years old.')\n# Hello, Alice! You are 30 years old.\n\n# Format numbers:\nprint(f'Price: £{price:.2f}')  # Price: £19.99\nprint(f'{age:05d}')            # 00030 (pad with zeros)\n```",
+  "common_mistakes": [
+    "Strings are immutable — you can't do `name[0] = 'B'`. Create a new string instead",
+    "IndexError when accessing index >= len(string)",
+    "Forgetting that split() returns a list, not a string — `'a,b,c'.split(',')` → `['a', 'b', 'c']`"
+  ],
+  "mini_exercise": "Given `s = 'Hello, World!'`, write expressions to: (1) get only 'World', (2) convert to uppercase, (3) check if 'World' is in the string, (4) replace 'World' with your name, (5) count how many 'l' characters there are.",
+  "real_world_usage": "Every web form, user profile, error message, and file path in software is a string. Python string methods are used constantly: strip() removes whitespace from user input, split() parses CSV data, f-strings format output. Django templates use Python string formatting to generate HTML.",
+  "explain_back_prompt": "What is string slicing and how does negative indexing work? What does split() return? What is an f-string and how is it different from string concatenation with `+`?",
+  "build_task": {
+    "title": "Build a username validator",
+    "context": "String methods are perfect for input validation.",
+    "steps": [
+      "Accept a username from input()",
+      "Check: length must be 3-20 characters",
+      "Check: must start with a letter (use .isalpha() on first character)",
+      "Check: can only contain letters, numbers, underscores (use .isalnum() and check for underscore)",
+      "Check: must be lowercase (or auto-lowercase it with .lower())",
+      "Print 'Valid username' or specific error messages"
+    ],
+    "expected_output": "Username validator that accepts 'alice_99' and rejects '1user', 'ab', 'user name'.",
+    "starter_code": "username = input('Enter a username: ').strip()\n\n# TODO: validate each rule with string methods\n# Rules: 3-20 chars, starts with letter, only alphanum/underscore, lowercase"
+  }
+}

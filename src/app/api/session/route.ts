@@ -1,8 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getCurrentUser } from '@/lib/db/session'
 import { selectNextTask } from '@/lib/session/engine'
+import { getAllNodes, getHardPrereqs } from '@/lib/graph'
+import { initSkillState } from '@/lib/bkt'
+import { initSM2 } from '@/lib/sm2'
 import { getMotivationState, getAllSkillStates, getReviewSchedules,
-         createSession, getSession, endSession } from '@/lib/db/queries'
+         createSession, getSession, endSession,
+         bulkUpsertSkillStates, bulkUpsertReviewSchedules } from '@/lib/db/queries'
 import type { LearnerSkillState, ReviewSchedule, Question } from '@/types'
 
 export async function POST(req: NextRequest) {
@@ -21,11 +25,26 @@ export async function POST(req: NextRequest) {
     const session = getSession(session_id)
     if (!session || session.learner_id !== user.id) return NextResponse.json({ error: 'Invalid session' }, { status: 403 })
 
-    const [allStates, allSchedules, motivation] = [
-      getAllSkillStates(user.id),
-      getReviewSchedules(user.id),
-      getMotivationState(user.id),
-    ]
+    let allStates = getAllSkillStates(user.id)
+    const allSchedules = getReviewSchedules(user.id)
+    const motivation   = getMotivationState(user.id)
+
+    // Auto-sync: initialize states for any new nodes added after onboarding
+    const allNodeIds  = new Set(getAllNodes().filter(n => !n.deprecated).map(n => n.id))
+    const existingIds = new Set(allStates.map(s => s.skill_id))
+    const newNodeIds  = [...allNodeIds].filter(id => !existingIds.has(id))
+    if (newNodeIds.length > 0) {
+      const stateMap   = new Map(allStates.map(s => [s.skill_id, s]))
+      const newStates  = newNodeIds.map(id => {
+        const prereqs = getHardPrereqs(id)
+        const blocked = prereqs.length > 0 && prereqs.some(pid => (stateMap.get(pid)?.p_know ?? 0) < 0.40)
+        return initSkillState(user.id, id, undefined, blocked)
+      })
+      const newSchedules = newNodeIds.map(id => initSM2(user.id, id))
+      bulkUpsertSkillStates(newStates)
+      bulkUpsertReviewSchedules(newSchedules)
+      allStates = [...allStates, ...newStates]
+    }
 
     if (!motivation) return NextResponse.json({ error: 'Motivation state missing — run /api/onboard first' }, { status: 400 })
 

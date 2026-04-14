@@ -1,0 +1,77 @@
+{
+  "skill_id": "p2_numpy_basics",
+  "questions": [
+    {
+      "id": "p2_numpy_basics_q1",
+      "stem": "What is the key advantage of NumPy arrays over Python lists for numerical computation?",
+      "options": [
+        "NumPy arrays can hold more elements than Python lists",
+        "NumPy arrays store homogeneous numeric data in contiguous memory, enabling C-level SIMD operations — eliminating Python interpreter overhead per element",
+        "NumPy arrays are automatically saved to disk and don't use RAM",
+        "NumPy arrays work on GPU natively without any configuration"
+      ],
+      "answer": 1,
+      "explanation": "Python lists store pointers to objects — each element has 16-56 bytes overhead for the Python object wrapper. NumPy float32 arrays store raw 4-byte floats packed contiguously. For 1M numbers: list = ~56 MB; NumPy float32 = 4 MB. More importantly: NumPy calls C code with SIMD, processing 8-16 elements per instruction — vs 1 element per Python bytecode dispatch. The result is ~50-200× speedup for numerical operations."
+    },
+    {
+      "id": "p2_numpy_basics_q2",
+      "stem": "What does np.mean(arr, axis=0) compute for a 2D array of shape (4, 3)?",
+      "options": [
+        "The single mean of all 12 elements",
+        "The mean of each COLUMN — averages along axis 0 (across rows), producing a (3,) array with the mean of each column",
+        "The mean of each ROW — producing a (4,) array with the mean of each row",
+        "The median of the array (mean and median are the same)"
+      ],
+      "answer": 1,
+      "explanation": "axis=0 means 'collapse the first axis' — averaging across rows. For shape (4, 3): axis=0 produces shape (3,) — the column means. axis=1 produces shape (4,) — the row means. axis=None produces a scalar (overall mean). In ML: model.layers.weight.mean(axis=0) gives the mean weight per output neuron; per-feature normalisation uses axis=0 to compute statistics across the batch."
+    },
+    {
+      "id": "p2_numpy_basics_q3",
+      "stem": "What is the difference between np.copy() and np.view() when creating a new array from an existing one?",
+      "options": [
+        "np.copy() is slower; np.view() is faster but less accurate",
+        "np.copy() allocates new memory with a copy of the data; slicing (a[1:4]) and reshape produce VIEWS sharing the same memory — modifying a view modifies the original",
+        "np.view() works on GPU; np.copy() works on CPU",
+        "They are identical — np.view() is deprecated in modern NumPy"
+      ],
+      "answer": 1,
+      "explanation": "b = a[1:4] is a VIEW — b and a share memory. b[0] = 99 also changes a[1]. b = a[1:4].copy() allocates new memory. Knowing the difference prevents bugs: gradient accumulation bugs, accidental data corruption in preprocessing. Check with array.base: if b.base is a, b is a view. In PyTorch: tensor.grad is a view of the parameter's gradient memory — this is why zero_grad() must clear it explicitly."
+    },
+    {
+      "id": "p2_numpy_basics_q4",
+      "stem": "What does np.einsum('ij,jk->ik', A, B) compute?",
+      "options": [
+        "Element-wise multiplication of A and B",
+        "Matrix multiplication A @ B — for each (i,k) output cell, sum over the shared j dimension: Σⱼ A[i,j] × B[j,k]",
+        "The outer product of A and B",
+        "The transpose of A followed by multiplication with B"
+      ],
+      "answer": 1,
+      "explanation": "Einsum notation: label each dimension. 'ij,jk->ik' means: A has axes (i, j), B has axes (j, k), output has axes (i, k). The j axis appears in both inputs but not the output — it gets summed over. This is exactly matrix multiplication. Einsum is more general: 'ii->' computes the trace; 'i,j->ij' computes the outer product; 'bik,bjk->bij' computes batched dot products (used in attention)."
+    },
+    {
+      "id": "p2_numpy_basics_q5",
+      "stem": "What is np.memmap and why is it useful for large ML datasets?",
+      "options": [
+        "A way to transfer NumPy arrays to GPU memory",
+        "Memory-mapped file access: maps a file on disk directly into virtual memory — allows reading/writing array data larger than RAM, with the OS handling paging transparently",
+        "A compressed array format that reduces file size",
+        "A tool for mapping between NumPy dtypes and PyTorch dtypes"
+      ],
+      "answer": 1,
+      "explanation": "np.memmap('data.npy', dtype='float32', mode='r', shape=(10M, 768)) maps the file into virtual memory. Accessing row data[42] loads only that page (4 KB) from disk — not the entire 30 GB file. Multiple processes can share the same physical pages (shared memory). Used for: large embedding tables, datasets too large for RAM, sharing precomputed features between workers. PyTorch's DataLoader with mmap_mode uses this internally."
+    },
+    {
+      "id": "p2_numpy_basics_q6",
+      "stem": "What does np.where(condition, x, y) return?",
+      "options": [
+        "The indices where condition is True",
+        "An array where each element is x[i] if condition[i] is True, else y[i] — a vectorised if-else over the entire array",
+        "A boolean array with True where condition is met",
+        "The subset of x where condition is True (same as x[condition])"
+      ],
+      "answer": 1,
+      "explanation": "np.where(a > 0, a, 0) implements ReLU: positive values kept, negatives zeroed. np.where(a > 0, a, -0.01 * a) implements Leaky ReLU. This is vectorised conditional selection — no Python loop, processes millions of elements in microseconds. Distinguish: np.where(condition) with only one argument returns the INDICES where condition is True (equivalent to np.nonzero). With three arguments: vectorised ternary."
+    }
+  ]
+}

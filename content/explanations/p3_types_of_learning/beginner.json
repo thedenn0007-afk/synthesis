@@ -1,0 +1,29 @@
+{
+  "skill_id": "p3_types_of_learning",
+  "depth": "beginner",
+  "title": "Three Ways Machines Learn",
+  "key_insight": "There are three main flavours of machine learning — supervised (with answer keys), unsupervised (finding patterns alone), and reinforcement (learning from rewards).",
+  "body": "## Learning Style #1: Supervised Learning\n\n**The setup**: You give the machine labelled examples — the question AND the answer.\n\n**Examples:**\n- 10,000 emails, each labelled 'spam' or 'not spam'\n- 1 million images, each labelled with what's in them\n- House prices with their sale prices as labels\n\nThe machine learns: given a new input, what's the correct output?\n\n**Used for**: classification, prediction, translation\n\n---\n\n## Learning Style #2: Unsupervised Learning\n\n**The setup**: You give the machine data with NO labels. It finds patterns on its own.\n\n**Examples:**\n- Give 10,000 customer records — machine groups them into similar types (clustering)\n- Give text — machine learns word meanings from context\n- Give 1 million images — machine learns visual structure without being told anything\n\n**Used for**: clustering, compression, finding structure in data\n\n---\n\n## Learning Style #3: Reinforcement Learning\n\n**The setup**: An agent tries actions, receives rewards or penalties, learns to maximise rewards over time.\n\n**Examples:**\n- A game AI that learns chess by playing millions of games against itself\n- A robot arm that learns to grab objects through trial and error\n- An LLM trained to give helpful, safe answers using human feedback\n\n**Used for**: games, robotics, recommendation systems\n\n---\n\n## Quick Summary\n\n| Type | Training Data | Key Question |\n|---|---|---|\n| Supervised | Labelled examples (X → Y) | What is the correct output? |\n| Unsupervised | Raw data (no labels) | What patterns exist? |\n| Reinforcement | Actions + rewards | What actions maximise reward? |",
+  "common_mistakes": [
+    "Thinking supervised is always best — sometimes you don't have labels, and unsupervised approaches find better structure",
+    "Confusing unsupervised with 'no learning' — it still trains intensively, just on different objectives",
+    "Thinking reinforcement learning is only for games — it's used in robotics, drug discovery, and LLM alignment (RLHF)"
+  ],
+  "mini_exercise": "Classify each of these as supervised, unsupervised, or reinforcement learning: (1) A model that predicts house prices from square footage. (2) A model that groups news articles into topics without being told the topics. (3) A model that learns to play Pong by trying random moves and scoring points. (4) Spotify learning word2vec embeddings from song sequences.",
+  "real_world_usage": "ChatGPT uses all three: GPT was pre-trained with unsupervised learning (predict next word), then fine-tuned with supervised learning (demonstration data), then improved with reinforcement learning (RLHF). Modern AI products rarely use just one type — they stack all three.",
+  "explain_back_prompt": "Explain supervised, unsupervised, and reinforcement learning using a different analogy for each. Don't use the same examples as the lesson. Then give a real AI product that uses each type.",
+  "build_task": {
+    "title": "Run a real unsupervised algorithm",
+    "context": "K-means clustering demonstrates unsupervised learning — no labels needed.",
+    "steps": [
+      "from sklearn.cluster import KMeans",
+      "from sklearn.datasets import make_blobs",
+      "Generate fake data: X, _ = make_blobs(n_samples=300, centers=3)",
+      "Run KMeans: km = KMeans(n_clusters=3); km.fit(X)",
+      "Print the cluster centers: print(km.cluster_centers_)",
+      "Plot the data coloured by cluster using matplotlib"
+    ],
+    "expected_output": "A scatter plot showing 3 clusters with different colours. Cluster centres printed.",
+    "starter_code": "from sklearn.cluster import KMeans\nfrom sklearn.datasets import make_blobs\nimport matplotlib.pyplot as plt\n\nX, _ = make_blobs(n_samples=300, centers=3, random_state=42)\n\n# TODO: Create and fit KMeans\n# TODO: Plot results"
+  }
+}
