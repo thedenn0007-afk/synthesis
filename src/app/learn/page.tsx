@@ -26,7 +26,7 @@ function ReasonPill({ reason, pKnow }: { reason: TaskReason; pKnow: number }) {
   const pct = Math.round(pKnow * 100)
   return (
     <span
-      className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-mono border"
+      className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[12px] font-mono border"
       style={{ color: cfg.color, borderColor: cfg.color + '35', background: cfg.color + '12' }}
       title={`Why this? ${cfg.label}${reason === 'weak_area' ? ` (${pct}% mastered)` : ''}`}
     >
@@ -66,27 +66,38 @@ function ModeBar({
   const activeIdx = visible.findIndex(s => s.id === activeMode)
 
   return (
-    <div className="flex items-center gap-2 mb-5">
+    <div className="flex items-center gap-2.5 mb-6">
       {visible.map((step, idx) => {
         const isPast   = idx < activeIdx
         const isActive = idx === activeIdx
         return (
-          <div key={step.id} className="flex items-center gap-2">
+          <div key={step.id} className="flex items-center gap-2.5">
             {idx > 0 && (
-              <div className={`h-px w-5 ${isPast ? 'bg-c-purple' : 'bg-[var(--border)]'}`} />
+              <div className={`h-px w-8 ${isPast ? 'bg-c-purple' : 'bg-[var(--border-hi)]'}`} />
             )}
-            <div className="flex items-center gap-1.5">
+            <div className="flex items-center gap-2">
+              {/* Larger circle: w-5 h-5 */}
               <div
-                className={`w-4 h-4 rounded-full flex items-center justify-center text-[9px] font-mono ${
-                  isPast   ? 'bg-c-purple text-white'
-                  : isActive ? 'bg-c-purple/20 border-2 border-c-purple text-c-purple'
-                  : 'bg-c-bg3 border border-[var(--border)] text-c-ghost'
+                className={`w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-mono font-semibold ${
+                  isPast
+                    ? 'bg-c-purple text-white'
+                    : isActive
+                    ? 'bg-c-purple/20 border-2 border-c-purple text-c-purple'
+                    : 'bg-c-bg3 border border-[var(--border)] text-c-ghost'
                 }`}
               >
-                {isPast ? '✓' : idx + 1}
+                {isPast ? (
+                  <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                    strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                    <polyline points="20 6 9 17 4 12"/>
+                  </svg>
+                ) : (
+                  idx + 1
+                )}
               </div>
+              {/* Bigger label: 12px */}
               <span
-                className={`text-[10px] font-mono ${
+                className={`text-[12px] font-mono font-medium ${
                   isActive ? 'text-c-purple' : isPast ? 'text-c-muted' : 'text-c-ghost'
                 }`}
               >
@@ -100,7 +111,7 @@ function ModeBar({
   )
 }
 
-// ─── Pre-question Learn Panel (inline, compact) ───────────────────────────────
+// ─── Pre-question Learn Panel ─────────────────────────────────────────────────
 
 interface LearnPanelProps {
   task:        SessionTask
@@ -120,52 +131,54 @@ function LearnPanel({ task, explanation, depth, onReady }: LearnPanelProps) {
   return (
     <div className="animate-slide-up">
       {explanation ? (
-        <div className="rounded-2xl bg-c-bg2 border border-[var(--border)] overflow-hidden mb-4">
-          <div className="px-5 pt-5 pb-4">
-            <div className="flex items-center justify-between mb-1">
-              <p className="font-mono text-[10px] text-c-purple uppercase tracking-[0.16em]">New concept</p>
+        <div className="rounded-2xl bg-c-bg2 border border-[var(--border)] overflow-hidden mb-5">
+          <div className="px-6 pt-6 pb-5">
+            <div className="flex items-center justify-between mb-2">
+              <p className="font-mono text-[12px] text-c-purple uppercase tracking-[0.16em]">New concept</p>
               {depth && (
-                <span className="text-[10px] font-mono font-semibold uppercase tracking-[0.1em] px-1.5 py-0.5 rounded"
-                  style={{ color: DEPTH_COLORS[depth], background: DEPTH_COLORS[depth] + '18' }}>
+                <span
+                  className="text-[11px] font-mono font-semibold uppercase tracking-[0.1em] px-2 py-0.5 rounded"
+                  style={{ color: DEPTH_COLORS[depth], background: DEPTH_COLORS[depth] + '18' }}
+                >
                   {depth}
                 </span>
               )}
             </div>
-            <h3 className="text-[16px] font-semibold text-c-text mb-3">{explanation.title}</h3>
+            <h3 className="text-[18px] font-semibold text-c-text mb-3">{explanation.title}</h3>
 
             {explanation.key_insight && (
-              <div className="mb-4 px-4 py-3 rounded-lg bg-c-purple/[0.08] border border-c-purple/20">
-                <p className="text-[12px] text-c-purple italic">"{explanation.key_insight}"</p>
+              <div className="mb-5 px-4 py-3.5 rounded-xl bg-c-purple/[0.10] border border-c-purple/25">
+                <p className="text-[13px] text-c-purple italic leading-[1.6]">"{explanation.key_insight}"</p>
               </div>
             )}
 
             <div
-              className="prose-synaptic text-[13px] text-c-muted leading-[1.75]"
+              className="prose-synaptic text-[14px] text-c-muted leading-[1.75]"
               dangerouslySetInnerHTML={{ __html: mdToHtml(explanation.body) }}
             />
 
             {explanation.mini_exercise && (
-              <div className="mt-4 p-3 rounded-xl bg-c-bg3 border border-[var(--border)]">
-                <p className="text-[10px] font-mono text-c-faint uppercase tracking-[0.14em] mb-1">Quick check</p>
-                <p className="text-[12px] text-c-muted">{explanation.mini_exercise}</p>
+              <div className="mt-5 p-4 rounded-xl bg-c-bg3 border border-[var(--border)]">
+                <p className="text-[11px] font-mono text-c-faint uppercase tracking-[0.14em] mb-2">Quick check</p>
+                <p className="text-[13px] text-c-muted leading-[1.6]">{explanation.mini_exercise}</p>
               </div>
             )}
           </div>
         </div>
       ) : (
-        <div className="rounded-2xl bg-c-bg2 border border-[var(--border)] px-5 py-6 mb-4">
-          <p className="font-mono text-[10px] text-c-purple uppercase tracking-[0.14em] mb-2">New concept</p>
-          <h3 className="text-[16px] font-semibold text-c-text mb-2">{task.skill_label}</h3>
-          <p className="text-[13px] text-c-muted italic">{task.skill_intuition}</p>
+        <div className="rounded-2xl bg-c-bg2 border border-[var(--border)] px-6 py-6 mb-5">
+          <p className="font-mono text-[12px] text-c-purple uppercase tracking-[0.14em] mb-2">New concept</p>
+          <h3 className="text-[18px] font-semibold text-c-text mb-2">{task.skill_label}</h3>
+          <p className="text-[14px] text-c-muted italic leading-[1.6]">{task.skill_intuition}</p>
           {task.skill_analogy && (
-            <p className="text-[12px] text-c-faint mt-3">Analogy: {task.skill_analogy}</p>
+            <p className="text-[13px] text-c-faint mt-3 leading-[1.55]">Analogy: {task.skill_analogy}</p>
           )}
         </div>
       )}
 
       <button
         onClick={onReady}
-        className="w-full py-3.5 rounded-xl bg-c-purple hover:bg-[var(--purple-hover)] text-white text-[14px] font-medium transition-all hover:scale-[1.01]"
+        className="w-full py-4 rounded-xl bg-c-purple hover:bg-[var(--purple-hover)] text-white text-[15px] font-medium transition-all hover:scale-[1.01]"
       >
         I understand — Practice now →
       </button>
@@ -176,28 +189,27 @@ function LearnPanel({ task, explanation, depth, onReady }: LearnPanelProps) {
 // ─── Page ─────────────────────────────────────────────────────────────────────
 
 function LearnPageInner() {
-  const router      = useRouter()
+  const router       = useRouter()
   const searchParams = useSearchParams()
   const sessionMode  = (searchParams.get('mode') ?? 'learn') as SessionMode
   const { track } = useAnalytics()
 
-  const [sessionId,      setSessionId]      = useState<string | null>(null)
-  const [task,           setTask]           = useState<SessionTask | null>(null)
-  const [phase,          setPhase]          = useState<SessionPhase>('loading')
-  const [selected,       setSelected]       = useState<string | null>(null)
-  const [fillAnswer,     setFillAnswer]     = useState('')
-  const [feedback,       setFeedback]       = useState<{ correct: boolean; explanation_after?: string } | null>(null)
-  const [explanation,    setExplanation]    = useState<Explanation | null>(null)
-  const [explanationDepth, setExplanationDepth] = useState<ExplanationDepth>('beginner')
-  const [preExplanation, setPreExplanation] = useState<Explanation | null>(null)  // shown BEFORE question
-  const [preDepth,       setPreDepth]       = useState<ExplanationDepth>('beginner')
-  const [motivation,     setMotivation]     = useState<string>('neutral')
-  const [seenSkills,     setSeenSkills]     = useState<string[]>([])
-  const [seenQuestions,  setSeenQuestions]  = useState<string[]>([])
-  const [sessionStats,   setSessionStats]   = useState({ correct: 0, total: 0 })
-  const [showLearnFirst, setShowLearnFirst] = useState(false)  // pre-question Learn mode active
+  const [sessionId,         setSessionId]         = useState<string | null>(null)
+  const [task,              setTask]              = useState<SessionTask | null>(null)
+  const [phase,             setPhase]             = useState<SessionPhase>('loading')
+  const [selected,          setSelected]          = useState<string | null>(null)
+  const [fillAnswer,        setFillAnswer]        = useState('')
+  const [feedback,          setFeedback]          = useState<{ correct: boolean; explanation_after?: string } | null>(null)
+  const [explanation,       setExplanation]       = useState<Explanation | null>(null)
+  const [explanationDepth,  setExplanationDepth]  = useState<ExplanationDepth>('beginner')
+  const [preExplanation,    setPreExplanation]    = useState<Explanation | null>(null)
+  const [preDepth,          setPreDepth]          = useState<ExplanationDepth>('beginner')
+  const [motivation,        setMotivation]        = useState<string>('neutral')
+  const [seenSkills,        setSeenSkills]        = useState<string[]>([])
+  const [seenQuestions,     setSeenQuestions]     = useState<string[]>([])
+  const [sessionStats,      setSessionStats]      = useState({ correct: 0, total: 0 })
+  const [showLearnFirst,    setShowLearnFirst]    = useState(false)
 
-  // Derived: which learning mode are we in right now?
   function currentMode(): LearningMode {
     if (showLearnFirst && phase === 'question') return 'learn'
     if (phase === 'question' || phase === 'revealing') return 'practice'
@@ -237,7 +249,6 @@ function LearnPageInner() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  // Load next question
   const loadNext = useCallback(async (sid: string) => {
     setPhase('loading')
     setShowLearnFirst(false)
@@ -258,10 +269,8 @@ function LearnPageInner() {
     setTask(newTask)
     setSelected(null); setFillAnswer(''); setFeedback(null); setExplanation(null)
 
-    // Decide: show Learn mode first for new/weak skills?
     const isNewOrWeak = newTask.p_know < 0.35
     if (isNewOrWeak) {
-      // Prefetch explanation for the Learn panel
       try {
         const er = await fetch(`/api/explanation?skill_id=${newTask.skill_id}`)
         const ed = await er.json()
@@ -269,10 +278,10 @@ function LearnPageInner() {
           setPreExplanation(ed.explanation)
           setPreDepth(ed.depth ?? 'beginner')
           setShowLearnFirst(true)
-          setPhase('question')  // stays on 'question' but showLearnFirst=true means render LearnPanel
+          setPhase('question')
           return
         }
-      } catch { /* proceed to question if fetch fails */ }
+      } catch { /* proceed to question */ }
     }
 
     setPhase('question')
@@ -343,8 +352,8 @@ function LearnPageInner() {
     return (
       <div className="min-h-screen bg-c-bg">
         <Navbar />
-        <div className="max-w-lg mx-auto px-8 py-20 text-center animate-slide-up">
-          <p className="font-mono text-[11px] text-c-faint uppercase tracking-[0.14em] mb-4">
+        <div className="max-w-lg mx-auto px-8 py-24 text-center animate-slide-up">
+          <p className="font-mono text-[12px] text-c-faint uppercase tracking-[0.14em] mb-5">
             {earlyExit
               ? 'Session ended early'
               : isReviewMode
@@ -352,23 +361,23 @@ function LearnPageInner() {
               : 'Session complete'}
           </p>
           {earlyExit ? (
-            <p className="text-[14px] text-[#fbbf24] mb-8 px-4">
+            <p className="text-[15px] text-[#fbbf24] mb-10 px-4 leading-[1.6]">
               No more questions available right now — the engine exhausted its current pool.
               Complete more skills or come back after reviews reset.
             </p>
           ) : (
             <>
-              <h1 className="font-serif italic text-[44px] text-c-text mb-2">{accuracy}%</h1>
-              <p className="text-[14px] text-c-muted mb-8">
+              <h1 className="font-serif italic text-[52px] text-c-text mb-2 leading-none">{accuracy}%</h1>
+              <p className="text-[16px] text-c-muted mb-10">
                 {sessionStats.correct} of {sessionStats.total} correct
               </p>
             </>
           )}
-          <div className="flex gap-3 justify-center">
+          <div className="flex gap-3 justify-center flex-wrap">
             {!isReviewMode && (
               <button
                 onClick={restartSession}
-                className="px-6 py-3 rounded-xl bg-c-purple hover:bg-[var(--purple-hover)] text-white text-[14px] font-medium transition-all"
+                className="px-7 py-3.5 rounded-xl bg-c-purple hover:bg-[var(--purple-hover)] text-white text-[15px] font-medium transition-all"
               >
                 Keep studying →
               </button>
@@ -376,7 +385,7 @@ function LearnPageInner() {
             {isReviewMode && !earlyExit && (
               <button
                 onClick={restartSession}
-                className="px-6 py-3 rounded-xl border border-[#fbbf24]/40 text-[#fbbf24] hover:bg-[#fbbf24]/10 text-[14px] font-medium transition-all"
+                className="px-7 py-3.5 rounded-xl border border-[#fbbf24]/40 text-[#fbbf24] hover:bg-[#fbbf24]/10 text-[15px] font-medium transition-all"
               >
                 Keep reviewing →
               </button>
@@ -384,14 +393,14 @@ function LearnPageInner() {
             {isReviewMode && (
               <button
                 onClick={() => router.push('/learn')}
-                className="px-6 py-3 rounded-xl bg-c-purple hover:bg-[var(--purple-hover)] text-white text-[14px] font-medium transition-all"
+                className="px-7 py-3.5 rounded-xl bg-c-purple hover:bg-[var(--purple-hover)] text-white text-[15px] font-medium transition-all"
               >
                 Study new content →
               </button>
             )}
             <button
               onClick={() => router.push('/dashboard')}
-              className="px-6 py-3 rounded-xl border border-[var(--border)] text-c-muted hover:text-c-text text-[14px] transition-all"
+              className="px-7 py-3.5 rounded-xl border border-[var(--border)] text-c-muted hover:text-c-text text-[15px] transition-all"
             >
               Dashboard
             </button>
@@ -409,22 +418,23 @@ function LearnPageInner() {
   return (
     <div className="min-h-screen bg-c-bg">
       <Navbar />
-      <div className="max-w-2xl mx-auto px-8 py-10">
+      {/* Widened to max-w-3xl for more breathing room */}
+      <div className="max-w-3xl mx-auto px-8 py-10">
 
         {/* ── Skill context bar ──────────────────────────────────────────── */}
-        <div className="mb-5 animate-slide-up">
+        <div className="mb-6 animate-slide-up">
           {sessionMode === 'review' && (
-            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-mono border mb-3"
+            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[12px] font-mono border mb-3"
               style={{ color: '#fbbf24', borderColor: '#fbbf2435', background: '#fbbf2412' }}>
               ↻ Review session
             </span>
           )}
-          <div className="flex items-center flex-wrap gap-2 mb-2">
-            <span className="font-mono text-[11px] text-c-muted uppercase tracking-[0.12em]">
+          <div className="flex items-center flex-wrap gap-2.5 mb-2">
+            <span className="font-mono text-[13px] text-c-muted font-medium uppercase tracking-[0.10em]">
               {task.skill_label}
             </span>
-            <span className="text-c-ghost text-[10px]">·</span>
-            <span className="font-mono text-[10px] text-c-faint uppercase tracking-[0.08em]">
+            <span className="text-c-ghost text-[12px]">·</span>
+            <span className="font-mono text-[12px] text-c-faint uppercase tracking-[0.08em]">
               {task.difficulty_tier}
             </span>
             {task.reason && (
@@ -432,25 +442,22 @@ function LearnPageInner() {
             )}
           </div>
 
-          {/* 4A: Review urgency line */}
           {task.reason === 'review_due' && task.days_overdue !== undefined && (
-            <p className="text-[11px] font-mono text-[#fbbf24]/80 mb-1">
+            <p className="text-[12px] font-mono text-[#fbbf24]/80 mb-1.5">
               {task.days_overdue === 0
                 ? `Due today · Rep #${task.review_repetition}`
                 : `${task.days_overdue}d overdue · Rep #${task.review_repetition}`}
             </p>
           )}
 
-          {/* 4B: Weak area priority line */}
           {task.reason === 'weak_area' && (
-            <p className="text-[11px] font-mono text-c-faint mb-1">
+            <p className="text-[12px] font-mono text-c-faint mb-1.5">
               {Math.round(task.p_know * 100)}% mastered · lowest in queue
             </p>
           )}
 
           {motivation !== 'neutral' && <MotivationBanner state={motivation} />}
 
-          {/* Mode bar — always visible once a task is loaded */}
           {!showLearnFirst && (
             <ModeBar
               activeMode={currentMode()}
@@ -459,10 +466,11 @@ function LearnPageInner() {
             />
           )}
 
-          <p className="text-[11px] text-c-faint italic leading-relaxed">{task.skill_intuition}</p>
+          {/* Skill intuition line — bigger */}
+          <p className="text-[13px] text-c-faint italic leading-relaxed">{task.skill_intuition}</p>
         </div>
 
-        {/* ── LEARN PANEL (pre-question, new/weak skills) ──────────────── */}
+        {/* ── LEARN PANEL (pre-question) ──────────────────────────────── */}
         {showLearnFirst && phase === 'question' && (
           <>
             <ModeBar activeMode="learn" hasApply={false} hasReview={false} />
@@ -478,7 +486,7 @@ function LearnPageInner() {
         {/* ── PRACTICE: Question card ─────────────────────────────────── */}
         {!showLearnFirst && (
           <>
-            <div className="p-6 rounded-2xl bg-c-bg2 border border-[var(--border)] mb-4 animate-slide-up">
+            <div className="p-7 rounded-2xl bg-c-bg2 border border-[var(--border)] mb-5 animate-slide-up">
               <QuestionCard
                 question={task.question}
                 selected={selected}
@@ -491,14 +499,14 @@ function LearnPageInner() {
 
             {/* Feedback banner */}
             {feedback && isRevealed && (
-              <div className="mb-4 animate-slide-up">
+              <div className="mb-5">
                 <FeedbackBanner correct={feedback.correct} explanation_after={feedback.explanation_after} />
               </div>
             )}
 
-            {/* APPLY + REVIEW panels (post-correct explanation) */}
+            {/* Explanation panel */}
             {(phase === 'explanation' || phase === 'build_task' || phase === 'explain_back') && explanation && (
-              <div className="mb-4 animate-slide-up">
+              <div className="mb-5 animate-slide-up">
                 <ExplanationPanel
                   explanation={explanation}
                   depth={explanationDepth}
@@ -528,24 +536,28 @@ function LearnPageInner() {
                 <button
                   onClick={submit}
                   disabled={!selected && !fillAnswer.trim() && task.question.format !== 'explain'}
-                  className="w-full py-3.5 rounded-xl bg-c-purple hover:bg-[var(--purple-hover)] text-white text-[14px] font-medium transition-all hover:scale-[1.01] disabled:opacity-40"
+                  className="w-full py-4 rounded-xl bg-c-purple hover:bg-[var(--purple-hover)] text-white text-[15px] font-medium transition-all hover:scale-[1.01] disabled:opacity-40"
                 >
                   Submit
                 </button>
               )}
               {isRevealed && (
-                <div className="space-y-2">
+                <div className="space-y-2.5">
                   {feedback?.correct && phase === 'revealing' && explanation && (
                     <button
                       onClick={() => setPhase('explanation')}
-                      className="w-full py-3 rounded-xl border border-c-purple/30 bg-c-purple/[0.06] text-c-purple text-[13px] hover:bg-c-purple/10 transition-all"
+                      className="w-full py-3.5 rounded-xl border border-c-purple/30 bg-c-purple/[0.06] text-c-purple text-[14px] hover:bg-c-purple/10 transition-all"
                     >
-                      {hasApply ? 'See explanation + build task →' : hasReview ? 'See explanation + explain back →' : 'See explanation →'}
+                      {hasApply
+                        ? 'See explanation + build task →'
+                        : hasReview
+                        ? 'See explanation + explain back →'
+                        : 'See explanation →'}
                     </button>
                   )}
                   <button
                     onClick={nextQuestion}
-                    className="w-full py-3.5 rounded-xl bg-c-bg3 border border-[var(--border)] text-c-muted hover:text-c-text text-[14px] transition-all"
+                    className="w-full py-4 rounded-xl bg-c-bg3 border border-[var(--border)] text-c-muted hover:text-c-text text-[15px] transition-all"
                   >
                     Next question →
                   </button>
@@ -557,7 +569,7 @@ function LearnPageInner() {
 
         {/* Session counter */}
         {!showLearnFirst && (
-          <p className="text-center text-[11px] text-c-ghost mt-4 font-mono">
+          <p className="text-center text-[12px] text-c-ghost mt-5 font-mono">
             {sessionStats.correct}/{sessionStats.total} correct this session
             {' · '}
             <button

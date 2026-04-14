@@ -10,11 +10,11 @@
   --bg3:          #17171f;
   --bg4:          #0d0d13;
   --text:         #e8e8f0;
-  --text-muted:   #a8a8c0;   /* improved from #9898b0 — better contrast */
-  --text-faint:   #747490;   /* improved from #5a5a72 — better contrast */
-  --text-ghost:   #545468;   /* improved from #3a3a50 — better contrast */
-  --border:       rgba(255,255,255,0.07);
-  --border-hi:    rgba(255,255,255,0.13);
+  --text-muted:   #b4b4cc;   /* raised from #a8a8c0 — better contrast on dark bg */
+  --text-faint:   #9090b0;   /* raised from #747490 — was failing AA */
+  --text-ghost:   #707090;   /* raised from #545468 — was critically failing AA */
+  --border:       rgba(255,255,255,0.10);   /* raised from 0.07 — cards more distinct */
+  --border-hi:    rgba(255,255,255,0.18);   /* raised from 0.13 */
   --purple:       #7c6eff;
   --purple-hover: #6a5cdd;
   --green:        #34d399;
@@ -24,33 +24,33 @@
   /* Node backgrounds (for graph) */
   --node-bg:      #111118;
   --node-bg-sel:  #16162a;
-  --node-text:    #cccce0;
-  --node-blocked: #5a5a70;
+  --node-text:    #d0d0e8;   /* raised from #cccce0 */
+  --node-blocked: #7070a0;   /* raised from #5a5a70 */
 }
 
-/* Light mode */
+/* Light mode — switched to cool near-neutral to avoid warm/purple clash */
 html.light {
-  --bg:           #f2f0eb;
-  --bg2:          #faf8f4;
-  --bg3:          #ece9e3;
-  --bg4:          #f5f3ee;
+  --bg:           #f0f0f8;   /* cool near-neutral instead of warm beige */
+  --bg2:          #f8f8ff;
+  --bg3:          #e8e8f4;
+  --bg4:          #f4f4fc;
   --text:         #1a1820;
-  --text-muted:   #4c4a60;
-  --text-faint:   #7c7a90;
-  --text-ghost:   #aaa8b8;
-  --border:       rgba(0,0,0,0.08);
-  --border-hi:    rgba(0,0,0,0.15);
-  --purple:       #6655ee;
-  --purple-hover: #5546cc;
-  --green:        #1a9e6e;
-  --yellow:       #c4880a;
-  --red:          #d94848;
-  --blue:         #3b82f6;
+  --text-muted:   #3e3c54;   /* raised from #4c4a60 */
+  --text-faint:   #606080;   /* raised from #7c7a90 — was failing AA */
+  --text-ghost:   #8888a8;   /* raised from #aaa8b8 — was critically failing */
+  --border:       rgba(0,0,0,0.12);   /* raised from 0.08 — cards visible */
+  --border-hi:    rgba(0,0,0,0.20);   /* raised from 0.15 */
+  --purple:       #5544dd;   /* slightly deeper for contrast on light bg */
+  --purple-hover: #4433bb;
+  --green:        #158a5e;   /* deepened from #1a9e6e for contrast */
+  --yellow:       #a87000;   /* deepened from #c4880a */
+  --red:          #c43030;   /* deepened from #d94848 */
+  --blue:         #2563eb;   /* deepened from #3b82f6 */
   /* Node backgrounds */
-  --node-bg:      #faf8f4;
-  --node-bg-sel:  #ece9ff;
-  --node-text:    #2a2838;
-  --node-blocked: #a8a6b8;
+  --node-bg:      #f8f8ff;
+  --node-bg-sel:  #ebebff;
+  --node-text:    #1e1c30;
+  --node-blocked: #9090b0;
 }
 
 /* ─── Base ────────────────────────────────────────────────────────────────── */
@@ -75,24 +75,76 @@ body {
 }
 .animate-fade-in { animation: fadeIn 0.3s ease forwards; }
 
+@keyframes pulse-ring {
+  0%   { box-shadow: 0 0 0 0 var(--purple); opacity: 0.6; }
+  70%  { box-shadow: 0 0 0 6px var(--purple); opacity: 0; }
+  100% { box-shadow: 0 0 0 0 var(--purple); opacity: 0; }
+}
+.animate-pulse-ring { animation: pulse-ring 2s ease-out infinite; }
+
+/* ─── Prose styles (used in ExplanationPanel) ─────────────────────────────── */
+.prose-synaptic p  { margin-bottom: 0.75em; }
+.prose-synaptic ul { list-style: disc; padding-left: 1.4em; margin-bottom: 0.75em; }
+.prose-synaptic ol { list-style: decimal; padding-left: 1.4em; margin-bottom: 0.75em; }
+.prose-synaptic li { margin-bottom: 0.3em; }
+.prose-synaptic code {
+  font-family: ui-monospace, monospace;
+  font-size: 0.88em;
+  background: var(--bg4);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 0.1em 0.35em;
+}
+.prose-synaptic pre {
+  background: var(--bg4);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 0.85em 1em;
+  overflow-x: auto;
+  margin-bottom: 0.75em;
+}
+.prose-synaptic strong { color: var(--text); font-weight: 600; }
+
 /* ─── ReactFlow overrides — theme-aware ──────────────────────────────────── */
+.react-flow__controls {
+  background: var(--bg2) !important;
+  border: 1px solid var(--border-hi) !important;
+  border-radius: 10px !important;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.18) !important;
+  overflow: hidden;
+}
 .react-flow__controls-button {
   background: var(--bg2) !important;
   border-color: var(--border) !important;
   fill: var(--text-faint) !important;
+  width: 28px !important;
+  height: 28px !important;
 }
 .react-flow__controls-button:hover {
   background: var(--bg3) !important;
   fill: var(--text-muted) !important;
 }
 .react-flow__minimap {
-  background: var(--bg4) !important;
+  background: var(--bg2) !important;
+  border: 1px solid var(--border-hi) !important;
+  border-radius: 10px !important;
+  overflow: hidden;
 }
-/* Light mode: invert the RF attribution text */
+.react-flow__minimap-mask {
+  fill: var(--bg4) !important;
+  opacity: 0.7;
+}
+/* Light mode: attribution */
 html.light .react-flow__attribution {
-  background: rgba(242,240,235,0.8) !important;
+  background: rgba(240,240,248,0.85) !important;
   color: var(--text-faint) !important;
 }
 html.light .react-flow__attribution a {
   color: var(--purple) !important;
 }
+
+/* ─── Scrollbar styling (thin, theme-aware) ──────────────────────────────── */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border-hi); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--text-ghost); }

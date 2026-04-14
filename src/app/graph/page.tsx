@@ -10,10 +10,10 @@ import type { SkillEdge } from '@/types'
 
 const LEGEND = [
   { color: '#34d399', label: 'Mastered' },
-  { color: '#fbbf24', label: 'Fragile' },
+  { color: '#fbbf24', label: 'Fragile'  },
   { color: '#7c6eff', label: 'Learning' },
-  { color: '#5a8a9f', label: 'Ready' },
-  { color: '#5a5a72', label: 'Locked' },
+  { color: '#5a8a9f', label: 'Ready'    },
+  { color: '#5a5a72', label: 'Locked'   },
 ]
 
 // ─── Page ─────────────────────────────────────────────────────────────────────
@@ -24,6 +24,7 @@ export default function GraphPage() {
   const [selected, setSelected] = useState<GraphNodeWithState | null>(null)
   const [loading,  setLoading]  = useState(true)
   const [error,    setError]    = useState<string | null>(null)
+  const [search,   setSearch]   = useState('')
 
   useEffect(() => {
     async function load() {
@@ -63,21 +64,40 @@ export default function GraphPage() {
     total:    nodes.length,
   }), [nodes])
 
+  // Active learning node (learning or fragile, highest p_know)
+  const activeNode = useMemo(() => {
+    const candidates = nodes.filter(n => n.mastery_state === 'learning' || n.mastery_state === 'fragile')
+    if (candidates.length === 0) return nodes.find(n => n.mastery_state === 'ready') ?? null
+    return candidates.sort((a, b) => b.p_know - a.p_know)[0] ?? null
+  }, [nodes])
+
+  // Filtered nodes for search — pass full node list but highlight matches
+  const filteredNodes = useMemo(() => {
+    if (!search.trim()) return nodes
+    const q = search.trim().toLowerCase()
+    return nodes.filter(n => n.label.toLowerCase().includes(q))
+  }, [nodes, search])
+
+  // When search changes, auto-select the first match if exactly one result
+  useEffect(() => {
+    if (filteredNodes.length === 1) setSelected(filteredNodes[0])
+  }, [filteredNodes])
+
   return (
     <div className="min-h-screen bg-c-bg">
       <Navbar />
 
-      <div className="px-6 py-7">
+      <div className="px-6 py-6">
 
         {/* ── Header + stats ──────────────────────────────────────────── */}
-        <div className="max-w-6xl mx-auto mb-5 animate-slide-up">
-          <div className="flex items-end justify-between flex-wrap gap-4">
+        <div className="max-w-6xl mx-auto mb-4 animate-slide-up">
+          <div className="flex items-end justify-between flex-wrap gap-4 mb-4">
             <div>
-              <h1 className="font-serif italic text-[26px] text-c-text leading-none mb-1.5">
+              <h1 className="font-serif italic text-[28px] text-c-text leading-none mb-1.5">
                 Learning Graph
               </h1>
-              <p className="text-[12px] text-c-faint font-mono">
-                Click any node to explore prerequisites and next steps
+              <p className="text-[13px] text-c-faint font-mono">
+                Click any node to explore — scroll or pinch to zoom
               </p>
             </div>
 
@@ -91,10 +111,10 @@ export default function GraphPage() {
                   { val: stats.total,    label: 'Total',       color: 'var(--text-faint)' },
                 ].map(s => (
                   <div key={s.label} className="flex items-baseline gap-1.5">
-                    <span className="font-serif text-[20px] font-semibold" style={{ color: s.color }}>
+                    <span className="font-serif text-[22px] font-semibold" style={{ color: s.color }}>
                       {s.val}
                     </span>
-                    <span className="font-mono text-[10px] text-c-faint uppercase tracking-[0.07em]">
+                    <span className="font-mono text-[12px] text-c-faint uppercase tracking-[0.07em]">
                       {s.label}
                     </span>
                   </div>
@@ -103,31 +123,81 @@ export default function GraphPage() {
             )}
           </div>
 
-          {/* Legend */}
+          {/* Controls row: Legend + Search + Go-to-active */}
           {!loading && !error && (
-            <div className="flex flex-wrap items-center gap-5 mt-4 pt-4 border-t border-[var(--border)]">
-              {LEGEND.map(l => (
-                <div key={l.label} className="flex items-center gap-1.5">
-                  <div className="w-2 h-2 rounded-full" style={{ background: l.color }} />
-                  <span className="font-mono text-[10px] text-c-muted">{l.label}</span>
+            <div className="flex flex-wrap items-center gap-4 pt-3 pb-1 border-t border-[var(--border)]">
+              {/* Legend */}
+              <div className="flex flex-wrap items-center gap-4">
+                {LEGEND.map(l => (
+                  <div key={l.label} className="flex items-center gap-1.5">
+                    <div className="w-2.5 h-2.5 rounded-full" style={{ background: l.color }} />
+                    <span className="font-mono text-[12px] text-c-muted">{l.label}</span>
+                  </div>
+                ))}
+                <div className="flex items-center gap-1.5">
+                  <svg width="20" height="8">
+                    <line x1="0" y1="4" x2="20" y2="4" stroke="rgba(124,110,255,0.65)" strokeWidth="2" />
+                  </svg>
+                  <span className="font-mono text-[12px] text-c-muted">Required</span>
                 </div>
-              ))}
-              <div className="flex items-center gap-1.5">
-                <svg width="18" height="6">
-                  <line x1="0" y1="3" x2="18" y2="3" stroke="rgba(124,110,255,0.55)" strokeWidth="1.5" />
-                </svg>
-                <span className="font-mono text-[10px] text-c-muted">Required</span>
+                <div className="flex items-center gap-1.5">
+                  <svg width="20" height="8">
+                    <line x1="0" y1="4" x2="20" y2="4" stroke="rgba(120,120,160,0.50)" strokeWidth="1.5" strokeDasharray="6 4" />
+                  </svg>
+                  <span className="font-mono text-[12px] text-c-muted">Helpful</span>
+                </div>
               </div>
-              <div className="flex items-center gap-1.5">
-                <svg width="18" height="6">
-                  <line x1="0" y1="3" x2="18" y2="3" stroke="rgba(90,90,114,0.5)" strokeWidth="1" strokeDasharray="4 3" />
+
+              {/* Spacer */}
+              <div className="flex-1" />
+
+              {/* Search input */}
+              <div className="relative">
+                <svg
+                  className="absolute left-3 top-1/2 -translate-y-1/2 text-c-faint pointer-events-none"
+                  width="14" height="14" viewBox="0 0 24 24" fill="none"
+                  stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
+                >
+                  <circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/>
                 </svg>
-                <span className="font-mono text-[10px] text-c-muted">Helpful</span>
+                <input
+                  type="text"
+                  value={search}
+                  onChange={e => setSearch(e.target.value)}
+                  placeholder="Search skills…"
+                  className="pl-8 pr-3 py-2 rounded-lg bg-c-bg2 border border-[var(--border)] text-c-text placeholder:text-c-ghost text-[13px] focus:border-c-purple/50 focus:outline-none focus:ring-1 focus:ring-c-purple/30 transition-colors w-44"
+                />
+                {search && (
+                  <button
+                    onClick={() => { setSearch(''); setSelected(null) }}
+                    className="absolute right-2.5 top-1/2 -translate-y-1/2 text-c-ghost hover:text-c-faint text-[16px] leading-none"
+                  >
+                    ×
+                  </button>
+                )}
               </div>
-              <span className="font-mono text-[10px] text-c-ghost ml-auto">
-                Tip: scroll to zoom · click background to deselect
-              </span>
+
+              {/* Go to active skill button */}
+              {activeNode && (
+                <button
+                  onClick={() => setSelected(activeNode)}
+                  className="flex items-center gap-2 px-3 py-2 rounded-lg bg-c-purple/10 border border-c-purple/25 text-c-purple text-[13px] font-mono hover:bg-c-purple/20 transition-all"
+                  title={`Jump to: ${activeNode.label}`}
+                >
+                  <span className="w-2 h-2 rounded-full bg-c-purple inline-block" />
+                  Go to active
+                </button>
+              )}
             </div>
+          )}
+
+          {/* Search result count */}
+          {search.trim() && !loading && !error && (
+            <p className="text-[12px] font-mono text-c-faint mt-2">
+              {filteredNodes.length === 0
+                ? 'No skills match that search.'
+                : `${filteredNodes.length} skill${filteredNodes.length !== 1 ? 's' : ''} found — click the result below`}
+            </p>
           )}
         </div>
 
@@ -135,36 +205,38 @@ export default function GraphPage() {
         {loading ? (
           <div className="flex items-center justify-center py-32 gap-3">
             <div className="w-6 h-6 rounded-full border-2 border-c-purple/30 border-t-c-purple animate-spin" />
-            <p className="text-[12px] text-c-faint font-mono">Loading your graph…</p>
+            <p className="text-[13px] text-c-faint font-mono">Loading your graph…</p>
           </div>
         ) : error ? (
           <div className="max-w-6xl mx-auto rounded-xl border border-[var(--border)] bg-c-bg2 px-5 py-4">
-            <p className="text-[13px] text-c-yellow font-mono">{error}</p>
+            <p className="text-[14px] text-c-yellow font-mono">{error}</p>
           </div>
         ) : (
           /* Split layout: graph | detail panel */
-          <div
-            className="max-w-6xl mx-auto flex gap-4 items-start"
-            style={{ minHeight: 560 }}
-          >
-            {/* Graph canvas — shrinks when panel is open */}
+          <div className="max-w-6xl mx-auto flex gap-4 items-start">
+            {/* Graph canvas — fills viewport height */}
             <div
-              className="rounded-xl border border-[var(--border)] bg-c-bg4 overflow-hidden transition-all duration-300"
+              className="rounded-xl border border-[var(--border)] bg-c-bg4 overflow-hidden transition-all duration-300 flex-shrink-0"
               style={{
-                flex: selected ? '0 0 62%' : '1 1 100%',
-                height: 580,
+                flex:   selected ? '0 0 62%' : '1 1 100%',
+                height: 'calc(100vh - 220px)',
+                minHeight: 480,
               }}
             >
               <GraphView
-                nodes={nodes}
+                nodes={search.trim() ? filteredNodes : nodes}
                 edges={edges}
                 onSelect={setSelected}
+                activeId={activeNode?.id ?? null}
               />
             </div>
 
-            {/* Detail panel — slides in from right */}
+            {/* Detail panel — overlay-style, does not shrink canvas */}
             {selected && (
-              <div className="flex-1 min-w-0 animate-slide-up">
+              <div
+                className="animate-slide-up flex-shrink-0"
+                style={{ width: '36%', minWidth: 280, maxWidth: 380 }}
+              >
                 <SkillDetailPanel
                   node={selected}
                   edges={edges}

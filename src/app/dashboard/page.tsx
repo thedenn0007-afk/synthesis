@@ -69,7 +69,6 @@ function phaseStats(nodes: SkillNode[], stateMap: Map<string, LearnerSkillState>
   return { total, mastered, learning, pct, hasContent }
 }
 
-/** Counts how many skills in the current set are NOT yet mastered but have questions. */
 function skillsLeft(nodes: SkillNode[], stateMap: Map<string, LearnerSkillState>): number {
   return nodes.filter(n =>
     n.question_ids.length > 0 &&
@@ -77,7 +76,6 @@ function skillsLeft(nodes: SkillNode[], stateMap: Map<string, LearnerSkillState>
   ).length
 }
 
-/** Find the first phase that isn't 100% mastered and has learnable skills. */
 function findActivePhase(
   phaseGroups: Record<string, SkillNode[]>,
   stateMap: Map<string, LearnerSkillState>,
@@ -88,7 +86,6 @@ function findActivePhase(
     const stats = phaseStats(nodes, stateMap)
     if (stats.hasContent && stats.mastered < stats.total) return phase
   }
-  // All content phases complete — return last active
   return PHASE_ORDER[PHASE_ORDER.length - 1]
 }
 
@@ -115,7 +112,6 @@ export default async function Dashboard() {
   const dueSchedules = schedules.filter(s => new Date(s.due_at) <= now && s.repetitions > 0)
   const dueReviews = dueSchedules.length
 
-  // Top-5 most overdue skills for the widget
   const top5DueSkills = dueSchedules
     .sort((a, b) => new Date(a.due_at).getTime() - new Date(b.due_at).getTime())
     .slice(0, 5)
@@ -124,6 +120,7 @@ export default async function Dashboard() {
       const daysOverdue = Math.floor((now.getTime() - new Date(s.due_at).getTime()) / 86400000)
       return { id: s.skill_id, label: node?.label ?? s.skill_id, daysOverdue: Math.max(0, daysOverdue) }
     })
+
   const totalMastered  = allStates.filter(s => s.mastery_state === 'mastered').length
   const totalLearning  = allStates.filter(s => ['learning','fragile'].includes(s.mastery_state)).length
 
@@ -137,13 +134,11 @@ export default async function Dashboard() {
   const activeNodes = phaseGroups[activePhase] ?? []
   const activeStats = phaseStats(activeNodes, stateMap)
 
-  // Next phase label for the "X skills to unlock" banner
   const activePhaseIdx  = PHASE_ORDER.indexOf(activePhase)
   const nextPhaseKey    = PHASE_ORDER[activePhaseIdx + 1]
   const nextPhaseLabel  = nextPhaseKey ? PHASE_SHORT[nextPhaseKey] : null
   const skillsRemaining = skillsLeft(activeNodes, stateMap)
 
-  // Hard-prereq edges: skill → skills it unlocks
   const unlocksMap = new Map<string, string[]>()
   for (const edge of allEdges) {
     if (edge.strength === 'hard') {
@@ -161,28 +156,28 @@ export default async function Dashboard() {
         {/* ── Header ──────────────────────────────────────────────────────── */}
         <div className="flex items-start justify-between mb-8 animate-slide-up">
           <div>
-            <h1 className="font-serif italic text-[30px] text-c-text leading-none mb-2">
+            <h1 className="font-serif italic text-[32px] text-c-text leading-none mb-2">
               {profile.display_name ? `Hi, ${profile.display_name}` : 'Your Journey'}
             </h1>
-            <p className="text-[13px] text-c-faint font-mono">
+            <p className="text-[14px] text-c-faint font-mono">
               {dueReviews > 0
                 ? `${dueReviews} review${dueReviews !== 1 ? 's' : ''} due`
                 : 'No reviews due today'}{' '}
-              · 🔥 {profile.streak_days} day streak
+              · {profile.streak_days} day streak
             </p>
           </div>
           <div className="flex items-center gap-2">
             {dueReviews > 0 && (
               <Link
                 href="/learn?mode=review"
-                className="px-5 py-2.5 rounded-xl border border-[#fbbf24]/40 text-[#fbbf24] hover:bg-[#fbbf24]/10 text-[13px] font-medium transition-all"
+                className="px-5 py-2.5 rounded-xl border border-[#fbbf24]/40 text-[#fbbf24] hover:bg-[#fbbf24]/10 text-[14px] font-medium transition-all"
               >
                 Review {dueReviews} due →
               </Link>
             )}
             <Link
               href="/learn"
-              className="px-5 py-2.5 rounded-xl bg-c-purple hover:bg-[var(--purple-hover)] text-white text-[13px] font-medium transition-all hover:scale-[1.02] shadow-sm"
+              className="px-5 py-2.5 rounded-xl bg-c-purple hover:bg-[var(--purple-hover)] text-white text-[14px] font-medium transition-all hover:scale-[1.02] shadow-sm"
             >
               Study now →
             </Link>
@@ -196,11 +191,15 @@ export default async function Dashboard() {
             { val: totalLearning, lbl: 'Actively learning',  col: '#7c6eff' },
             { val: dueReviews,    lbl: 'Reviews due',        col: dueReviews > 0 ? '#fbbf24' : 'var(--text-faint)' },
           ].map((s, i) => (
-            <div key={i} className="p-5 rounded-xl border border-[var(--border)] bg-c-bg2">
-              <p className="font-serif text-[30px] leading-none mb-1.5" style={{ color: s.col }}>
+            <div
+              key={i}
+              className="p-6 rounded-xl border border-[var(--border)] bg-c-bg2"
+              style={{ borderLeft: `3px solid ${s.col}` }}
+            >
+              <p className="font-serif text-[36px] leading-none mb-2" style={{ color: s.col }}>
                 {s.val}
               </p>
-              <p className="text-[11px] text-c-muted uppercase tracking-[0.1em] font-mono">{s.lbl}</p>
+              <p className="text-[12px] text-c-muted uppercase tracking-[0.1em] font-mono">{s.lbl}</p>
             </div>
           ))}
         </div>
@@ -208,28 +207,28 @@ export default async function Dashboard() {
         {/* ── Due Reviews Widget ──────────────────────────────────────────── */}
         {dueReviews > 0 && (
           <div className="rounded-2xl border border-[#fbbf24]/30 bg-c-bg2 overflow-hidden mb-6 animate-slide-up">
-            <div className="px-6 pt-4 pb-3 flex items-center justify-between">
-              <p className="text-[13px] font-semibold text-c-text">
+            <div className="px-6 pt-4 pb-3 flex items-center justify-between border-b border-[var(--border)]">
+              <p className="text-[14px] font-semibold text-c-text">
                 {dueReviews} review{dueReviews !== 1 ? 's' : ''} due
               </p>
               <Link
                 href="/learn?mode=review"
-                className="text-[12px] font-mono text-[#fbbf24] hover:underline transition-colors"
+                className="text-[13px] font-mono text-[#fbbf24] hover:underline transition-colors"
               >
                 Review all →
               </Link>
             </div>
             <div className="divide-y divide-[var(--border)]">
               {top5DueSkills.map(skill => (
-                <div key={skill.id} className="px-6 py-2.5 flex items-center justify-between">
-                  <span className="text-[13px] text-c-text truncate mr-4">{skill.label}</span>
+                <div key={skill.id} className="px-6 py-3 flex items-center justify-between">
+                  <span className="text-[14px] text-c-text truncate mr-4">{skill.label}</span>
                   <div className="flex items-center gap-4 flex-shrink-0">
-                    <span className="text-[11px] font-mono text-[#fbbf24]">
+                    <span className="text-[12px] font-mono text-[#fbbf24]">
                       {skill.daysOverdue === 0 ? 'due today' : `${skill.daysOverdue}d overdue`}
                     </span>
                     <Link
                       href={`/learn/skill/${skill.id}`}
-                      className="px-2.5 py-0.5 rounded text-[10px] font-mono text-[#fbbf24] bg-[#fbbf24]/10 hover:bg-[#fbbf24]/20 border border-[#fbbf24]/20 transition-all"
+                      className="px-3 py-1 rounded-lg text-[12px] font-mono text-[#fbbf24] bg-[#fbbf24]/10 hover:bg-[#fbbf24]/20 border border-[#fbbf24]/20 transition-all"
                     >
                       Study →
                     </Link>
@@ -244,110 +243,123 @@ export default async function Dashboard() {
         <div className="rounded-2xl border border-[var(--border)] bg-c-bg2 overflow-hidden mb-6 animate-slide-up">
 
           {/* Phase header */}
-          <div className="px-6 pt-5 pb-4">
+          <div className="px-6 pt-6 pb-4">
             <div className="flex items-center justify-between mb-1">
-              <p className="font-mono text-[10px] text-c-purple uppercase tracking-[0.16em]">
+              <p className="font-mono text-[12px] text-c-purple uppercase tracking-[0.16em]">
                 Active phase
               </p>
-              <span className="font-mono text-[11px] text-c-muted">
+              <span className="font-mono text-[12px] text-c-muted">
                 {activeStats.mastered}/{activeStats.total} mastered
               </span>
             </div>
-            <h2 className="text-[17px] font-semibold text-c-text mb-3">
+            <h2 className="text-[18px] font-semibold text-c-text mb-3">
               {PHASE_LABELS[activePhase]}
             </h2>
 
-            {/* Phase progress bar */}
-            <div className="h-1.5 rounded-full bg-c-bg3 overflow-hidden mb-3">
+            {/* Phase progress bar — thicker */}
+            <div className="h-2 rounded-full bg-c-bg3 overflow-hidden mb-3">
               <div
                 className="h-full rounded-full bg-c-purple transition-all duration-700"
                 style={{ width: `${activeStats.pct}%` }}
               />
             </div>
 
-            {/* "X skills left" hint */}
             {skillsRemaining > 0 && nextPhaseLabel && (
-              <p className="text-[11px] text-c-faint font-mono">
-                {skillsRemaining} skill{skillsRemaining !== 1 ? 's' : ''} left to unlock <span className="text-c-muted">{nextPhaseLabel}</span>
+              <p className="text-[12px] text-c-faint font-mono">
+                {skillsRemaining} skill{skillsRemaining !== 1 ? 's' : ''} left to unlock{' '}
+                <span className="text-c-muted">{nextPhaseLabel}</span>
               </p>
             )}
             {skillsRemaining === 0 && nextPhaseLabel && (
-              <p className="text-[11px] text-c-green font-mono">
+              <p className="text-[12px] text-c-green font-mono">
                 Phase complete — {nextPhaseLabel} is unlocked! →
               </p>
             )}
           </div>
 
           {/* ── Skill path row ──────────────────────────────────────────── */}
-          <div className="px-4 pb-5 overflow-x-auto">
-            <div className="flex items-start gap-0 min-w-max">
-              {activeNodes.map((node, idx) => {
-                const state   = stateMap.get(node.id)
-                const mastery = state?.mastery_state ?? 'blocked'
-                const pKnow   = state?.p_know ?? 0
-                const pct     = Math.round(pKnow * 100)
-                const colour  = MASTERY_COLOUR[mastery] ?? '#3a3a52'
-                const ring    = MASTERY_RING[mastery] ?? ''
-                const isLast  = idx === activeNodes.length - 1
-                const isStudiable = ['ready','learning','fragile','mastered'].includes(mastery) && node.question_ids.length > 0
+          {/* Outer wrapper with scroll hint arrows */}
+          <div className="relative px-4 pb-6">
+            {/* Scroll fade hints */}
+            <div
+              className="pointer-events-none absolute left-4 top-0 bottom-6 w-8 z-10"
+              style={{ background: 'linear-gradient(to right, var(--bg2), transparent)' }}
+            />
+            <div
+              className="pointer-events-none absolute right-4 top-0 bottom-6 w-8 z-10"
+              style={{ background: 'linear-gradient(to left, var(--bg2), transparent)' }}
+            />
 
-                return (
-                  <div key={node.id} className="flex items-center">
-                    {/* Node */}
-                    <div className="flex flex-col items-center w-[88px]">
-                      {/* Circle */}
-                      <Link
-                        href={isStudiable ? `/learn/skill/${node.id}` : '#'}
-                        className={`relative w-12 h-12 rounded-full flex items-center justify-center mb-2 transition-all ${ring} ${
-                          isStudiable
-                            ? 'hover:scale-110 cursor-pointer'
-                            : 'opacity-50 cursor-default'
-                        }`}
-                        style={{ background: colour + '22', border: `2px solid ${colour}` }}
-                        title={isStudiable ? `Study: ${node.label}` : `Blocked: prerequisites needed`}
-                      >
-                        {mastery === 'mastered' ? (
-                          <span className="text-[16px]">✓</span>
-                        ) : (
-                          <span className="font-mono text-[11px] font-bold" style={{ color: colour }}>
-                            {pct}%
-                          </span>
-                        )}
-                      </Link>
+            <div className="overflow-x-auto pb-2">
+              <div className="flex items-start gap-0 min-w-max px-2">
+                {activeNodes.map((node, idx) => {
+                  const state   = stateMap.get(node.id)
+                  const mastery = state?.mastery_state ?? 'blocked'
+                  const pKnow   = state?.p_know ?? 0
+                  const pct     = Math.round(pKnow * 100)
+                  const colour  = MASTERY_COLOUR[mastery] ?? '#3a3a52'
+                  const ring    = MASTERY_RING[mastery] ?? ''
+                  const isLast  = idx === activeNodes.length - 1
+                  const isStudiable = ['ready','learning','fragile','mastered'].includes(mastery) && node.question_ids.length > 0
+                  const isLearning  = mastery === 'learning' || mastery === 'fragile'
 
-                      {/* Label */}
-                      <p
-                        className="text-[10px] text-center leading-tight font-mono px-1"
-                        style={{ color: mastery === 'blocked' ? 'var(--text-ghost)' : 'var(--text-muted)' }}
-                      >
-                        {node.label}
-                      </p>
+                  return (
+                    <div key={node.id} className="flex items-center">
+                      {/* Node */}
+                      <div className="flex flex-col items-center w-[96px]">
+                        {/* Circle — larger: 64px */}
+                        <Link
+                          href={isStudiable ? `/learn/skill/${node.id}` : '#'}
+                          className={`relative w-16 h-16 rounded-full flex items-center justify-center mb-2.5 transition-all ${ring} ${
+                            isStudiable
+                              ? 'hover:scale-110 cursor-pointer'
+                              : 'opacity-50 cursor-default'
+                          } ${isLearning ? 'animate-pulse-ring' : ''}`}
+                          style={{ background: colour + '22', border: `2.5px solid ${colour}` }}
+                          title={isStudiable ? `Study: ${node.label}` : 'Prerequisites needed'}
+                        >
+                          {mastery === 'mastered' ? (
+                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke={colour} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                              <polyline points="20 6 9 17 4 12"/>
+                            </svg>
+                          ) : (
+                            <span className="font-mono text-[13px] font-bold" style={{ color: colour }}>
+                              {pct}%
+                            </span>
+                          )}
+                        </Link>
 
-                      {/* Mastery dot */}
-                      <div
-                        className="w-1.5 h-1.5 rounded-full mt-1.5"
-                        style={{ background: colour }}
-                      />
+                        {/* Label — larger */}
+                        <p
+                          className="text-[12px] text-center leading-tight font-mono px-1 max-w-[88px]"
+                          style={{ color: mastery === 'blocked' ? 'var(--text-ghost)' : 'var(--text-muted)' }}
+                        >
+                          {node.label}
+                        </p>
+                      </div>
+
+                      {/* Connector line — thicker */}
+                      {!isLast && (
+                        <div
+                          className="w-5 flex-shrink-0 mt-[-36px]"
+                          style={{ height: 2, background: 'var(--border-hi)' }}
+                        />
+                      )}
                     </div>
-
-                    {/* Connector line */}
-                    {!isLast && (
-                      <div className="w-6 h-px flex-shrink-0 mt-[-28px]" style={{ background: 'var(--border)' }} />
-                    )}
-                  </div>
-                )
-              })}
+                  )
+                })}
+              </div>
             </div>
           </div>
 
           {/* CTA bar */}
           <div className="px-6 py-3 border-t border-[var(--border)] bg-c-bg3 flex items-center justify-between">
-            <p className="text-[12px] text-c-faint font-mono">
+            <p className="text-[13px] text-c-faint font-mono">
               Click any skill to dive in, or let the engine pick for you
             </p>
             <Link
               href="/learn"
-              className="px-4 py-1.5 rounded-lg bg-c-purple hover:bg-[var(--purple-hover)] text-white text-[12px] font-medium transition-all"
+              className="px-4 py-2 rounded-lg bg-c-purple hover:bg-[var(--purple-hover)] text-white text-[13px] font-medium transition-all"
             >
               Continue →
             </Link>
@@ -356,7 +368,7 @@ export default async function Dashboard() {
 
         {/* ── All Phases Summary ──────────────────────────────────────────── */}
         <div className="space-y-2">
-          <p className="font-mono text-[10px] text-c-ghost uppercase tracking-[0.16em] mb-3 px-1">
+          <p className="font-mono text-[12px] text-c-faint uppercase tracking-[0.16em] mb-3 px-1">
             Full curriculum
           </p>
           {PHASE_ORDER.map(phaseKey => {
@@ -367,6 +379,30 @@ export default async function Dashboard() {
             const isLocked  = !stats.hasContent
             const isDone    = stats.hasContent && stats.mastered === stats.total
 
+            // Icon SVGs instead of emoji
+            const PhaseIcon = () => {
+              if (isLocked) return (
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-c-ghost flex-shrink-0">
+                  <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                </svg>
+              )
+              if (isDone) return (
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="flex-shrink-0" style={{ color: '#34d399' }}>
+                  <polyline points="20 6 9 17 4 12"/>
+                </svg>
+              )
+              if (isActive) return (
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" className="flex-shrink-0 text-c-purple">
+                  <polygon points="5 3 19 12 5 21 5 3"/>
+                </svg>
+              )
+              return (
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="flex-shrink-0 text-c-ghost">
+                  <circle cx="12" cy="12" r="10"/>
+                </svg>
+              )
+            }
+
             return (
               <div
                 key={phaseKey}
@@ -374,38 +410,35 @@ export default async function Dashboard() {
                   isActive
                     ? 'border-c-purple/40 bg-c-bg2'
                     : isLocked
-                    ? 'border-[var(--border)] opacity-35'
+                    ? 'border-[var(--border)] opacity-40'
                     : 'border-[var(--border)] bg-c-bg4'
                 }`}
               >
                 {/* Phase row */}
-                <div className="px-5 py-3 flex items-center justify-between gap-3">
+                <div className="px-5 py-3.5 flex items-center justify-between gap-3">
                   <div className="flex items-center gap-3 min-w-0">
-                    {/* Phase status icon */}
-                    <span className="text-[14px] flex-shrink-0">
-                      {isLocked ? '🔒' : isDone ? '✅' : isActive ? '▶' : '○'}
-                    </span>
-                    <p className={`text-[13px] font-medium truncate ${isActive ? 'text-c-text' : 'text-c-muted'}`}>
+                    <PhaseIcon />
+                    <p className={`text-[14px] font-medium truncate ${isActive ? 'text-c-text' : 'text-c-muted'}`}>
                       {PHASE_LABELS[phaseKey]}
                     </p>
                   </div>
                   <div className="flex items-center gap-4 flex-shrink-0">
-                    {/* Mini progress bar */}
+                    {/* Mini progress bar — thicker */}
                     {stats.hasContent && (
-                      <div className="w-24 h-1 rounded-full bg-c-bg3 overflow-hidden">
+                      <div className="w-28 h-1.5 rounded-full bg-c-bg3 overflow-hidden">
                         <div
                           className="h-full rounded-full transition-all"
                           style={{ width: `${stats.pct}%`, background: isDone ? '#34d399' : isActive ? '#7c6eff' : '#5a8a9f' }}
                         />
                       </div>
                     )}
-                    <span className="font-mono text-[11px] text-c-ghost w-14 text-right">
+                    <span className="font-mono text-[12px] text-c-ghost w-14 text-right">
                       {isLocked ? 'Soon' : `${stats.mastered}/${stats.total}`}
                     </span>
                     {isActive && (
                       <Link
                         href="/learn"
-                        className="px-3 py-1 rounded-lg text-[11px] font-mono bg-c-purple/10 text-c-purple hover:bg-c-purple/20 transition-all border border-c-purple/20"
+                        className="px-3 py-1.5 rounded-lg text-[12px] font-mono bg-c-purple/10 text-c-purple hover:bg-c-purple/20 transition-all border border-c-purple/20"
                       >
                         Study
                       </Link>
@@ -413,7 +446,7 @@ export default async function Dashboard() {
                   </div>
                 </div>
 
-                {/* Expanded skill list for active phase — inline */}
+                {/* Expanded skill list for active phase */}
                 {isActive && (
                   <div className="border-t border-[var(--border)] divide-y divide-[var(--border)]">
                     {nodes.map(node => {
@@ -426,23 +459,23 @@ export default async function Dashboard() {
                       return (
                         <div
                           key={node.id}
-                          className="px-5 py-2.5 flex items-center justify-between bg-c-bg4 hover:bg-c-bg3 transition-colors"
+                          className="px-5 py-3 flex items-center justify-between bg-c-bg4 hover:bg-c-bg3 transition-colors"
                         >
-                          <div className="flex items-center gap-2.5 min-w-0">
-                            <div className="w-2 h-2 rounded-full flex-shrink-0" style={{ background: colour }} />
-                            <span className="text-[13px] text-c-text truncate">{node.label}</span>
+                          <div className="flex items-center gap-3 min-w-0">
+                            <div className="w-2.5 h-2.5 rounded-full flex-shrink-0" style={{ background: colour }} />
+                            <span className="text-[14px] text-c-text truncate">{node.label}</span>
                           </div>
                           <div className="flex items-center gap-3 flex-shrink-0 ml-4">
-                            <span className="font-mono text-[11px] capitalize" style={{ color: colour }}>
+                            <span className="font-mono text-[12px] capitalize" style={{ color: colour }}>
                               {mastery}
                             </span>
-                            <span className="font-mono text-[11px] text-c-ghost">
+                            <span className="font-mono text-[12px] text-c-ghost">
                               {Math.round(pKnow * 100)}%
                             </span>
                             {isStudiable && (
                               <Link
                                 href={`/learn/skill/${node.id}`}
-                                className="px-2.5 py-0.5 rounded text-[10px] font-mono text-c-purple bg-c-purple/10 hover:bg-c-purple/20 border border-c-purple/20 transition-all"
+                                className="px-3 py-1 rounded-lg text-[12px] font-mono text-c-purple bg-c-purple/10 hover:bg-c-purple/20 border border-c-purple/20 transition-all"
                               >
                                 Study
                               </Link>
@@ -462,7 +495,7 @@ export default async function Dashboard() {
         <div className="mt-8 text-center animate-fade-in">
           <Link
             href="/graph"
-            className="inline-flex items-center gap-2 text-[12px] font-mono text-c-faint hover:text-c-muted transition-colors underline underline-offset-4"
+            className="inline-flex items-center gap-2 text-[13px] font-mono text-c-faint hover:text-c-muted transition-colors underline underline-offset-4"
           >
             View full skill graph →
           </Link>

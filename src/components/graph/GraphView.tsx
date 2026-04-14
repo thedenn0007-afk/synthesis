@@ -4,6 +4,7 @@ import {
   ReactFlow,
   Background,
   Controls,
+  MiniMap,
   Handle,
   Position,
   useNodesState,
@@ -27,6 +28,8 @@ interface Props {
   nodes:    GraphNodeWithState[]
   edges:    SkillEdge[]
   onSelect: (node: GraphNodeWithState | null) => void
+  /** ID of the currently active/learning node — gets a pulsing ring */
+  activeId?: string | null
 }
 
 // ─── Mastery colours ─────────────────────────────────────────────────────────
@@ -35,7 +38,7 @@ export const MASTERY_COLOUR: Record<MasteryState, string> = {
   mastered: '#34d399',
   fragile:  '#fbbf24',
   learning: '#7c6eff',
-  ready:    '#5a8a9f',   /* teal-ish — more distinct from blocked */
+  ready:    '#5a8a9f',
   blocked:  '#5a5a72',
 }
 
@@ -49,8 +52,8 @@ export const MASTERY_LABEL: Record<MasteryState, string> = {
 
 // ─── Layout constants ─────────────────────────────────────────────────────────
 
-const NODE_W = 175
-const NODE_H = 52
+const NODE_W = 210   // wider: was 175
+const NODE_H = 64    // taller: was 52
 
 // ─── Dagre layout ─────────────────────────────────────────────────────────────
 
@@ -60,7 +63,8 @@ function computeLayout(
 ): { nodes: Node[]; edges: Edge[] } {
   const g = new graphlib.Graph()
   g.setDefaultEdgeLabel(() => ({}))
-  g.setGraph({ rankdir: 'LR', nodesep: 48, ranksep: 90, marginx: 32, marginy: 32 })
+  // More spacing so nodes don't crowd each other
+  g.setGraph({ rankdir: 'LR', nodesep: 60, ranksep: 120, marginx: 40, marginy: 40 })
 
   skillNodes.forEach(n => g.setNode(n.id, { width: NODE_W, height: NODE_H }))
   skillEdges.forEach(e => g.setEdge(e.from, e.to))
@@ -83,9 +87,10 @@ function computeLayout(
     type:   'smoothstep',
     animated: false,
     style: {
-      stroke:          e.strength === 'hard' ? 'rgba(124,110,255,0.5)' : 'rgba(90,90,114,0.28)',
-      strokeWidth:     e.strength === 'hard' ? 1.5 : 1,
-      strokeDasharray: e.strength === 'hard' ? undefined : '5 4',
+      // Thicker, more visible edges
+      stroke:          e.strength === 'hard' ? 'rgba(124,110,255,0.65)' : 'rgba(120,120,160,0.40)',
+      strokeWidth:     e.strength === 'hard' ? 2 : 1.5,
+      strokeDasharray: e.strength === 'hard' ? undefined : '8 5',
     },
   }))
 
@@ -103,15 +108,15 @@ function SkillNodeComponent({ data, selected }: SkillNodeProps) {
   const sn      = data.skillNode
   const color   = MASTERY_COLOUR[sn.mastery_state]
   const blocked = sn.mastery_state === 'blocked'
-  // Truncate at 22 chars so text is readable at 11px
-  const label   = sn.label.length > 22 ? sn.label.slice(0, 21) + '…' : sn.label
+  // Truncate at 26 chars (wider node)
+  const label   = sn.label.length > 26 ? sn.label.slice(0, 25) + '…' : sn.label
 
   return (
     <>
       <Handle
         type="target"
         position={Position.Left}
-        style={{ background: color, opacity: 0.6, width: 6, height: 6, border: 'none' }}
+        style={{ background: color, opacity: 0.7, width: 8, height: 8, border: 'none' }}
       />
 
       <div
@@ -119,20 +124,22 @@ function SkillNodeComponent({ data, selected }: SkillNodeProps) {
           width:        NODE_W,
           height:       NODE_H,
           background:   selected ? 'var(--node-bg-sel)' : 'var(--node-bg)',
-          border:       `${selected ? 2 : 1}px solid ${selected ? color : color + '70'}`,
-          borderRadius: 8,
-          opacity:      blocked ? 0.5 : 1,
+          border:       `${selected ? 2 : 1.5}px solid ${selected ? color : color + '80'}`,
+          borderRadius: 10,
+          opacity:      blocked ? 0.55 : 1,
           position:     'relative',
           display:      'flex',
           alignItems:   'center',
-          padding:      '0 11px',
+          padding:      '0 13px',
           overflow:     'hidden',
           cursor:       'pointer',
-          boxShadow:    selected ? `0 0 0 2px ${color}22, 0 2px 8px rgba(0,0,0,0.18)` : '0 1px 3px rgba(0,0,0,0.12)',
-          transition:   'border-color 0.15s, box-shadow 0.15s',
+          boxShadow:    selected
+            ? `0 0 0 3px ${color}30, 0 4px 16px rgba(0,0,0,0.22)`
+            : '0 1px 4px rgba(0,0,0,0.14)',
+          transition:   'border-color 0.15s, box-shadow 0.15s, transform 0.1s',
         }}
       >
-        {/* p_know progress strip at bottom */}
+        {/* p_know progress strip at bottom — taller and more visible */}
         {!blocked && sn.p_know > 0 && (
           <div
             style={{
@@ -140,24 +147,24 @@ function SkillNodeComponent({ data, selected }: SkillNodeProps) {
               bottom:       0,
               left:         0,
               width:        `${Math.max(0, sn.p_know * 100)}%`,
-              height:       3,
+              height:       5,   // was 3
               background:   color,
-              opacity:      0.45,
-              borderRadius: '0 2px 0 0',
+              opacity:      0.55, // was 0.45
+              borderRadius: '0 3px 0 0',
             }}
           />
         )}
 
-        {/* Mastery dot */}
+        {/* Mastery dot with glow */}
         <div
           style={{
-            width:        8,
-            height:       8,
+            width:        10,   // was 8
+            height:       10,
             borderRadius: '50%',
             background:   color,
             flexShrink:   0,
-            marginRight:  8,
-            boxShadow:    blocked ? 'none' : `0 0 4px ${color}88`,
+            marginRight:  10,
+            boxShadow:    blocked ? 'none' : `0 0 6px ${color}99`,
           }}
         />
 
@@ -165,7 +172,7 @@ function SkillNodeComponent({ data, selected }: SkillNodeProps) {
         <span
           style={{
             fontFamily:   'system-ui, -apple-system, sans-serif',
-            fontSize:     11,
+            fontSize:     13,   // was 11
             fontWeight:   blocked ? 400 : 500,
             color:        blocked ? 'var(--node-blocked)' : 'var(--node-text)',
             flex:         1,
@@ -174,21 +181,23 @@ function SkillNodeComponent({ data, selected }: SkillNodeProps) {
             whiteSpace:   'nowrap',
             userSelect:   'none',
             letterSpacing: '0.01em',
+            lineHeight:   '1.3',
           }}
         >
           {label}
         </span>
 
-        {/* p_know % badge for non-blocked */}
+        {/* p_know % badge — larger and readable */}
         {!blocked && sn.p_know > 0 && (
           <span
             style={{
-              fontFamily:   'ui-monospace, monospace',
-              fontSize:     9,
-              color:        color,
-              opacity:      0.75,
-              flexShrink:   0,
-              marginLeft:   5,
+              fontFamily:    'ui-monospace, monospace',
+              fontSize:      11,   // was 9
+              color:         color,
+              opacity:       0.85, // was 0.75
+              flexShrink:    0,
+              marginLeft:    7,
+              fontWeight:    500,
             }}
           >
             {Math.round(sn.p_know * 100)}%
@@ -199,7 +208,7 @@ function SkillNodeComponent({ data, selected }: SkillNodeProps) {
       <Handle
         type="source"
         position={Position.Right}
-        style={{ background: color, opacity: 0.6, width: 6, height: 6, border: 'none' }}
+        style={{ background: color, opacity: 0.7, width: 8, height: 8, border: 'none' }}
       />
     </>
   )
@@ -209,9 +218,16 @@ function SkillNodeComponent({ data, selected }: SkillNodeProps) {
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const nodeTypes: Record<string, any> = { skillNode: SkillNodeComponent }
 
+// ─── MiniMap node colour ──────────────────────────────────────────────────────
+
+function minimapNodeColor(node: Node): string {
+  const sn = (node.data as { skillNode: GraphNodeWithState }).skillNode
+  return MASTERY_COLOUR[sn.mastery_state] + '99'
+}
+
 // ─── Component ────────────────────────────────────────────────────────────────
 
-export function GraphView({ nodes: skillNodes, edges: skillEdges, onSelect }: Props) {
+export function GraphView({ nodes: skillNodes, edges: skillEdges, onSelect, activeId }: Props) {
   const [nodes, setNodes, onNodesChange] = useNodesState<Node>([])
   const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>([])
 
@@ -242,8 +258,8 @@ export function GraphView({ nodes: skillNodes, edges: skillEdges, onSelect }: Pr
       onPaneClick={handlePaneClick}
       nodeTypes={nodeTypes}
       fitView
-      fitViewOptions={{ padding: 0.14 }}
-      minZoom={0.2}
+      fitViewOptions={{ padding: 0.18 }}
+      minZoom={0.15}
       maxZoom={2}
       nodesDraggable={false}
       nodesConnectable={false}
@@ -252,10 +268,17 @@ export function GraphView({ nodes: skillNodes, edges: skillEdges, onSelect }: Pr
       <Background
         color="var(--border-hi)"
         variant={BackgroundVariant.Dots}
-        gap={24}
-        size={1.2}
+        gap={28}
+        size={1.4}
       />
       <Controls showInteractive={false} />
+      <MiniMap
+        nodeColor={minimapNodeColor}
+        maskColor="rgba(0,0,0,0.25)"
+        style={{ width: 160, height: 100 }}
+        pannable
+        zoomable
+      />
     </ReactFlow>
   )
 }
