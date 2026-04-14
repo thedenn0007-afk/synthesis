@@ -8,3 +8,4 @@ data/*.db-journal
 data/*.bak
 .env.local
 *.DS_Store
+.claude/
