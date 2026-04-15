@@ -87,11 +87,15 @@ export interface MotivationState {
   intervention_cooldown_until: string | null; updated_at: string
 }
 
+export type ReviewUrgency = 'overdue' | 'due_today' | 'due_soon' | 'upcoming'
+
 export type TaskReason =
-  | 'review_due'          // overdue SM-2 review
-  | 'confidence_boost'    // frustrated → easy win
-  | 'weak_area'           // lowest p_know skill
-  | 'varied_practice'     // interleaving logic
+  | 'active_phase_new'          // new/weak skill in the active phase
+  | 'active_phase_review'       // SM-2 review for an active-phase skill
+  | 'past_phase_review_urgent'  // ≥2 days overdue from a completed phase
+  | 'past_phase_review'         // non-urgent review from a completed phase
+  | 'confidence_boost'          // frustrated → easy win
+  | 'varied_practice'           // fallback interleaving
 
 export type SessionMode = 'learn' | 'review'
 
@@ -99,9 +103,11 @@ export interface SessionTask {
   skill_id: string; skill_label: string; skill_intuition: string; skill_analogy: string
   question: Question; difficulty_tier: DifficultyTier; source: 'review' | 'learning' | 'diagnostic'
   reason: TaskReason
-  p_know: number           // current mastery % for context display
-  days_overdue?: number    // set when reason === 'review_due'
-  review_repetition?: number  // SM-2 rep count for display
+  p_know: number                // current mastery % for context display
+  phase_context?: 'active_phase' | 'past_phase'
+  review_urgency?: ReviewUrgency
+  days_until_due?: number       // negative = overdue, positive = future
+  review_repetition?: number    // SM-2 rep count for display
 }
 
 export interface SessionSummary {

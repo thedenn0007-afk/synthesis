@@ -1,7 +1,7 @@
 'use client'
 import { useState, useEffect, useCallback, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
-import type { SessionTask, Explanation, ExplanationDepth, SessionPhase, TaskReason, SessionMode } from '@/types'
+import type { SessionTask, Explanation, ExplanationDepth, SessionPhase, TaskReason, SessionMode, ReviewUrgency } from '@/types'
 import { QuestionCard }     from '@/components/learning/QuestionCard'
 import { FeedbackBanner }   from '@/components/learning/FeedbackBanner'
 import { ExplanationPanel } from '@/components/learning/ExplanationPanel'
@@ -14,24 +14,44 @@ import { useAnalytics }     from '@/hooks/useAnalytics'
 // ─── Reason pill config ───────────────────────────────────────────────────────
 
 const REASON_CONFIG: Record<TaskReason, { label: string; icon: string; color: string }> = {
-  review_due:       { label: 'Review due',        icon: '↻', color: 'var(--yellow)' },
-  confidence_boost: { label: 'Confidence boost',  icon: '↑', color: 'var(--blue)' },
-  weak_area:        { label: 'Weak area',          icon: '⬡', color: 'var(--purple)' },
-  varied_practice:  { label: 'Varied practice',   icon: '⇄', color: 'var(--green)' },
+  active_phase_new:          { label: 'Active phase',      icon: '⬡', color: 'var(--purple)' },
+  active_phase_review:       { label: 'Phase review',      icon: '↻', color: 'var(--yellow)' },
+  past_phase_review_urgent:  { label: 'Urgent review',     icon: '↻', color: '#f87171' },
+  past_phase_review:         { label: 'Past phase review', icon: '↻', color: 'var(--yellow)' },
+  confidence_boost:          { label: 'Confidence boost',  icon: '↑', color: 'var(--blue)' },
+  varied_practice:           { label: 'Varied practice',   icon: '⇄', color: 'var(--green)' },
+}
+
+function isReviewReason(r: TaskReason): boolean {
+  return r === 'active_phase_review' || r === 'past_phase_review' || r === 'past_phase_review_urgent'
+}
+
+function formatDueLabel(days_until_due: number, urgency?: ReviewUrgency): string {
+  if (urgency === 'overdue') {
+    const d = Math.max(1, Math.ceil(-days_until_due))
+    return d === 1 ? 'Overdue by 1 day' : `Overdue by ${d} days`
+  }
+  if (urgency === 'due_today') return 'Due today'
+  if (urgency === 'due_soon') {
+    const d = Math.ceil(days_until_due)
+    return d === 1 ? 'Due tomorrow' : `Due in ${d} days`
+  }
+  return 'Scheduled'
 }
 
 function ReasonPill({ reason, pKnow }: { reason: TaskReason; pKnow: number }) {
   const cfg = REASON_CONFIG[reason]
   if (!cfg) return null
   const pct = Math.round(pKnow * 100)
+  const showMastery = reason === 'active_phase_new' || reason === 'varied_practice'
   return (
     <span
       className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[12px] font-mono border"
       style={{ color: cfg.color, borderColor: cfg.color + '35', background: cfg.color + '12' }}
-      title={`Why this? ${cfg.label}${reason === 'weak_area' ? ` (${pct}% mastered)` : ''}`}
+      title={`Why this? ${cfg.label}${showMastery ? ` (${pct}% mastered)` : ''}`}
     >
       <span>{cfg.icon}</span>
-      <span>{cfg.label}{reason === 'weak_area' ? ` · ${pct}%` : ''}</span>
+      <span>{cfg.label}{showMastery ? ` · ${pct}%` : ''}</span>
     </span>
   )
 }
@@ -442,17 +462,25 @@ function LearnPageInner() {
             )}
           </div>
 
-          {task.reason === 'review_due' && task.days_overdue !== undefined && (
-            <p className="text-[12px] font-mono text-[#fbbf24]/80 mb-1.5">
-              {task.days_overdue === 0
-                ? `Due today · Rep #${task.review_repetition}`
-                : `${task.days_overdue}d overdue · Rep #${task.review_repetition}`}
+          {/* Phase context line */}
+          {task.phase_context && (
+            <p className="text-[12px] font-mono text-c-faint mb-1">
+              {task.phase_context === 'active_phase' ? 'Current focus' : 'Past phase — retention review'}
             </p>
           )}
 
-          {task.reason === 'weak_area' && (
+          {/* Review timing */}
+          {isReviewReason(task.reason) && task.days_until_due !== undefined && (
+            <p className={`text-[12px] font-mono mb-1.5 ${task.review_urgency === 'overdue' ? 'text-[#f87171]/90' : 'text-[#fbbf24]/80'}`}>
+              {formatDueLabel(task.days_until_due, task.review_urgency)}
+              {task.review_repetition !== undefined && ` · Rep #${task.review_repetition}`}
+            </p>
+          )}
+
+          {/* Learning context */}
+          {(task.reason === 'active_phase_new' || task.reason === 'varied_practice') && (
             <p className="text-[12px] font-mono text-c-faint mb-1.5">
-              {Math.round(task.p_know * 100)}% mastered · lowest in queue
+              {Math.round(task.p_know * 100)}% mastered · weakest in queue
             </p>
           )}
 

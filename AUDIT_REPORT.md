@@ -1,5 +1,46 @@
 # Synaptic — Full Implementation Audit Report
-**Date:** March 2026 · **Validator:** ✅ 0 errors, 0 warnings · **Files:** 133
+**Last updated:** April 2026 · **Validator:** ✅ 0 errors, 0 warnings · **Build:** ✅ 24/24 pages
+
+---
+
+## Changelog
+
+### April 2026 — UI/UX Accessibility & Usability Overhaul ✅ COMPLETE
+
+All items below were audited, changed, and verified with `tsc --noEmit` (0 errors) and `next build` (24/24 pages).
+
+| Area | Change | Files |
+|---|---|---|
+| Contrast | Dark `--text-faint` `#747490→#9090b0`, `--text-ghost` `#545468→#707090` — both now pass WCAG AA | `globals.css` |
+| Contrast | Light mode background `#f2f0eb→#f0f0f8` (cool neutral, eliminates purple clash) | `globals.css` |
+| Contrast | Light `--text-muted/faint/ghost` all raised; light accent colours deepened | `globals.css` |
+| Borders | Dark card border `rgba(255,255,255,0.07→0.10)`, light `rgba(0,0,0,0.08→0.12)` | `globals.css` |
+| Graph nodes | 175×52px → 210×64px; label 11→13px; badge 9→11px; strip 3→5px; dot 8→10px | `GraphView.tsx` |
+| Graph edges | Required 1.5→2px; optional 1→1.5px dashed with larger dash pattern | `GraphView.tsx` |
+| Graph viewport | Fixed 580px → `calc(100vh - 220px)` fills screen | `graph/page.tsx` |
+| Graph minimap | Added (pannable + zoomable, colour-coded by mastery state) | `GraphView.tsx` |
+| Graph search | Real-time skill filter input with clear button | `graph/page.tsx` |
+| Graph nav | "Go to active" button jumps to current learning node | `graph/page.tsx` |
+| Graph spacing | `nodesep 48→60`, `ranksep 90→120` | `GraphView.tsx` |
+| Dashboard circles | 48→64px skill path circles; active nodes pulse with ring animation | `dashboard/page.tsx` |
+| Dashboard UX | Scroll fade hints on path edges; connector line 1→2px | `dashboard/page.tsx` |
+| Dashboard stats | Left accent bar on cards; values 30→36px; labels 11→12px | `dashboard/page.tsx` |
+| Dashboard bars | Phase progress `h-1.5→h-2`; accordion `h-1→h-1.5` | `dashboard/page.tsx` |
+| Dashboard icons | Emoji (🔒✅▶○) → SVG icons | `dashboard/page.tsx` |
+| Question stem | 15→17px | `QuestionCard.tsx` |
+| MCQ options | 13→15px, `py-3.5→py-4`, stronger tints | `QuestionCard.tsx` |
+| Code blocks | 12→13px, more padding | `QuestionCard.tsx` |
+| Feedback banner | `border-2`, background `/0.07→/0.12`, SVG icons, title 13→15px | `FeedbackBanner.tsx` |
+| Explanation tabs | 11→12px; body 13→14px; key insight callout stronger | `ExplanationPanel.tsx` |
+| Learn container | `max-w-2xl→max-w-3xl` | `learn/page.tsx` |
+| ModeBar | Circles `w-4→w-5`; labels 10→12px; SVG checkmarks | `learn/page.tsx` |
+| Buttons | Submit/Next `py-3.5→py-4`, 14→15px | `learn/page.tsx` |
+| Navbar | Theme toggle: unicode → SVG sun/moon; tap targets `py-1.5→py-2`; links 12→13px | `Navbar.tsx` |
+| Detail panel | Intuition 13→14px; meta pills 11→12px; close button is now SVG × | `SkillDetailPanel.tsx` |
+| Prose styles | Added `.prose-synaptic` CSS block for consistent list/code/strong rendering | `globals.css` |
+| Scrollbar | Added thin theme-aware scrollbar styles | `globals.css` |
+
+---
 
 ---
 

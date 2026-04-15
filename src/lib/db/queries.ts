@@ -145,14 +145,21 @@ export function upsertReviewSchedule(schedule: ReviewSchedule) {
 }
 
 export function schedulePhaseReview(learnerId: string, skillIds: string[]) {
-  const db = getDb()
+  const db   = getDb()
+  // Only update skills that have been through at least one SM-2 cycle (repetitions > 0)
   const stmt = db.prepare(`
     UPDATE review_schedules
-    SET due_at = datetime('now')
-    WHERE learner_id = ? AND skill_id = ?
+    SET due_at = ?
+    WHERE learner_id = ? AND skill_id = ? AND repetitions > 0
   `)
+  // Stagger reviews: skill[0] = now, skill[1] = +1d, skill[2] = +2d … max +4d
+  // This prevents a flood of identical-urgency reviews after phase completion
   const update = db.transaction((ids: string[]) => {
-    for (const id of ids) stmt.run(learnerId, id)
+    ids.forEach((id, i) => {
+      const offsetMs  = Math.min(i, 4) * 86400000
+      const dueDate   = new Date(Date.now() + offsetMs).toISOString()
+      stmt.run(dueDate, learnerId, id)
+    })
   })
   update(skillIds)
 }

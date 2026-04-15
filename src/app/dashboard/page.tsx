@@ -5,20 +5,11 @@ import { verifyToken } from '@/lib/db/auth'
 import { getLearnerProfile, getAllSkillStates, getReviewSchedules } from '@/lib/db/queries'
 import { getAllNodes, getAllEdges } from '@/lib/graph'
 import { Navbar } from '@/components/layout/Navbar'
+import { PHASE_ORDER, findActivePhase, buildPhaseGroups } from '@/lib/phases'
+import { deriveUrgency } from '@/lib/sm2/urgency'
 import type { LearnerSkillState, SkillNode } from '@/types'
 
-// ─── Constants ────────────────────────────────────────────────────────────────
-
-const PHASE_ORDER = [
-  'phase_1_computer_basics',
-  'phase_2_cs_data',
-  'phase_3_intro_ai',
-  'phase_4_machine_learning',
-  'phase_5_deep_learning',
-  'phase_6_modern_ai',
-  'phase_7_real_world',
-  'phase_8_mastery',
-]
+// ─── Display constants ────────────────────────────────────────────────────────
 
 const PHASE_LABELS: Record<string, string> = {
   phase_1_computer_basics:  'Phase 1 — Computer & Python Basics',
@@ -32,14 +23,14 @@ const PHASE_LABELS: Record<string, string> = {
 }
 
 const PHASE_SHORT: Record<string, string> = {
-  phase_1_computer_basics:  'Basics',
-  phase_2_cs_data:          'CS & Data',
-  phase_3_intro_ai:         'Intro AI',
-  phase_4_machine_learning: 'ML',
-  phase_5_deep_learning:    'Deep Learning',
-  phase_6_modern_ai:        'Modern AI',
-  phase_7_real_world:       'Real-World',
-  phase_8_mastery:          'Mastery',
+  phase_1_computer_basics:  'Phase 1',
+  phase_2_cs_data:          'Phase 2',
+  phase_3_intro_ai:         'Phase 3',
+  phase_4_machine_learning: 'Phase 4',
+  phase_5_deep_learning:    'Phase 5',
+  phase_6_modern_ai:        'Phase 6',
+  phase_7_real_world:       'Phase 7',
+  phase_8_mastery:          'Phase 8',
 }
 
 const MASTERY_COLOUR: Record<string, string> = {
@@ -61,10 +52,10 @@ const MASTERY_RING: Record<string, string> = {
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
 function phaseStats(nodes: SkillNode[], stateMap: Map<string, LearnerSkillState>) {
-  const total     = nodes.length
-  const mastered  = nodes.filter(n => stateMap.get(n.id)?.mastery_state === 'mastered').length
-  const learning  = nodes.filter(n => ['learning','fragile'].includes(stateMap.get(n.id)?.mastery_state ?? '')).length
-  const pct       = total > 0 ? Math.round((mastered / total) * 100) : 0
+  const total      = nodes.length
+  const mastered   = nodes.filter(n => stateMap.get(n.id)?.mastery_state === 'mastered').length
+  const learning   = nodes.filter(n => ['learning','fragile'].includes(stateMap.get(n.id)?.mastery_state ?? '')).length
+  const pct        = total > 0 ? Math.round((mastered / total) * 100) : 0
   const hasContent = nodes.some(n => n.question_ids.length > 0)
   return { total, mastered, learning, pct, hasContent }
 }
@@ -74,19 +65,6 @@ function skillsLeft(nodes: SkillNode[], stateMap: Map<string, LearnerSkillState>
     n.question_ids.length > 0 &&
     stateMap.get(n.id)?.mastery_state !== 'mastered',
   ).length
-}
-
-function findActivePhase(
-  phaseGroups: Record<string, SkillNode[]>,
-  stateMap: Map<string, LearnerSkillState>,
-): string {
-  for (const phase of PHASE_ORDER) {
-    const nodes = phaseGroups[phase] ?? []
-    if (nodes.length === 0) continue
-    const stats = phaseStats(nodes, stateMap)
-    if (stats.hasContent && stats.mastered < stats.total) return phase
-  }
-  return PHASE_ORDER[PHASE_ORDER.length - 1]
 }
 
 // ─── Page ─────────────────────────────────────────────────────────────────────
@@ -107,38 +85,68 @@ export default async function Dashboard() {
   const allNodes  = getAllNodes()
   const allEdges  = getAllEdges()
 
-  const stateMap   = new Map(allStates.map(s => [s.skill_id, s]))
-  const now        = new Date()
-  const dueSchedules = schedules.filter(s => new Date(s.due_at) <= now && s.repetitions > 0)
-  const dueReviews = dueSchedules.length
+  const stateMap     = new Map(allStates.map(s => [s.skill_id, s]))
+  const now          = new Date()
+  const threeDays    = new Date(now.getTime() + 3 * 86400000)
 
-  const top5DueSkills = dueSchedules
+  // ── Classify reviews ────────────────────────────────────────────────────────
+  const learnedSchedules = schedules.filter(s => s.repetitions > 0)
+
+  const urgentSchedules = learnedSchedules
+    .filter(s => new Date(s.due_at) <= now)
     .sort((a, b) => new Date(a.due_at).getTime() - new Date(b.due_at).getTime())
-    .slice(0, 5)
-    .map(s => {
-      const node = allNodes.find(n => n.id === s.skill_id)
-      const daysOverdue = Math.floor((now.getTime() - new Date(s.due_at).getTime()) / 86400000)
-      return { id: s.skill_id, label: node?.label ?? s.skill_id, daysOverdue: Math.max(0, daysOverdue) }
-    })
 
-  const totalMastered  = allStates.filter(s => s.mastery_state === 'mastered').length
-  const totalLearning  = allStates.filter(s => ['learning','fragile'].includes(s.mastery_state)).length
+  const upcomingSchedules = learnedSchedules
+    .filter(s => new Date(s.due_at) > now && new Date(s.due_at) <= threeDays)
+    .sort((a, b) => new Date(a.due_at).getTime() - new Date(b.due_at).getTime())
 
-  const phaseGroups = allNodes.reduce<Record<string, SkillNode[]>>((acc, node) => {
-    if (!acc[node.phase]) acc[node.phase] = []
-    acc[node.phase].push(node)
-    return acc
-  }, {})
+  const urgentCount   = urgentSchedules.length
+  const upcomingCount = upcomingSchedules.length
 
-  const activePhase = findActivePhase(phaseGroups, stateMap)
-  const activeNodes = phaseGroups[activePhase] ?? []
-  const activeStats = phaseStats(activeNodes, stateMap)
+  // Top items for display
+  const top5Urgent = urgentSchedules.slice(0, 5).map(s => {
+    const node = allNodes.find(n => n.id === s.skill_id)
+    const { label, urgency } = deriveUrgency(s.due_at, now)
+    return { id: s.skill_id, nodeLabel: node?.label ?? s.skill_id, urgencyLabel: label, urgency }
+  })
 
-  const activePhaseIdx  = PHASE_ORDER.indexOf(activePhase)
-  const nextPhaseKey    = PHASE_ORDER[activePhaseIdx + 1]
-  const nextPhaseLabel  = nextPhaseKey ? PHASE_SHORT[nextPhaseKey] : null
+  const top4Upcoming = upcomingSchedules.slice(0, 4).map(s => {
+    const node = allNodes.find(n => n.id === s.skill_id)
+    const { label } = deriveUrgency(s.due_at, now)
+    return { id: s.skill_id, nodeLabel: node?.label ?? s.skill_id, urgencyLabel: label }
+  })
+
+  // ── Phase data ──────────────────────────────────────────────────────────────
+  const totalMastered = allStates.filter(s => s.mastery_state === 'mastered').length
+  const totalLearning = allStates.filter(s => ['learning','fragile'].includes(s.mastery_state)).length
+
+  const phaseGroups    = buildPhaseGroups(allNodes)
+  const activePhase    = findActivePhase(allNodes, stateMap)
+  const activeNodes    = phaseGroups[activePhase] ?? []
+  const activeStats    = phaseStats(activeNodes, stateMap)
+  const activePhaseIds = new Set(activeNodes.map(n => n.id))
   const skillsRemaining = skillsLeft(activeNodes, stateMap)
 
+  const activePhaseIdx = PHASE_ORDER.indexOf(activePhase as typeof PHASE_ORDER[number])
+  const nextPhaseKey   = PHASE_ORDER[activePhaseIdx + 1]
+  const nextPhaseLabel = nextPhaseKey ? PHASE_SHORT[nextPhaseKey] : null
+
+  // ── Smart CTA ───────────────────────────────────────────────────────────────
+  const urgentInActivePhase = urgentSchedules.filter(s => activePhaseIds.has(s.skill_id))
+  let ctaText: string
+  let ctaHref: string
+  if (urgentInActivePhase.length > 0) {
+    ctaText = `Review urgent topics →`
+    ctaHref = '/learn?mode=review'
+  } else if (skillsRemaining > 0) {
+    ctaText = `Continue ${PHASE_SHORT[activePhase]} →`
+    ctaHref = '/learn'
+  } else {
+    ctaText = nextPhaseLabel ? `Start ${nextPhaseLabel} →` : 'All phases complete →'
+    ctaHref = '/learn'
+  }
+
+  // ── Edge map for graph ──────────────────────────────────────────────────────
   const unlocksMap = new Map<string, string[]>()
   for (const edge of allEdges) {
     if (edge.strength === 'hard') {
@@ -160,26 +168,28 @@ export default async function Dashboard() {
               {profile.display_name ? `Hi, ${profile.display_name}` : 'Your Journey'}
             </h1>
             <p className="text-[14px] text-c-faint font-mono">
-              {dueReviews > 0
-                ? `${dueReviews} review${dueReviews !== 1 ? 's' : ''} due`
-                : 'No reviews due today'}{' '}
+              {urgentCount > 0
+                ? `${urgentCount} urgent${upcomingCount > 0 ? ` · ${upcomingCount} upcoming` : ''}`
+                : upcomingCount > 0
+                ? `${upcomingCount} review${upcomingCount !== 1 ? 's' : ''} coming up`
+                : 'No reviews due'}{' '}
               · {profile.streak_days} day streak
             </p>
           </div>
           <div className="flex items-center gap-2">
-            {dueReviews > 0 && (
+            {urgentCount > 0 && (
               <Link
                 href="/learn?mode=review"
                 className="px-5 py-2.5 rounded-xl border border-[#fbbf24]/40 text-[#fbbf24] hover:bg-[#fbbf24]/10 text-[14px] font-medium transition-all"
               >
-                Review {dueReviews} due →
+                Review {urgentCount} →
               </Link>
             )}
             <Link
-              href="/learn"
+              href={ctaHref}
               className="px-5 py-2.5 rounded-xl bg-c-purple hover:bg-[var(--purple-hover)] text-white text-[14px] font-medium transition-all hover:scale-[1.02] shadow-sm"
             >
-              Study now →
+              {ctaText}
             </Link>
           </div>
         </div>
@@ -187,9 +197,9 @@ export default async function Dashboard() {
         {/* ── Stats row ───────────────────────────────────────────────────── */}
         <div className="grid grid-cols-3 gap-4 mb-8">
           {[
-            { val: totalMastered, lbl: 'Skills mastered',   col: '#34d399' },
-            { val: totalLearning, lbl: 'Actively learning',  col: '#7c6eff' },
-            { val: dueReviews,    lbl: 'Reviews due',        col: dueReviews > 0 ? '#fbbf24' : 'var(--text-faint)' },
+            { val: totalMastered, lbl: 'Skills mastered',  col: '#34d399' },
+            { val: totalLearning, lbl: 'Actively learning', col: '#7c6eff' },
+            { val: urgentCount,   lbl: 'Urgent reviews',   col: urgentCount > 0 ? '#fbbf24' : 'var(--text-faint)' },
           ].map((s, i) => (
             <div
               key={i}
@@ -204,45 +214,9 @@ export default async function Dashboard() {
           ))}
         </div>
 
-        {/* ── Due Reviews Widget ──────────────────────────────────────────── */}
-        {dueReviews > 0 && (
-          <div className="rounded-2xl border border-[#fbbf24]/30 bg-c-bg2 overflow-hidden mb-6 animate-slide-up">
-            <div className="px-6 pt-4 pb-3 flex items-center justify-between border-b border-[var(--border)]">
-              <p className="text-[14px] font-semibold text-c-text">
-                {dueReviews} review{dueReviews !== 1 ? 's' : ''} due
-              </p>
-              <Link
-                href="/learn?mode=review"
-                className="text-[13px] font-mono text-[#fbbf24] hover:underline transition-colors"
-              >
-                Review all →
-              </Link>
-            </div>
-            <div className="divide-y divide-[var(--border)]">
-              {top5DueSkills.map(skill => (
-                <div key={skill.id} className="px-6 py-3 flex items-center justify-between">
-                  <span className="text-[14px] text-c-text truncate mr-4">{skill.label}</span>
-                  <div className="flex items-center gap-4 flex-shrink-0">
-                    <span className="text-[12px] font-mono text-[#fbbf24]">
-                      {skill.daysOverdue === 0 ? 'due today' : `${skill.daysOverdue}d overdue`}
-                    </span>
-                    <Link
-                      href={`/learn/skill/${skill.id}`}
-                      className="px-3 py-1 rounded-lg text-[12px] font-mono text-[#fbbf24] bg-[#fbbf24]/10 hover:bg-[#fbbf24]/20 border border-[#fbbf24]/20 transition-all"
-                    >
-                      Study →
-                    </Link>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* ── Active Phase Journey ────────────────────────────────────────── */}
+        {/* ── Active Phase Card (Primary Action) ──────────────────────────── */}
         <div className="rounded-2xl border border-[var(--border)] bg-c-bg2 overflow-hidden mb-6 animate-slide-up">
 
-          {/* Phase header */}
           <div className="px-6 pt-6 pb-4">
             <div className="flex items-center justify-between mb-1">
               <p className="font-mono text-[12px] text-c-purple uppercase tracking-[0.16em]">
@@ -256,7 +230,6 @@ export default async function Dashboard() {
               {PHASE_LABELS[activePhase]}
             </h2>
 
-            {/* Phase progress bar — thicker */}
             <div className="h-2 rounded-full bg-c-bg3 overflow-hidden mb-3">
               <div
                 className="h-full rounded-full bg-c-purple transition-all duration-700"
@@ -277,10 +250,8 @@ export default async function Dashboard() {
             )}
           </div>
 
-          {/* ── Skill path row ──────────────────────────────────────────── */}
-          {/* Outer wrapper with scroll hint arrows */}
+          {/* Skill path row */}
           <div className="relative px-4 pb-6">
-            {/* Scroll fade hints */}
             <div
               className="pointer-events-none absolute left-4 top-0 bottom-6 w-8 z-10"
               style={{ background: 'linear-gradient(to right, var(--bg2), transparent)' }}
@@ -289,31 +260,26 @@ export default async function Dashboard() {
               className="pointer-events-none absolute right-4 top-0 bottom-6 w-8 z-10"
               style={{ background: 'linear-gradient(to left, var(--bg2), transparent)' }}
             />
-
             <div className="overflow-x-auto pb-2">
               <div className="flex items-start gap-0 min-w-max px-2">
                 {activeNodes.map((node, idx) => {
-                  const state   = stateMap.get(node.id)
-                  const mastery = state?.mastery_state ?? 'blocked'
-                  const pKnow   = state?.p_know ?? 0
-                  const pct     = Math.round(pKnow * 100)
-                  const colour  = MASTERY_COLOUR[mastery] ?? '#3a3a52'
-                  const ring    = MASTERY_RING[mastery] ?? ''
-                  const isLast  = idx === activeNodes.length - 1
+                  const state    = stateMap.get(node.id)
+                  const mastery  = state?.mastery_state ?? 'blocked'
+                  const pKnow    = state?.p_know ?? 0
+                  const pct      = Math.round(pKnow * 100)
+                  const colour   = MASTERY_COLOUR[mastery] ?? '#3a3a52'
+                  const ring     = MASTERY_RING[mastery] ?? ''
+                  const isLast   = idx === activeNodes.length - 1
                   const isStudiable = ['ready','learning','fragile','mastered'].includes(mastery) && node.question_ids.length > 0
                   const isLearning  = mastery === 'learning' || mastery === 'fragile'
 
                   return (
                     <div key={node.id} className="flex items-center">
-                      {/* Node */}
                       <div className="flex flex-col items-center w-[96px]">
-                        {/* Circle — larger: 64px */}
                         <Link
                           href={isStudiable ? `/learn/skill/${node.id}` : '#'}
                           className={`relative w-16 h-16 rounded-full flex items-center justify-center mb-2.5 transition-all ${ring} ${
-                            isStudiable
-                              ? 'hover:scale-110 cursor-pointer'
-                              : 'opacity-50 cursor-default'
+                            isStudiable ? 'hover:scale-110 cursor-pointer' : 'opacity-50 cursor-default'
                           } ${isLearning ? 'animate-pulse-ring' : ''}`}
                           style={{ background: colour + '22', border: `2.5px solid ${colour}` }}
                           title={isStudiable ? `Study: ${node.label}` : 'Prerequisites needed'}
@@ -328,8 +294,6 @@ export default async function Dashboard() {
                             </span>
                           )}
                         </Link>
-
-                        {/* Label — larger */}
                         <p
                           className="text-[12px] text-center leading-tight font-mono px-1 max-w-[88px]"
                           style={{ color: mastery === 'blocked' ? 'var(--text-ghost)' : 'var(--text-muted)' }}
@@ -337,13 +301,8 @@ export default async function Dashboard() {
                           {node.label}
                         </p>
                       </div>
-
-                      {/* Connector line — thicker */}
                       {!isLast && (
-                        <div
-                          className="w-5 flex-shrink-0 mt-[-36px]"
-                          style={{ height: 2, background: 'var(--border-hi)' }}
-                        />
+                        <div className="w-5 flex-shrink-0 mt-[-36px]" style={{ height: 2, background: 'var(--border-hi)' }} />
                       )}
                     </div>
                   )
@@ -352,34 +311,93 @@ export default async function Dashboard() {
             </div>
           </div>
 
-          {/* CTA bar */}
           <div className="px-6 py-3 border-t border-[var(--border)] bg-c-bg3 flex items-center justify-between">
             <p className="text-[13px] text-c-faint font-mono">
-              Click any skill to dive in, or let the engine pick for you
+              Click any skill to dive in, or let the engine choose
             </p>
             <Link
-              href="/learn"
+              href={ctaHref}
               className="px-4 py-2 rounded-lg bg-c-purple hover:bg-[var(--purple-hover)] text-white text-[13px] font-medium transition-all"
             >
-              Continue →
+              {ctaText}
             </Link>
           </div>
         </div>
 
-        {/* ── All Phases Summary ──────────────────────────────────────────── */}
+        {/* ── Urgent Reviews ───────────────────────────────────────────────── */}
+        {urgentCount > 0 && (
+          <div className="rounded-2xl border border-[#fbbf24]/30 bg-c-bg2 overflow-hidden mb-4 animate-slide-up">
+            <div className="px-6 pt-4 pb-3 flex items-center justify-between border-b border-[var(--border)]">
+              <div className="flex items-center gap-2">
+                <p className="text-[14px] font-semibold text-c-text">Urgent reviews</p>
+                <span className="px-2 py-0.5 rounded-full text-[11px] font-mono bg-[#fbbf24]/15 text-[#fbbf24] border border-[#fbbf24]/25">
+                  {urgentCount}
+                </span>
+              </div>
+              <Link
+                href="/learn?mode=review"
+                className="text-[13px] font-mono text-[#fbbf24] hover:underline transition-colors"
+              >
+                Review all →
+              </Link>
+            </div>
+            <div className="divide-y divide-[var(--border)]">
+              {top5Urgent.map(skill => (
+                <div key={skill.id} className="px-6 py-3 flex items-center justify-between">
+                  <span className="text-[14px] text-c-text truncate mr-4">{skill.nodeLabel}</span>
+                  <div className="flex items-center gap-4 flex-shrink-0">
+                    <span className={`text-[12px] font-mono ${skill.urgency === 'overdue' ? 'text-[#f87171]' : 'text-[#fbbf24]'}`}>
+                      {skill.urgencyLabel}
+                    </span>
+                    <Link
+                      href={`/learn/skill/${skill.id}`}
+                      className="px-3 py-1 rounded-lg text-[12px] font-mono text-[#fbbf24] bg-[#fbbf24]/10 hover:bg-[#fbbf24]/20 border border-[#fbbf24]/20 transition-all"
+                    >
+                      Study →
+                    </Link>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* ── Upcoming Reviews ─────────────────────────────────────────────── */}
+        {upcomingCount > 0 && (
+          <div className="rounded-2xl border border-[var(--border)] bg-c-bg2 overflow-hidden mb-6 animate-slide-up">
+            <div className="px-6 pt-4 pb-3 flex items-center justify-between border-b border-[var(--border)]">
+              <div className="flex items-center gap-2">
+                <p className="text-[14px] font-semibold text-c-text">Coming up</p>
+                <span className="px-2 py-0.5 rounded-full text-[11px] font-mono bg-[var(--bg3)] text-c-muted border border-[var(--border)]">
+                  {upcomingCount}
+                </span>
+              </div>
+              <p className="text-[12px] font-mono text-c-ghost">Next 3 days</p>
+            </div>
+            <div className="divide-y divide-[var(--border)]">
+              {top4Upcoming.map(skill => (
+                <div key={skill.id} className="px-6 py-3 flex items-center justify-between">
+                  <span className="text-[14px] text-c-muted truncate mr-4">{skill.nodeLabel}</span>
+                  <span className="text-[12px] font-mono text-c-faint flex-shrink-0">{skill.urgencyLabel}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* ── Full Curriculum ──────────────────────────────────────────────── */}
         <div className="space-y-2">
           <p className="font-mono text-[12px] text-c-faint uppercase tracking-[0.16em] mb-3 px-1">
             Full curriculum
           </p>
           {PHASE_ORDER.map(phaseKey => {
-            const nodes = phaseGroups[phaseKey] ?? []
+            const nodes    = phaseGroups[phaseKey] ?? []
             if (nodes.length === 0) return null
-            const stats     = phaseStats(nodes, stateMap)
-            const isActive  = phaseKey === activePhase
-            const isLocked  = !stats.hasContent
-            const isDone    = stats.hasContent && stats.mastered === stats.total
+            const stats    = phaseStats(nodes, stateMap)
+            const isActive = phaseKey === activePhase
+            const isLocked = !stats.hasContent
+            const isDone   = stats.hasContent && stats.mastered === stats.total
 
-            // Icon SVGs instead of emoji
             const PhaseIcon = () => {
               if (isLocked) return (
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-c-ghost flex-shrink-0">
@@ -414,7 +432,6 @@ export default async function Dashboard() {
                     : 'border-[var(--border)] bg-c-bg4'
                 }`}
               >
-                {/* Phase row */}
                 <div className="px-5 py-3.5 flex items-center justify-between gap-3">
                   <div className="flex items-center gap-3 min-w-0">
                     <PhaseIcon />
@@ -423,7 +440,6 @@ export default async function Dashboard() {
                     </p>
                   </div>
                   <div className="flex items-center gap-4 flex-shrink-0">
-                    {/* Mini progress bar — thicker */}
                     {stats.hasContent && (
                       <div className="w-28 h-1.5 rounded-full bg-c-bg3 overflow-hidden">
                         <div
@@ -450,10 +466,10 @@ export default async function Dashboard() {
                 {isActive && (
                   <div className="border-t border-[var(--border)] divide-y divide-[var(--border)]">
                     {nodes.map(node => {
-                      const state   = stateMap.get(node.id)
-                      const mastery = state?.mastery_state ?? 'blocked'
-                      const pKnow   = state?.p_know ?? 0
-                      const colour  = MASTERY_COLOUR[mastery] ?? '#3a3a52'
+                      const state    = stateMap.get(node.id)
+                      const mastery  = state?.mastery_state ?? 'blocked'
+                      const pKnow    = state?.p_know ?? 0
+                      const colour   = MASTERY_COLOUR[mastery] ?? '#3a3a52'
                       const isStudiable = ['ready','learning','fragile','mastered'].includes(mastery) && node.question_ids.length > 0
 
                       return (
@@ -497,7 +513,7 @@ export default async function Dashboard() {
             href="/graph"
             className="inline-flex items-center gap-2 text-[13px] font-mono text-c-faint hover:text-c-muted transition-colors underline underline-offset-4"
           >
-            View full skill graph →
+            Explore skill graph →
           </Link>
         </div>
 
