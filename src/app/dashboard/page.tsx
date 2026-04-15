@@ -131,20 +131,10 @@ export default async function Dashboard() {
   const nextPhaseKey   = PHASE_ORDER[activePhaseIdx + 1]
   const nextPhaseLabel = nextPhaseKey ? PHASE_SHORT[nextPhaseKey] : null
 
-  // ── Smart CTA ───────────────────────────────────────────────────────────────
-  const urgentInActivePhase = urgentSchedules.filter(s => activePhaseIds.has(s.skill_id))
-  let ctaText: string
-  let ctaHref: string
-  if (urgentInActivePhase.length > 0) {
-    ctaText = `Review urgent topics →`
-    ctaHref = '/learn?mode=review'
-  } else if (skillsRemaining > 0) {
-    ctaText = `Continue ${PHASE_SHORT[activePhase]} →`
-    ctaHref = '/learn'
-  } else {
-    ctaText = nextPhaseLabel ? `Start ${nextPhaseLabel} →` : 'All phases complete →'
-    ctaHref = '/learn'
-  }
+  // ── Study CTA (always study-only, never review) ────────────────────────────
+  const studyCtaText = skillsRemaining > 0
+    ? `Continue ${PHASE_SHORT[activePhase]} →`
+    : nextPhaseLabel ? `Start ${nextPhaseLabel} →` : 'All phases complete →'
 
   // ── Edge map for graph ──────────────────────────────────────────────────────
   const unlocksMap = new Map<string, string[]>()
@@ -177,19 +167,25 @@ export default async function Dashboard() {
             </p>
           </div>
           <div className="flex items-center gap-2">
-            {urgentCount > 0 && (
+            {/* Review slot — amber if urgent, muted badge if upcoming, hidden if neither */}
+            {urgentCount > 0 ? (
               <Link
                 href="/learn?mode=review"
                 className="px-5 py-2.5 rounded-xl border border-[#fbbf24]/40 text-[#fbbf24] hover:bg-[#fbbf24]/10 text-[14px] font-medium transition-all"
               >
                 Review {urgentCount} →
               </Link>
-            )}
+            ) : upcomingCount > 0 ? (
+              <span className="px-4 py-2.5 rounded-xl border border-[var(--border)] text-c-faint text-[13px] font-mono">
+                {upcomingCount} due soon
+              </span>
+            ) : null}
+            {/* Study slot — always study, never review */}
             <Link
-              href={ctaHref}
+              href="/learn"
               className="px-5 py-2.5 rounded-xl bg-c-purple hover:bg-[var(--purple-hover)] text-white text-[14px] font-medium transition-all hover:scale-[1.02] shadow-sm"
             >
-              {ctaText}
+              {studyCtaText}
             </Link>
           </div>
         </div>
@@ -271,7 +267,6 @@ export default async function Dashboard() {
                   const ring     = MASTERY_RING[mastery] ?? ''
                   const isLast   = idx === activeNodes.length - 1
                   const isStudiable = ['ready','learning','fragile','mastered'].includes(mastery) && node.question_ids.length > 0
-                  const isLearning  = mastery === 'learning' || mastery === 'fragile'
 
                   return (
                     <div key={node.id} className="flex items-center">
@@ -280,7 +275,7 @@ export default async function Dashboard() {
                           href={isStudiable ? `/learn/skill/${node.id}` : '#'}
                           className={`relative w-16 h-16 rounded-full flex items-center justify-center mb-2.5 transition-all ${ring} ${
                             isStudiable ? 'hover:scale-110 cursor-pointer' : 'opacity-50 cursor-default'
-                          } ${isLearning ? 'animate-pulse-ring' : ''}`}
+                          }`}
                           style={{ background: colour + '22', border: `2.5px solid ${colour}` }}
                           title={isStudiable ? `Study: ${node.label}` : 'Prerequisites needed'}
                         >
@@ -316,10 +311,10 @@ export default async function Dashboard() {
               Click any skill to dive in, or let the engine choose
             </p>
             <Link
-              href={ctaHref}
+              href="/learn"
               className="px-4 py-2 rounded-lg bg-c-purple hover:bg-[var(--purple-hover)] text-white text-[13px] font-medium transition-all"
             >
-              {ctaText}
+              {studyCtaText}
             </Link>
           </div>
         </div>
